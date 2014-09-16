@@ -1,4 +1,4 @@
-Web-Service
+OAuth-Service
 ===========
 
-Supply school information using OAuth
+Supply information for OAuth in NCU-CC

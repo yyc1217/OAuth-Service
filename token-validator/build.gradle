@@ -1,0 +1,8 @@
+
+version = '0.0.1-SNAPSHOT'
+
+dependencies{
+
+    compile 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.11'
+
+}

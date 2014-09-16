@@ -1,0 +1,46 @@
+
+allprojects{
+    group = 'tw.edu.ncu.cc'
+}
+
+subprojects{
+    apply plugin: 'java'
+    sourceCompatibility = 1.7
+
+    repositories {
+        mavenCentral()
+        maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+
+    buildscript {
+        repositories {
+            mavenCentral()
+            jcenter()
+        }
+    }
+
+    dependencies {
+
+        compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.0'){
+            exclude group: 'org.slf4j'
+        }
+        compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.authzserver:1.0.0'){
+            exclude group: 'org.slf4j'
+        }
+        compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.0'){
+            exclude group: 'org.slf4j'
+        }
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
