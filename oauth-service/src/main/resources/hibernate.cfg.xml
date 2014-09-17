@@ -6,11 +6,14 @@
     <session-factory>
 
         <!-- DB schema will be updated if needed -->
-        <property name="hbm2ddl.auto">update</property>
+        <property name="hbm2ddl.auto">create</property>
 
         <mapping class="tw.edu.ncu.cc.security.data.AccessToken"/>
-        <mapping class="tw.edu.ncu.cc.security.data.ClientInfo"/>
+        <mapping class="tw.edu.ncu.cc.security.data.AuthCode"/>
+        <mapping class="tw.edu.ncu.cc.security.data.Client"/>
         <mapping class="tw.edu.ncu.cc.security.data.Permission"/>
+        <mapping class="tw.edu.ncu.cc.security.data.TokenConsumer"/>
+        <mapping class="tw.edu.ncu.cc.security.data.User"/>
 
     </session-factory>
 </hibernate-configuration>

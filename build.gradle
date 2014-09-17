@@ -4,7 +4,7 @@ allprojects{
 }
 
 subprojects{
-    apply plugin: 'java'
+    apply plugin: 'groovy'
     sourceCompatibility = 1.7
 
     repositories {
@@ -12,14 +12,12 @@ subprojects{
         maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
     }
 
-    buildscript {
-        repositories {
-            mavenCentral()
-            jcenter()
-        }
-    }
-
     dependencies {
+
+        compile     "org.codehaus.groovy:groovy-all:2.1.5"
+        testCompile "org.spockframework:spock-core:1.0-groovy-2.0-SNAPSHOT"
+
+        compile 'com.google.code.gson:gson:2.3'
 
         compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.0'){
             exclude group: 'org.slf4j'

@@ -1,16 +1,18 @@
 package tw.edu.ncu.cc.security.data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class ClientInfo {
+public class Client {
 
     @Id @GeneratedValue
     private Integer id;
-    private String cid;
     private String secret;
+
+    @Column( unique = true )
     private String name;
     private String description;
     private String url;
@@ -22,14 +24,6 @@ public class ClientInfo {
 
     public void setId( Integer id ) {
         this.id = id;
-    }
-
-    public String getCid() {
-        return cid;
-    }
-
-    public void setCid( String cid ) {
-        this.cid = cid;
     }
 
     public String getSecret() {

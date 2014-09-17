@@ -14,7 +14,7 @@
 <body>
     <div class="validateDiv">
         <form action="redirect" method="GET" >
-            ${it.clientID} requests the permission of ${it.scope}
+            ${it.clientName} requests the permission of ${it.scope}
             <input type="hidden" name="state"  value=${it.state}>
                 <br>
             <input type="submit" value="Agree" />
