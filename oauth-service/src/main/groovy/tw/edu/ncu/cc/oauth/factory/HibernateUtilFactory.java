@@ -9,25 +9,28 @@ import tw.edu.ncu.cc.oauth.db.HibernateUtil;
 
 public class HibernateUtilFactory implements Factory<HibernateUtil> {
 
-    private final static SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
-    static {
+    @Override
+    public HibernateUtil provide() {
+        if( sessionFactory == null ) {
+            sessionFactory = initSessionFactory();
+        }
+        return new HibernateUtil( sessionFactory );
+    }
+
+    private SessionFactory initSessionFactory() {
         try {
 
             Configuration conf = new Configuration() .configure();
 
-            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(conf.getProperties()).build();
+            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings( conf.getProperties() ).build();
 
-            sessionFactory =  conf.buildSessionFactory(serviceRegistry);
+            return conf.buildSessionFactory( serviceRegistry );
 
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
+        } catch ( Throwable ex ) {
+            throw new ExceptionInInitializerError( ex );
         }
-    }
-
-    @Override
-    public HibernateUtil provide() {
-        return new HibernateUtil( sessionFactory );
     }
 
     @Override
