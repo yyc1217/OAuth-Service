@@ -1,2 +1,2 @@
 include 'oauth-service'
-include 'token-validator'
+include 'oauth-validator'

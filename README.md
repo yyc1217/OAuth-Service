@@ -1,4 +1,6 @@
-OAuth-Service
-===========
+### OAuth-Service
+OAuth Athorization Service for NCU
 
-Supply information for OAuth in NCU-CC
+## Module
+- oauth-service   : main oauth application
+- oauth-validator : tools for validation of access token
