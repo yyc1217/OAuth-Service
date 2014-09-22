@@ -13,7 +13,7 @@ public class ClientModelImpl extends HibernateAccessTool implements ClientModel 
 
     @Override
     public void persistClient( Client... clients ) {
-        persistObject( ( Object[] ) clients );
+        persistObjects( ( Object[] ) clients );
     }
 
 }

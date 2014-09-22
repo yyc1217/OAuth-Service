@@ -25,6 +25,15 @@ class AuthCodeTest extends Specification {
             authCode.getCode() == "ABC123"
     }
 
+    def "has property of user in User"() {
+        given:
+            def user = new User()
+        when:
+            authCode.setUser( user )
+        then:
+            authCode.getUser() == user
+    }
+
     def "has property of client in Client"() {
         given:
             def client = new Client()

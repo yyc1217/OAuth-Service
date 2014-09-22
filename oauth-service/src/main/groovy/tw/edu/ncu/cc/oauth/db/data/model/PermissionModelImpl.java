@@ -9,10 +9,11 @@ import java.util.*;
 public class PermissionModelImpl extends HibernateAccessTool implements PermissionModel {
 
     private static Map< String, Permission > permissionMap;
+    private String permission;
 
     @Override
     public void persistPermissions( Permission... permissions ) {
-        persistObject( ( Object[] ) permissions );
+        persistObjects( ( Object[] ) permissions );
     }
 
     @Override
@@ -25,9 +26,11 @@ public class PermissionModelImpl extends HibernateAccessTool implements Permissi
 
     @Override
     public Set<Permission> convertToPermissions( Set<String> permissions ) {
+
         Set<Permission> resultPermissions = new HashSet<>();
+
         if( ! isPermissionsExist( permissions ) ) {
-            throw new IllegalArgumentException( "some permissions not exist" );
+            throw new IllegalArgumentException( "some permissions not exist:" + permission );
         }
 
         for( String permissionString : permissions ) {
@@ -44,6 +47,7 @@ public class PermissionModelImpl extends HibernateAccessTool implements Permissi
         }
         for( String permission : permissionSet ) {
             if( ! permissionMap.containsKey( permission ) ) {
+                this.permission = permission;
                 return false;
             }
         }

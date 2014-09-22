@@ -14,6 +14,12 @@ public class Permission {
     @Column( unique = true )
     private String name;
 
+    public Permission(){}
+
+    public Permission( String permissionName ) {
+        this.name = permissionName;
+    }
+
     public Integer getId() {
         return id;
     }

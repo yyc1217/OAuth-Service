@@ -12,10 +12,10 @@ public class AccessToken {
     @Column( unique = true )
     private String token;
 
-    @OneToOne
+    @OneToOne( fetch = FetchType.LAZY )
     private Client client;
 
-    @OneToMany
+    @OneToMany( fetch = FetchType.LAZY )
     private Set<Permission> scope;
 
     public Integer getId() {

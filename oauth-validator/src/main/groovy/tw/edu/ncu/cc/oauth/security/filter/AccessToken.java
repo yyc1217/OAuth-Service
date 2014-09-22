@@ -4,14 +4,14 @@ import java.util.List;
 
 class AccessToken {
 
-    private List<String> scopes;
+    private List<String> scope;
 
-    public List<String> getScopes() {
-        return scopes;
+    public List<String> getScope() {
+        return scope;
     }
 
-    public void setScopes( List<String> scopes ) {
-        this.scopes = scopes;
+    public void setScope( List<String> scope ) {
+        this.scope = scope;
     }
 
 }

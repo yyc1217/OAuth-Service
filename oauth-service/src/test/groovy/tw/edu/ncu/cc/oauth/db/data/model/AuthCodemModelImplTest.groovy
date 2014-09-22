@@ -26,14 +26,30 @@ class AuthCodemModelImplTest extends Specification {
         hibernateUtil.closeSession()
     }
 
-    def "use AuthCode(s) as the param of persistAuthToken() to persist the data into db"() {
+    def "use AuthCode(s) as the param of persistAuthTokens() to persist the data into db"() {
         given:
             AuthCode authCode = new AuthCode()
             authCode.setCode( "AUTHCODE" )
         when:
-            authCodemModel.persistAuthCode( authCode )
+            authCodemModel.persistAuthCodes( authCode )
         then:
             authCodemModel.getAuthCode( "AUTHCODE" ) == authCode
+    }
+
+    def "use AuthCode(s) as the param of deleteAuthTokens() to delete the data from db"() {
+        given:
+            AuthCode authCode1 = new AuthCode()
+            authCode1.setCode( "CODE1" )
+        and:
+            AuthCode authCode2 = new AuthCode()
+            authCode2.setCode( "CODE2" )
+        and:
+            authCodemModel.persistAuthCodes( authCode1, authCode2 )
+        when:
+            authCodemModel.deleteAuthCodes( authCode1, authCode2 )
+        then:
+            authCodemModel.getAuthCode( "CODE1" ) == null
+            authCodemModel.getAuthCode( "CODE2" ) == null
     }
 
     def "getAuthCode() will return null if data not exist"() {

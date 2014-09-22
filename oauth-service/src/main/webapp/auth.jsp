@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Auth Demo Page</title>
+    <title>Authorization Page for ${it.portalID}</title>
     <style type="text/css">
         .validateDiv {
             margin-top: 40%;

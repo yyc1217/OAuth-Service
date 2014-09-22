@@ -13,10 +13,13 @@ public class AuthCode {
     @Column( unique = true )
     private String code;
 
-    @OneToOne
+    @OneToOne( fetch = FetchType.LAZY )
+    private User user;
+
+    @OneToOne( fetch = FetchType.LAZY )
     private Client client;
 
-    @OneToMany
+    @OneToMany( fetch = FetchType.LAZY )
     private Set<Permission> scope;
 
     public Integer getId() {
@@ -33,6 +36,14 @@ public class AuthCode {
 
     public void setCode( String code ) {
         this.code = code;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser( User user ) {
+        this.user = user;
     }
 
     public Client getClient() {

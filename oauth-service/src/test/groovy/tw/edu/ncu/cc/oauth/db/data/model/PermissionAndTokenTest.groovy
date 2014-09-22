@@ -10,7 +10,7 @@ import tw.edu.ncu.cc.oauth.db.data.model.abstracts.PermissionModel
 import tw.edu.ncu.cc.oauth.factory.HibernateUtilFactory
 
 
-class DataReferenceTest extends Specification {
+class PermissionAndTokenTest extends Specification {
 
     private @Shared HibernateUtil hibernateUtil
     private @Shared PermissionModel permissionModel

@@ -20,9 +20,9 @@ class UserTest extends Specification {
 
     def "has property of account in String"() {
         when:
-            user.setAccount( "myaccount" )
+            user.setName( "myaccount" )
         then:
-            user.getAccount() == "myaccount"
+            user.getName() == "myaccount"
     }
 
     def "has property of tokens in AccessToken set"() {

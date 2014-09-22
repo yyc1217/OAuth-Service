@@ -9,8 +9,13 @@ import java.util.List;
 public class AuthCodemModelImpl extends HibernateAccessTool implements AuthCodeModel{
 
     @Override
-    public void persistAuthCode( AuthCode... authCodes ) {
-        persistObject( ( Object[] ) authCodes );
+    public void persistAuthCodes( AuthCode... authCodes ) {
+        persistObjects( ( Object[] ) authCodes );
+    }
+
+    @Override
+    public void deleteAuthCodes( AuthCode... authCodes ) {
+        deleteObjects( ( Object[] ) authCodes );
     }
 
     @Override
@@ -25,4 +30,5 @@ public class AuthCodemModelImpl extends HibernateAccessTool implements AuthCodeM
             return ( AuthCode ) codes.get( 0 );
         }
     }
+
 }

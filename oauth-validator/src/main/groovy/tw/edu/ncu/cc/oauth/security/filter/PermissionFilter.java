@@ -1,13 +1,14 @@
 package tw.edu.ncu.cc.oauth.security.filter;
 
-import com.google.gson.Gson;
 import org.apache.oltu.oauth2.common.OAuth;
 
 import javax.annotation.Priority;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -49,8 +50,14 @@ public class PermissionFilter implements ContainerRequestFilter {
     }
 
     private Set<String> getScopes( String tokenString ) {
-        AccessToken accessToken = new Gson().fromJson( "", AccessToken.class );
-        return new HashSet<>( accessToken.getScopes() );
+
+        AccessToken accessToken = ClientBuilder.newClient()
+                .target( "https://140.115.3.97:5278" )
+                .path( "oauth-service/token/" + tokenString )
+                .request( MediaType.APPLICATION_JSON_TYPE )
+                .get( AccessToken.class );
+
+        return new HashSet<>( accessToken.getScope() );
     }
 
 }

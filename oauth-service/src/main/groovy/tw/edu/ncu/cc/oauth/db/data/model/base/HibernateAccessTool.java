@@ -4,10 +4,18 @@ import org.hibernate.Transaction;
 
 public abstract class HibernateAccessTool extends SessionContainer {
 
-    protected void persistObject( Object... objects ) {
+    protected void persistObjects( Object... objects ) {
         Transaction transaction = getSession().beginTransaction();
         for( Object object : objects ) {
             getSession().persist( object );
+        }
+        transaction.commit();
+    }
+
+    protected void deleteObjects( Object... objects ) {
+        Transaction transaction = getSession().beginTransaction();
+        for( Object object : objects ) {
+            getSession().delete( object );
         }
         transaction.commit();
     }

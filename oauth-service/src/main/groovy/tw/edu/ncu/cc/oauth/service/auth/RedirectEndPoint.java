@@ -4,11 +4,14 @@ import org.apache.oltu.oauth2.as.issuer.OAuthIssuer;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
+import org.jboss.logging.Logger;
 import tw.edu.ncu.cc.oauth.db.data.AuthCode;
 import tw.edu.ncu.cc.oauth.db.data.Client;
+import tw.edu.ncu.cc.oauth.db.data.User;
 import tw.edu.ncu.cc.oauth.db.data.model.abstracts.AuthCodeModel;
 import tw.edu.ncu.cc.oauth.db.data.model.abstracts.ClientModel;
 import tw.edu.ncu.cc.oauth.db.data.model.abstracts.PermissionModel;
+import tw.edu.ncu.cc.oauth.db.data.model.abstracts.UserModel;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +31,7 @@ public final class RedirectEndPoint {
 
     @Inject private PermissionModel permissionModel;
     @Inject private AuthCodeModel authCodeModel;
+    @Inject private UserModel userModel;
     @Inject private ClientModel clientModel;
     @Inject private HttpSession session;
     @Inject private OAuthIssuer tokenIssuer;
@@ -37,29 +41,35 @@ public final class RedirectEndPoint {
 
         @SuppressWarnings( "unchecked" )
         Set<String> scopes = ( Set<String> ) session.getAttribute( "scope" );
-        String clientID    = (    String   ) session.getAttribute( "clientID" );
-        Client client      = getClientByID( clientID );
+        String clientID    = ( String ) session.getAttribute( "clientID" );
+        String portalID    = ( String ) session.getAttribute( "portalID" );
 
-        return prepareResponse( request, client, scopes );
+        validateData( scopes, clientID, portalID );
+
+        return prepareResponse( request, clientID, portalID, scopes );
     }
 
-    private Client getClientByID( String clientID ) {
+    private void validateData( Set<String> scopes, String clientID, String portalID ) {
+        if( scopes == null || clientID == null || portalID == null ) {
+            Logger.getLogger( "RED" ).error( "CANNOT FETCH ATTRIBUTE" );
+            throw new BadRequestException( "CANNOT FETCH ATTRIBUTE" );
+        }
 
-        Client client = clientModel.getClient( Integer.parseInt( clientID ) );
-
-        if( client == null ) {
+        if( clientModel.getClient( Integer.parseInt( clientID ) ) == null ) {
+            Logger.getLogger( "RED" ).error( "CLIENT NOT EXISTS" );
             throw new BadRequestException( "CLIENT NOT EXISTS" );
-        }else{
-            return client;
         }
     }
 
-    private Response prepareResponse( HttpServletRequest request, Client client, Set<String> scopes ) throws URISyntaxException, OAuthSystemException  {
+    private Response prepareResponse( HttpServletRequest request, String clientID,
+                                      String portalID, Set<String> scopes ) throws URISyntaxException, OAuthSystemException  {
 
         OAuthASResponse.OAuthAuthorizationResponseBuilder builder =
                 OAuthASResponse.authorizationResponse( request, HttpServletResponse.SC_FOUND );
 
-        builder.setCode ( prepareAuthCode( client, scopes ) );
+        Client client = clientModel.getClient( Integer.parseInt( clientID ) );
+
+        builder.setCode ( prepareAuthCode( client, portalID, scopes ) );
         builder.location( prepareRedirect( client ) );
 
         OAuthResponse response = builder.buildQueryMessage();
@@ -70,14 +80,16 @@ public final class RedirectEndPoint {
                 .build();
     }
 
-    private String prepareAuthCode( Client client,Set<String> scopes ) throws OAuthSystemException{
+    private String prepareAuthCode( Client client, String portalID, Set<String> scopes ) throws OAuthSystemException{
+
+        User user = userModel.getUser( portalID );
 
         AuthCode authCode = new AuthCode();
         authCode.setClient( client );
+        authCode.setUser( user );
         authCode.setCode  ( tokenIssuer.authorizationCode() );
         authCode.setScope ( permissionModel.convertToPermissions( scopes ) );
-
-        authCodeModel.persistAuthCode( authCode );
+        authCodeModel.persistAuthCodes( authCode );
 
         return authCode.getCode();
     }

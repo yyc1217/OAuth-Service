@@ -29,7 +29,7 @@ public class OAuthApplication extends ResourceConfig {
                 bind( AuthCodemModelImpl.class ).to( AuthCodeModel.class );
                 bind( AccessTokenModelImpl.class ).to( AccessTokenModel.class );
                 bind( PermissionModelImpl.class ).to( PermissionModel.class );
-                bind( PortalUserModelImpl.class ).to( PortalUserModel.class ).in( Singleton.class );
+                bind( UserModelImpl.class ).to( UserModel.class );
 
                 bindFactory( HttpSessionFactory.class ).to( HttpSession.class );
                 bindFactory( HibernateSessionFactory.class ).to( Session.class );

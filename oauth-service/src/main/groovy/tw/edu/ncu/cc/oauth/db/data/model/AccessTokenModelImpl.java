@@ -10,7 +10,7 @@ public class AccessTokenModelImpl extends HibernateAccessTool implements AccessT
 
     @Override
     public void persistAccessToken( AccessToken... accessToken ) {
-        persistObject( ( Object[] ) accessToken );
+        persistObjects( ( Object[] ) accessToken );
     }
 
     @Override

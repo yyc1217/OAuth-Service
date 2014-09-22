@@ -11,9 +11,9 @@ public class User {
     private Integer id;
 
     @Column( unique = true )
-    private String  account;
+    private String name;
 
-    @OneToMany
+    @OneToMany( fetch = FetchType.LAZY )
     private Set<AccessToken> tokens;
 
     public Integer getId() {
@@ -24,12 +24,12 @@ public class User {
         this.id = id;
     }
 
-    public String getAccount() {
-        return account;
+    public String getName() {
+        return name;
     }
 
-    public void setAccount( String account ) {
-        this.account = account;
+    public void setName( String account ) {
+        this.name = account;
     }
 
     public Set<AccessToken> getTokens() {
