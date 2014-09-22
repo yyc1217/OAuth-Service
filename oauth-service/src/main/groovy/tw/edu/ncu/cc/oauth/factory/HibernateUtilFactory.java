@@ -24,6 +24,19 @@ public class HibernateUtilFactory implements Factory<HibernateUtil> {
 
             Configuration conf = new Configuration() .configure();
 
+            if( System.getProperty( "hibernate.connection.driver_class" ) != null ) {
+                conf.setProperty( "hibernate.connection.driver_class",
+                        System.getProperty( "hibernate.connection.driver_class" ) );
+                conf.setProperty( "hibernate.connection.url",
+                        System.getProperty( "hibernate.connection.url" ) );
+                conf.setProperty( "hibernate.hbm2ddl.auto",
+                        System.getProperty( "hibernate.hbm2ddl.auto" ) );
+                conf.setProperty( "hibernate.connection.username",
+                        System.getProperty( "hibernate.connection.username" ) );
+                conf.setProperty( "hibernate.connection.password",
+                        System.getProperty( "hibernate.connection.password" ) );
+            }
+
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings( conf.getProperties() ).build();
 
             return conf.buildSessionFactory( serviceRegistry );
