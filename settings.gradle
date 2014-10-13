@@ -1,2 +1,2 @@
-include 'oauth-service'
+include 'oauth-server'
 include 'oauth-validator'
