@@ -10,10 +10,7 @@ import org.hibernate.Session;
 import tw.edu.ncu.cc.oauth.server.db.HibernateUtil;
 import tw.edu.ncu.cc.oauth.server.db.model.*;
 import tw.edu.ncu.cc.oauth.server.db.model.impl.*;
-import tw.edu.ncu.cc.oauth.server.factory.HibernateSessionFactory;
-import tw.edu.ncu.cc.oauth.server.factory.HibernateUtilFactory;
-import tw.edu.ncu.cc.oauth.server.factory.HttpSessionFactory;
-import tw.edu.ncu.cc.oauth.server.factory.OAuthIssuerFactory;
+import tw.edu.ncu.cc.oauth.server.factory.*;
 import tw.edu.ncu.cc.oauth.server.view.AuthBean;
 
 import javax.inject.Singleton;
@@ -23,7 +20,7 @@ public class OAuthApplication extends ResourceConfig {
     public OAuthApplication() {
         packages( "tw.edu.ncu.cc" );
         property( JspMvcFeature.TEMPLATES_BASE_PATH, "/jsp/" );
-        property( ServletProperties.FILTER_STATIC_CONTENT_REGEX, "(/resources/(css|img|js)/.*)" );
+        property( ServletProperties.FILTER_STATIC_CONTENT_REGEX, "/resources/.*" );
         register( JspMvcFeature.class );
         register( new AbstractBinder() {
             @Override
@@ -35,7 +32,7 @@ public class OAuthApplication extends ResourceConfig {
                 bind( PermissionModelImpl.class ).to( PermissionModel.class );
                 bind( UserModelImpl.class ).to( UserModel.class );
 
-                bind( AuthBean.class );
+                bindFactory( AuthBeanFactory.class ).to( AuthBean.class );
 
                 bindFactory( HttpSessionFactory.class ).to( HttpSession.class );
 

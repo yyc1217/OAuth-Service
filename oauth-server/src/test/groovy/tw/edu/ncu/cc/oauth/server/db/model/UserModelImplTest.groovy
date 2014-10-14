@@ -30,6 +30,15 @@ class UserModelImplTest extends Specification {
             userModel.getUser( "101502549" ) == user
     }
 
+    def "it can init tokens if it's null"() {
+        given:
+            UserEntity user = new UserEntity( "TEACHER" )
+        when:
+            userModel.persistUsers( user )
+        then:
+            userModel.getUser( "TEACHER" ).getTokens() != null
+    }
+
     def "it will return null if data not exist"() {
         expect:
             userModel.getUser( "USER NOT EXIST" ) == null

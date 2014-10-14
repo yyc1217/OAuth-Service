@@ -30,6 +30,15 @@ class AccessTokenModelImplTest extends Specification {
             accessTokenModel.getAccessToken( "ABC1234" ) == accessToken
     }
 
+    def "it can init scope if it's null"() {
+        given:
+            def accessToken = new AccessTokenEntity( "OTHER", null, null )
+        when:
+            accessTokenModel.persistAccessToken( accessToken )
+        then:
+            accessTokenModel.getAccessToken( "OTHER" ).getScope() != null
+    }
+
     def "it will return null if data not exists"() {
         expect:
             accessTokenModel.getAccessToken( "TOKEN NOT EXIST" ) == null

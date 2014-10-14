@@ -12,7 +12,10 @@ import tw.edu.ncu.cc.oauth.server.db.data.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.db.data.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.db.data.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.db.data.UserEntity;
-import tw.edu.ncu.cc.oauth.server.db.model.*;
+import tw.edu.ncu.cc.oauth.server.db.model.AccessTokenModel;
+import tw.edu.ncu.cc.oauth.server.db.model.AuthCodeModel;
+import tw.edu.ncu.cc.oauth.server.db.model.ClientModel;
+import tw.edu.ncu.cc.oauth.server.db.model.UserModel;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.util.HashSet;
 
 @Path( "token" )
 public final class TokenEndPoint {
@@ -30,7 +34,7 @@ public final class TokenEndPoint {
     @Inject private ClientModel clientModel;
     @Inject private AuthCodeModel authCodeModel;
     @Inject private AccessTokenModel accessTokenModel;
-    @Inject private PermissionModel permissionModel;
+
     @Inject private OAuthIssuer tokenIssuer;
 
     @POST
@@ -97,17 +101,18 @@ public final class TokenEndPoint {
 
         String token = tokenIssuer.accessToken();
 
+        AuthCodeEntity authCode = authCodeModel.getAuthCode( request.getCode() );
+
         AccessTokenEntity accessToken = new AccessTokenEntity();
         accessToken.setToken( token );
-        accessToken.setClient( clientModel.getClient( Integer.parseInt( request.getClientId() ) ) );
-        accessToken.setScope ( permissionModel.convertToPermissions( request.getScopes() ) );
+        accessToken.setClient( authCode.getClient() );
+        accessToken.setScope ( new HashSet<>( authCode.getScope() ) );
         accessTokenModel.persistAccessToken( accessToken );
 
-        UserEntity user = authCodeModel.getAuthCode( request.getCode() ).getUser();
+        UserEntity user = authCode.getUser();
         user.getTokens().add( accessToken );
         userModel.persistUsers( user );
 
-        AuthCodeEntity authCode = authCodeModel.getAuthCode( request.getCode() );
         authCodeModel.deleteAuthCodes( authCode );
 
         return token;

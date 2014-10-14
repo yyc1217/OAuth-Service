@@ -40,6 +40,15 @@ class AuthCodemModelImplTest extends Specification {
             authCodemModel.getAuthCode( "EFG" ) == null
     }
 
+    def "it can init scope if it's null"() {
+        given:
+            AuthCodeEntity authCode = new AuthCodeEntity( "KLM", null, null, null )
+        when:
+            authCodemModel.persistAuthCodes( authCode )
+        then:
+            authCodemModel.getAuthCode( "KLM" ).getScope() != null
+    }
+
     def "it will return null if data not exist"() {
         expect:
             authCodemModel.getAuthCode( "AUTHCODE NOT EXIST" ) == null

@@ -19,6 +19,10 @@ public class AuthBean {
         this.httpSession.setMaxInactiveInterval( 180 );
     }
 
+    public void destroy() {
+        httpSession.invalidate();
+    }
+
     public Set<String>  getScope() {
         return (Set<String>) httpSession.getAttribute( "scope" );
     }
@@ -66,4 +70,5 @@ public class AuthBean {
     public void setClientURL( String clientURL ) {
         this.clientURL = clientURL;
     }
+
 }
