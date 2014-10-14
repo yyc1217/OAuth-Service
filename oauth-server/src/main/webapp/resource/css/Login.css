@@ -8,6 +8,15 @@ p {
     margin-top: 0;
     font-family: 'Open Sans', 'trebuchet ms', arial, sans-serif;
 }
+h3, h5 {
+    font-weight: 600;
+}
+h3{
+    font-size: 26px;
+}
+h5{
+    font-size: 18px;
+}
 #login-container {
     position: relative;
     width: 90%;
@@ -44,24 +53,20 @@ p {
     -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.65);
     box-shadow: 3px 3px 8px rgba(2, 2, 3, 0.8);
 }
-#login #login-form {
-    padding: 0;
-    margin-top: 2em;
-    margin-bottom: 2em;
-    text-align: left;
-}
-#login #login-form .form-control {
-    height: 40px;
-    padding: 5px ;
-}
 #login #login-btn {
     padding: 5px 40px;
     font-size: 15px;
     background-color: rgb(233, 233, 233);
 }
-.permission-group{
+.permission-group {
     font-weight: 800;
     margin: 10px auto;
+}
+.form-group {
+    font-size: 15px;
+}
+.permission-item {
+
 }
 
 @media (min-width: 768px) {
@@ -70,9 +75,5 @@ p {
     }
     #login-container .row > div {
         margin-bottom: 0;
-    }
-    #login #login-form {
-        padding: 0 25px;
-        text-align: left;
     }
 }

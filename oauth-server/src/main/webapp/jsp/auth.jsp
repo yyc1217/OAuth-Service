@@ -35,7 +35,7 @@
                 for following permissions
                 <div class="permission-group">
                     <c:forEach items="${it.scope}" var="permission">
-                        <div>${permission}</div>
+                        <div class="permission-item">${permission}</div>
                     </c:forEach>
                 </div>
                 <input type="hidden" name="state" value=${it.state}>
