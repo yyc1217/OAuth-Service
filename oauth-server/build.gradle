@@ -9,7 +9,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:1.0'
+        classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:1.2.4'
     }
 }
 
@@ -21,21 +21,51 @@ dependencies{
         exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
     }
 
-    testCompile 'com.jayway.restassured:rest-assured:2.3.3'
+    testCompile ( 'com.jayway.restassured:rest-assured:2.3.3' ){
+        exclude module: 'groovy'
+    }
 
-    compile 'com.h2database:h2:1.4.181'
-    compile 'mysql:mysql-connector-java:5.1.32'
+
+
+    runtime  'com.h2database:h2:1.4.181'
+    runtime  'mysql:mysql-connector-java:5.1.32'
+
+    compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.0'){
+        exclude group: 'org.slf4j'
+    }
+    compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.authzserver:1.0.0'){
+        exclude group: 'org.slf4j'
+    }
+    compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.0'){
+        exclude group: 'org.slf4j'
+    }
+
     compile 'org.hibernate:hibernate-core:4.3.6.Final'
+    compile 'org.hibernate:hibernate-c3p0:4.3.6.Final'
 
-    compile 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.11'
-    compile 'org.glassfish.jersey.ext:jersey-mvc:2.11'
-    compile 'org.glassfish.jersey.ext:jersey-mvc-jsp:2.11'
+    compile 'jstl:jstl:1.2'
+    compile 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.12'
+    compile ( 'org.glassfish.jersey.ext:jersey-mvc-jsp:2.12' ) {
+        exclude group: 'javax.servlet'
+    }
 
+    providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
 }
 
-tomcatRunWar {
+war{
+    archiveName = 'oauth-server.war'
+}
+
+tomcatRun {
     enableSSL = true
     ajpPort   = 5566
     httpPort  = 8591
     httpsPort = 5278
+    stopPort = 8592
+    stopKey  = 'stopKey'
+}
+
+tomcatStop{
+    stopPort = 8592
+    stopKey  = 'stopKey'
 }

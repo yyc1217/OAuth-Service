@@ -8,6 +8,7 @@ import org.glassfish.jersey.server.mvc.Template;
 import tw.edu.ncu.cc.oauth.server.db.data.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.db.model.ClientModel;
 import tw.edu.ncu.cc.oauth.server.db.model.PermissionModel;
+import tw.edu.ncu.cc.oauth.server.view.AuthBean;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +19,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 @Path( "auth" )
 public final class AuthEndPoint {
@@ -30,7 +29,7 @@ public final class AuthEndPoint {
 
     @GET
     @Template( name = "/auth" )
-    public Map< String, String > authorize( @Context HttpServletRequest  request,
+    public AuthBean authorize( @Context HttpServletRequest  request,
                                             @QueryParam( "portalID" ) String portalID ) throws URISyntaxException, OAuthSystemException {
 
         OAuthAuthzRequest oauthRequest = prepareOAuthRequest( request );
@@ -72,30 +71,25 @@ public final class AuthEndPoint {
         }
     }
 
-    private  Map< String, String > prepareModel(  OAuthAuthzRequest oauthRequest, String portalID ) {
+    private  AuthBean prepareModel(  OAuthAuthzRequest oauthRequest, String portalID ) {
 
         Set<String> scope = oauthRequest.getScopes();
         String state      = oauthRequest.getState();
         String clientID   = oauthRequest.getClientId();
-        String clientName = getClientNameByID( clientID );
 
-        session.setMaxInactiveInterval( 180 );
-        session.setAttribute( "scope",  scope );
-        session.setAttribute( "clientID", clientID );
-        session.setAttribute( "portalID", portalID );
-
-        Map< String, String > map = new HashMap<>();
-        map.put( "portalID", portalID );
-        map.put( "clientName", clientName );
-        map.put( "scope", scope.toString() );
-        map.put( "state", state );
-
-        return map;
-    }
-
-    private String getClientNameByID( String clientID ) {
         ClientEntity client = clientModel.getClient( Integer.parseInt( clientID ) );
-        return client.getName();
+        String clientName = client.getName();
+        String clientURL  = client.getUrl();
+
+        AuthBean authBean = new AuthBean( session );
+        authBean.setScope( scope );
+        authBean.setClientID( clientID );
+        authBean.setClientName( clientName );
+        authBean.setPortalID( portalID );
+        authBean.setState( state );
+        authBean.setClientURL( clientURL );
+
+        return authBean;
     }
 
 }
