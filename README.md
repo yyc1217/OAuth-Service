@@ -2,5 +2,5 @@
 OAuth Athorization Service for NCU
 
 ## Module
-- oauth-server   : main oauth application
+- oauth-server    : oauth service provider
 - oauth-validator : tools for validation of access token
