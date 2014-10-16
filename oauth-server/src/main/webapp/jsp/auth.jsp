@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
@@ -32,7 +32,7 @@
         <h5>CLIENT: <a href="${it.clientURL}">${it.clientName}</a></h5>
         <div class="form-group">
             <form action="redirect" method="GET">
-                for following permissions
+                For following permissions
                 <div class="permission-group">
                     <c:forEach items="${it.scope}" var="permission">
                         <div class="permission-item">${permission}</div>

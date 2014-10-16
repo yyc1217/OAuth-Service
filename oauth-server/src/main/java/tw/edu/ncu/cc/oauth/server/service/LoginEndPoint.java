@@ -30,7 +30,7 @@ public class LoginEndPoint {
             session.invalidate();
             session = request.getSession();
             session.setAttribute( "portalID", portalID );
-            return Response.temporaryRedirect( URI.create( "auth/" + path ) ).build();
+            return Response.temporaryRedirect( URI.create( "auth?" + path ) ).build();
         } else {
             throw new BadRequestException( "openid validation error" );
         }

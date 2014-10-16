@@ -64,7 +64,8 @@ war{
 }
 
 tomcatRun {
-    enableSSL = true
+    reloadable = true
+    enableSSL  = true
     ajpPort   = 5566
     httpPort  = 8591
     httpsPort = 5278
