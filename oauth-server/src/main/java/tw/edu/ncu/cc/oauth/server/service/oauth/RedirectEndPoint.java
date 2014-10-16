@@ -16,6 +16,7 @@ import tw.edu.ncu.cc.oauth.server.view.AuthBean;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,7 +29,7 @@ import java.util.Set;
 @Path( "redirect" )
 public final class RedirectEndPoint {
 
-    @Inject private AuthBean authBean;
+    @Inject private HttpSession session;
 
     @Inject private UserModel   userModel;
     @Inject private ClientModel  clientModel;
@@ -40,25 +41,27 @@ public final class RedirectEndPoint {
     @GET
     public Response confirm( @Context HttpServletRequest request ) throws URISyntaxException, OAuthSystemException {
 
-        validateData();
+        AuthBean authBean = new AuthBean( session );
 
-        return prepareResponse( request );
+        validateData( authBean );
+
+        return prepareResponse( authBean, request );
     }
 
-    private void validateData() {
+    private void validateData( AuthBean authBean ) {
         try{
             authBean.getScope();
             authBean.getPortalID();
             authBean.getClientID();
         } catch ( NullPointerException ignore ) {
-            throw new BadRequestException( "NEED TO CONFIRM IN 180S" );
+            throw new BadRequestException( "DATA FETCH ERROR" );
         }
         if( clientModel.getClient( Integer.parseInt( authBean.getClientID() ) ) == null ) {
             throw new BadRequestException( "CLIENT NOT EXISTS" );
         }
     }
 
-    private Response prepareResponse( HttpServletRequest request ) throws URISyntaxException, OAuthSystemException  {
+    private Response prepareResponse( AuthBean authBean, HttpServletRequest request ) throws URISyntaxException, OAuthSystemException  {
 
         String clientID = authBean.getClientID();
         String portalID = authBean.getPortalID();

@@ -12,10 +12,10 @@ import tw.edu.ncu.cc.oauth.server.view.AuthBean;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import java.net.URISyntaxException;
 import java.util.Set;
@@ -23,25 +23,25 @@ import java.util.Set;
 @Path( "auth" )
 public final class AuthEndPoint {
 
-    @Inject private AuthBean authBean;
+    @Inject private HttpSession session;
     @Inject private ClientModel clientModel;
     @Inject private PermissionModel permissionModel;
 
     @GET
     @Template( name = "/auth" )
-    public AuthBean authorize( @Context HttpServletRequest request,
-                               @QueryParam( "portalID" ) String portalID ) throws URISyntaxException, OAuthSystemException {
+    public AuthBean authorize( @Context HttpServletRequest request ) throws URISyntaxException, OAuthSystemException {
 
         OAuthAuthzRequest oauthRequest = prepareOAuthRequest( request );
 
         validateRequest( oauthRequest );
 
-        return prepareModel( oauthRequest, portalID );
+        return prepareModel( oauthRequest, session.getAttribute( "portalID" ).toString() );
     }
 
     private OAuthAuthzRequest prepareOAuthRequest( HttpServletRequest request ) throws OAuthSystemException {
 
         OAuthAuthzRequest oauthRequest;
+
         try {
             oauthRequest = new OAuthAuthzRequest( request );
         } catch ( OAuthProblemException e ) {
@@ -52,10 +52,10 @@ public final class AuthEndPoint {
 
     private void validateRequest( OAuthAuthzRequest oauthRequest ) {
 
-        Set<String> scope = oauthRequest.getScopes();
+        Set<String> scope   = oauthRequest.getScopes();
         String responseType = oauthRequest.getResponseType();
-        String clientState = oauthRequest.getState();
-        String clientID = oauthRequest.getClientId();
+        String clientState  = oauthRequest.getState();
+        String clientID     = oauthRequest.getClientId();
 
         if ( clientState == null || clientState.equals( "" ) ) {
             throw new BadRequestException( "STATE IS NOT PROVIDED" );
@@ -71,22 +71,17 @@ public final class AuthEndPoint {
         }
     }
 
-    private AuthBean prepareModel( OAuthAuthzRequest oauthRequest, String portalID ) {
+    private AuthBean prepareModel( OAuthAuthzRequest request, String portalID ) {
 
-        Set<String> scope = oauthRequest.getScopes();
-        String state      = oauthRequest.getState();
-        String clientID   = oauthRequest.getClientId();
+        ClientEntity client = clientModel.getClient( Integer.parseInt( request.getClientId() ) );
 
-        ClientEntity client = clientModel.getClient( Integer.parseInt( clientID ) );
-        String clientName = client.getName();
-        String clientURL  = client.getUrl();
-
-        authBean.setScope( scope );
-        authBean.setClientID( clientID );
-        authBean.setClientName( clientName );
+        AuthBean authBean = new AuthBean( session );
+        authBean.setScope( request.getScopes() );
+        authBean.setState( request.getState() );
         authBean.setPortalID( portalID );
-        authBean.setState( state );
-        authBean.setClientURL( clientURL );
+        authBean.setClientID( request.getClientId() );
+        authBean.setClientURL( client.getUrl() );
+        authBean.setClientName( client.getName() );
 
         return authBean;
     }

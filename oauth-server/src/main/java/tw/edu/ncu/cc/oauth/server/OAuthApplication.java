@@ -7,6 +7,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.hibernate.Session;
+import tw.edu.ncu.cc.manage.openid.OpenIDManager;
 import tw.edu.ncu.cc.oauth.server.db.HibernateUtil;
 import tw.edu.ncu.cc.oauth.server.db.model.*;
 import tw.edu.ncu.cc.oauth.server.db.model.impl.*;
@@ -32,6 +33,7 @@ public class OAuthApplication extends ResourceConfig {
                 bind( PermissionModelImpl.class ).to( PermissionModel.class );
                 bind( UserModelImpl.class ).to( UserModel.class );
 
+                bindFactory( OpenIDFactory.class ).to( OpenIDManager.class ).in( Singleton.class );
                 bindFactory( AuthBeanFactory.class ).to( AuthBean.class );
 
                 bindFactory( HttpSessionFactory.class ).to( HttpSession.class );
@@ -39,7 +41,7 @@ public class OAuthApplication extends ResourceConfig {
                 bindFactory( HibernateSessionFactory.class ).to( Session.class ).in( RequestScoped.class );
                 bindFactory( HibernateUtilFactory.class ).to( HibernateUtil.class ).in( Singleton.class );
 
-                bindFactory( OAuthIssuerFactory.class ).to( OAuthIssuer.class ).in( Singleton.class );
+                bindFactory( OAuthIssuerFactory.class ).to( OAuthIssuer.class );
 
             }
         } );
