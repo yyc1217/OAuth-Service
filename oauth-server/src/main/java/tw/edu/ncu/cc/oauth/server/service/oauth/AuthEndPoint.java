@@ -8,6 +8,7 @@ import org.glassfish.jersey.server.mvc.Template;
 import tw.edu.ncu.cc.oauth.server.db.data.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.db.model.ClientModel;
 import tw.edu.ncu.cc.oauth.server.db.model.PermissionModel;
+import tw.edu.ncu.cc.oauth.server.rule.LoginRule;
 import tw.edu.ncu.cc.oauth.server.view.AuthBean;
 
 import javax.inject.Inject;
@@ -35,7 +36,7 @@ public final class AuthEndPoint {
 
         validateRequest( oauthRequest );
 
-        return prepareModel( oauthRequest, session.getAttribute( "portalID" ).toString() );
+        return prepareModel( oauthRequest );
     }
 
     private OAuthAuthzRequest prepareOAuthRequest( HttpServletRequest request ) throws OAuthSystemException {
@@ -71,14 +72,14 @@ public final class AuthEndPoint {
         }
     }
 
-    private AuthBean prepareModel( OAuthAuthzRequest request, String portalID ) {
+    private AuthBean prepareModel( OAuthAuthzRequest request ) {
 
         ClientEntity client = clientModel.getClient( Integer.parseInt( request.getClientId() ) );
 
         AuthBean authBean = new AuthBean( session );
         authBean.setScope( request.getScopes() );
         authBean.setState( request.getState() );
-        authBean.setPortalID( portalID );
+        authBean.setPortalID( session.getAttribute( LoginRule.KEY_LOGIN_ID ).toString() );
         authBean.setClientID( request.getClientId() );
         authBean.setClientURL( client.getUrl() );
         authBean.setClientName( client.getName() );
