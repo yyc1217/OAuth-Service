@@ -1,14 +1,15 @@
 package tw.edu.ncu.cc.oauth.server.db.data;
 
-import javax.persistence.*;
+import tw.edu.ncu.cc.oauth.server.db.data.base.BasicEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
 @Entity
-public class UserEntity {
-
-    @Id
-    @GeneratedValue
-    private Integer id;
+public class UserEntity extends BasicEntity {
 
     @Column( unique = true )
     private String name;
@@ -16,18 +17,13 @@ public class UserEntity {
     @OneToMany( fetch = FetchType.LAZY )
     private Set<AccessTokenEntity> tokens;
 
+    @OneToMany( fetch = FetchType.LAZY )
+    private Set<ClientEntity> clients;
+
     public UserEntity() { }
 
     public UserEntity( String name ) {
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId( Integer id ) {
-        this.id = id;
     }
 
     public String getName() {
@@ -46,4 +42,11 @@ public class UserEntity {
         this.tokens = tokens;
     }
 
+    public Set<ClientEntity> getClients() {
+        return clients;
+    }
+
+    public void setClients( Set<ClientEntity> clients ) {
+        this.clients = clients;
+    }
 }

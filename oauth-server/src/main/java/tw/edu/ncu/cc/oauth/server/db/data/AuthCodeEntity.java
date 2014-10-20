@@ -1,14 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.db.data;
 
+import tw.edu.ncu.cc.oauth.server.db.data.base.BasicEntity;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public class AuthCodeEntity {
-
-    @Id
-    @GeneratedValue
-    private Integer id;
+public class AuthCodeEntity extends BasicEntity {
 
     @Column( unique = true )
     private String code;
@@ -28,15 +26,7 @@ public class AuthCodeEntity {
         this.code = code;
         this.user = user;
         this.client = client;
-        this.scope = scope;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId( Integer id ) {
-        this.id = id;
+        this.scope  = scope;
     }
 
     public String getCode() {

@@ -1,13 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.db.data;
 
+import tw.edu.ncu.cc.oauth.server.db.data.base.BasicEntity;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public class AccessTokenEntity {
-
-    @Id @GeneratedValue
-    private Integer id;
+public class AccessTokenEntity extends BasicEntity {
 
     @Column( unique = true )
     private String token;
@@ -15,23 +14,19 @@ public class AccessTokenEntity {
     @OneToOne( fetch = FetchType.LAZY )
     private ClientEntity client;
 
+    @OneToOne( fetch = FetchType.LAZY )
+    private UserEntity user;
+
     @OneToMany( fetch = FetchType.LAZY )
     private Set<PermissionEntity> scope;
 
     public AccessTokenEntity() { }
 
-    public AccessTokenEntity( String token, ClientEntity client, Set<PermissionEntity> scope ) {
+    public AccessTokenEntity( String token, ClientEntity client, UserEntity user, Set<PermissionEntity> scope ) {
         this.token = token;
         this.client = client;
+        this.user = user;
         this.scope = scope;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId( Integer id ) {
-        this.id = id;
     }
 
     public String getToken() {
@@ -58,4 +53,11 @@ public class AccessTokenEntity {
         this.scope = scope;
     }
 
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser( UserEntity user ) {
+        this.user = user;
+    }
 }

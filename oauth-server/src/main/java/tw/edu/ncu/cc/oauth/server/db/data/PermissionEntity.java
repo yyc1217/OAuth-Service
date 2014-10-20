@@ -1,15 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.db.data;
 
+import tw.edu.ncu.cc.oauth.server.db.data.base.BasicEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 @Entity
-public class PermissionEntity {
-
-    @Id @GeneratedValue
-    private Integer id;
+public class PermissionEntity extends BasicEntity {
 
     @Column( unique = true )
     private String name;
@@ -20,14 +17,6 @@ public class PermissionEntity {
         this.name = permissionName;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId( Integer id ) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -35,7 +24,5 @@ public class PermissionEntity {
     public void setName( String name ) {
         this.name = name;
     }
-
-
 
 }

@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service;
+package tw.edu.ncu.cc.oauth.server.service.login;
 
 import tw.edu.ncu.cc.manage.openid.OpenIDManager;
 import tw.edu.ncu.cc.oauth.server.db.data.UserEntity;

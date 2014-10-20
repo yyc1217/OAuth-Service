@@ -16,6 +16,7 @@ import tw.edu.ncu.cc.oauth.server.db.model.AccessTokenModel;
 import tw.edu.ncu.cc.oauth.server.db.model.AuthCodeModel;
 import tw.edu.ncu.cc.oauth.server.db.model.ClientModel;
 import tw.edu.ncu.cc.oauth.server.db.model.UserModel;
+import tw.edu.ncu.cc.oauth.server.rule.OAuthRule;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 import java.util.HashSet;
 
 @Path( "token" )
@@ -66,14 +68,14 @@ public final class TokenEndPoint {
     }
 
     private void checkClient( OAuthTokenRequest request ) throws OAuthProblemException {
-        if ( ! isClientValid( request.getClientId(),  request.getClientSecret() ) ) {
+
+        String clientID     = request.getClientId();
+        String clientSecret = request.getClientSecret();
+        ClientEntity client = clientModel.getClient( Integer.parseInt( clientID ) );
+
+        if ( client == null || ! client.getSecret().equals( clientSecret ) ) {
             throw OAuthProblemException.error( TokenResponse.INVALID_CLIENT, "INVALID CLIENT" );
         }
-    }
-
-    private boolean isClientValid( String id, String secret ) {
-        ClientEntity client  = clientModel.getClient( Integer.parseInt( id ) );
-        return client != null && client.getSecret().equals( secret );
     }
 
     private void checkAuthGrant( OAuthTokenRequest request ) throws OAuthProblemException {
@@ -83,7 +85,6 @@ public final class TokenEndPoint {
         if ( grantType.equals( GrantType.AUTHORIZATION_CODE.toString() ) ) {
 
             if ( ! isAuthCodeValid( request.getCode(), request.getClientId() ) ) {
-
                 throw OAuthProblemException.error( TokenResponse.INVALID_GRANT, "INVALID AUTH CODE" );
             }
         } else {
@@ -93,8 +94,17 @@ public final class TokenEndPoint {
     }
 
     private boolean isAuthCodeValid( String authCode, String clientID ) {
-        AuthCodeEntity code  = authCodeModel.getAuthCode( authCode );
-        return   code != null && ( code.getClient().getId() == Integer.parseInt( clientID ) );
+        AuthCodeEntity code = authCodeModel.getAuthCode( authCode );
+        return isSameClient( code, clientID ) && isInValidTime( code );
+    }
+
+    private boolean isSameClient( AuthCodeEntity authCode, String clientID ) {
+        return authCode != null && ( authCode.getClient().getId() == Integer.parseInt( clientID ) );
+    }
+
+    private boolean isInValidTime( AuthCodeEntity authCode ) {
+        Date earliestValidTime = new Date( System.currentTimeMillis() - OAuthRule.CODE_EXPIRE_MILLI );
+        return authCode.getDateCreated().after( earliestValidTime );
     }
 
     private String prepareAccessToken( OAuthTokenRequest request )  throws OAuthSystemException {
@@ -105,6 +115,7 @@ public final class TokenEndPoint {
 
         AccessTokenEntity accessToken = new AccessTokenEntity();
         accessToken.setToken( token );
+        accessToken.setUser( authCode.getUser() );
         accessToken.setClient( authCode.getClient() );
         accessToken.setScope ( new HashSet<>( authCode.getScope() ) );
         accessTokenModel.persistAccessToken( accessToken );

@@ -1,15 +1,13 @@
 package tw.edu.ncu.cc.oauth.server.db.data;
 
+import tw.edu.ncu.cc.oauth.server.db.data.base.BasicEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 @Entity
-public class ClientEntity {
+public class ClientEntity extends BasicEntity {
 
-    @Id @GeneratedValue
-    private Integer id;
     private String secret;
 
     @Column( unique = true )
@@ -24,14 +22,6 @@ public class ClientEntity {
         this.secret = secret;
         this.name = name;
         this.callback = callback;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId( Integer id ) {
-        this.id = id;
     }
 
     public String getSecret() {
