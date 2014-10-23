@@ -23,7 +23,7 @@ class AuthCodemModelImplTest extends Specification {
 
     def "it can persist and get AuthCodeEntity"() {
         given:
-            AuthCodeEntity authCode = new AuthCodeEntity( "ABC", null, null, null )
+            AuthCodeEntity authCode = new AuthCodeEntity( "ABC", null, null )
         when:
             authCodemModel.persistAuthCodes( authCode )
         then:
@@ -32,21 +32,12 @@ class AuthCodemModelImplTest extends Specification {
 
     def "it can delete AuthCodeEntity"() {
         given:
-            AuthCodeEntity authCode = new AuthCodeEntity( "EFG", null, null, null )
+            AuthCodeEntity authCode = new AuthCodeEntity( "EFG", null, null )
         when:
             authCodemModel.persistAuthCodes( authCode )
             authCodemModel.deleteAuthCodes( authCode )
         then:
             authCodemModel.getAuthCode( "EFG" ) == null
-    }
-
-    def "it can init scope if it's null"() {
-        given:
-            AuthCodeEntity authCode = new AuthCodeEntity( "KLM", null, null, null )
-        when:
-            authCodemModel.persistAuthCodes( authCode )
-        then:
-            authCodemModel.getAuthCode( "KLM" ).getScope() != null
     }
 
     def "it will return null if data not exist"() {

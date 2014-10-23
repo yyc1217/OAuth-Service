@@ -1,8 +1,6 @@
 
 apply plugin: 'tomcat'
 
-version = '0.0.1-SNAPSHOT'
-
 buildscript {
     repositories {
         mavenCentral()
@@ -53,6 +51,7 @@ dependencies{
         exclude group: 'javax.servlet'
     }
 
+    compile project(":oauth-data")
     compile name: 'manage-0.0.1-SNAPSHOT'
     compile 'org.apache.commons:commons-io:1.3.2'
 

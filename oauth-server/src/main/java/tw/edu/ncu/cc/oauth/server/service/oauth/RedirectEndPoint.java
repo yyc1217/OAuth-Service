@@ -4,12 +4,12 @@ import org.apache.oltu.oauth2.as.issuer.OAuthIssuer;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
+import tw.edu.ncu.cc.oauth.data.Permission;
 import tw.edu.ncu.cc.oauth.server.db.data.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.db.data.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.db.data.UserEntity;
 import tw.edu.ncu.cc.oauth.server.db.model.AuthCodeModel;
 import tw.edu.ncu.cc.oauth.server.db.model.ClientModel;
-import tw.edu.ncu.cc.oauth.server.db.model.PermissionModel;
 import tw.edu.ncu.cc.oauth.server.db.model.UserModel;
 import tw.edu.ncu.cc.oauth.server.view.AuthBean;
 
@@ -34,7 +34,6 @@ public final class RedirectEndPoint {
     @Inject private UserModel   userModel;
     @Inject private ClientModel  clientModel;
     @Inject private AuthCodeModel authCodeModel;
-    @Inject private PermissionModel permissionModel;
 
     @Inject private OAuthIssuer tokenIssuer;
 
@@ -91,8 +90,8 @@ public final class RedirectEndPoint {
         AuthCodeEntity authCode = new AuthCodeEntity();
         authCode.setClient( client );
         authCode.setUser( user );
-        authCode.setCode  ( tokenIssuer.authorizationCode() );
-        authCode.setScope ( permissionModel.convertToPermissions( scopes ) );
+        authCode.setCode( tokenIssuer.authorizationCode() );
+        authCode.setPermissions( Permission.valueOf( scopes ) );
         authCodeModel.persistAuthCodes( authCode );
 
         return authCode.getCode();

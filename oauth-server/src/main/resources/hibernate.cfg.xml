@@ -8,7 +8,6 @@
         <mapping class="tw.edu.ncu.cc.oauth.server.db.data.AccessTokenEntity"/>
         <mapping class="tw.edu.ncu.cc.oauth.server.db.data.AuthCodeEntity"/>
         <mapping class="tw.edu.ncu.cc.oauth.server.db.data.ClientEntity"/>
-        <mapping class="tw.edu.ncu.cc.oauth.server.db.data.PermissionEntity"/>
         <mapping class="tw.edu.ncu.cc.oauth.server.db.data.UserEntity"/>
 
     </session-factory>

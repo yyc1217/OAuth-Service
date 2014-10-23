@@ -23,20 +23,11 @@ class AccessTokenModelImplTest extends Specification {
 
     def "it can persist and get AccessToken"() {
         given:
-            def accessToken = new AccessTokenEntity( "ABC1234",null, null, null )
+            def accessToken = new AccessTokenEntity( "ABC1234",null, null )
         when:
             accessTokenModel.persistAccessToken( accessToken )
         then:
             accessTokenModel.getAccessToken( "ABC1234" ) == accessToken
-    }
-
-    def "it can init scope if it's null"() {
-        given:
-            def accessToken = new AccessTokenEntity( "OTHER",null, null, null )
-        when:
-            accessTokenModel.persistAccessToken( accessToken )
-        then:
-            accessTokenModel.getAccessToken( "OTHER" ).getScope() != null
     }
 
     def "it will return null if data not exists"() {

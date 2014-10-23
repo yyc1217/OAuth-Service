@@ -1,12 +1,14 @@
 package tw.edu.ncu.cc.oauth.server.db.data;
 
-import tw.edu.ncu.cc.oauth.server.db.data.base.BasicEntity;
+import tw.edu.ncu.cc.oauth.server.db.data.base.TokenEntity;
 
-import javax.persistence.*;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
 @Entity
-public class AccessTokenEntity extends BasicEntity {
+public class AccessTokenEntity extends TokenEntity {
 
     @Column( unique = true )
     private String token;
@@ -17,16 +19,12 @@ public class AccessTokenEntity extends BasicEntity {
     @OneToOne( fetch = FetchType.LAZY )
     private UserEntity user;
 
-    @OneToMany( fetch = FetchType.LAZY )
-    private Set<PermissionEntity> scope;
-
     public AccessTokenEntity() { }
 
-    public AccessTokenEntity( String token, ClientEntity client, UserEntity user, Set<PermissionEntity> scope ) {
+    public AccessTokenEntity( String token, ClientEntity client, UserEntity user ) {
         this.token = token;
         this.client = client;
         this.user = user;
-        this.scope = scope;
     }
 
     public String getToken() {
@@ -43,14 +41,6 @@ public class AccessTokenEntity extends BasicEntity {
 
     public void setClient( ClientEntity client ) {
         this.client = client;
-    }
-
-    public Set<PermissionEntity> getScope() {
-        return scope;
-    }
-
-    public void setScope( Set<PermissionEntity> scope ) {
-        this.scope = scope;
     }
 
     public UserEntity getUser() {

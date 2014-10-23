@@ -9,8 +9,14 @@ import org.glassfish.jersey.servlet.ServletProperties;
 import org.hibernate.Session;
 import tw.edu.ncu.cc.manage.openid.OpenIDManager;
 import tw.edu.ncu.cc.oauth.server.db.HibernateUtil;
-import tw.edu.ncu.cc.oauth.server.db.model.*;
-import tw.edu.ncu.cc.oauth.server.db.model.impl.*;
+import tw.edu.ncu.cc.oauth.server.db.model.AccessTokenModel;
+import tw.edu.ncu.cc.oauth.server.db.model.AuthCodeModel;
+import tw.edu.ncu.cc.oauth.server.db.model.ClientModel;
+import tw.edu.ncu.cc.oauth.server.db.model.UserModel;
+import tw.edu.ncu.cc.oauth.server.db.model.impl.AccessTokenModelImpl;
+import tw.edu.ncu.cc.oauth.server.db.model.impl.AuthCodemModelImpl;
+import tw.edu.ncu.cc.oauth.server.db.model.impl.ClientModelImpl;
+import tw.edu.ncu.cc.oauth.server.db.model.impl.UserModelImpl;
 import tw.edu.ncu.cc.oauth.server.factory.*;
 import tw.edu.ncu.cc.oauth.server.view.AuthBean;
 
@@ -30,7 +36,6 @@ public class OAuthApplication extends ResourceConfig {
                 bind( ClientModelImpl.class ).to( ClientModel.class );
                 bind( AuthCodemModelImpl.class ).to( AuthCodeModel.class );
                 bind( AccessTokenModelImpl.class ).to( AccessTokenModel.class );
-                bind( PermissionModelImpl.class ).to( PermissionModel.class );
                 bind( UserModelImpl.class ).to( UserModel.class );
 
                 bindFactory( OpenIDFactory.class ).to( OpenIDManager.class ).in( Singleton.class );

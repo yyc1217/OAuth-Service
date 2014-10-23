@@ -27,7 +27,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.Date;
-import java.util.HashSet;
 
 @Path( "token" )
 public final class TokenEndPoint {
@@ -58,6 +57,7 @@ public final class TokenEndPoint {
                     .buildJSONMessage();
 
         } catch ( OAuthProblemException e ) {
+
             response = OAuthASResponse
                     .errorResponse( HttpServletResponse.SC_BAD_REQUEST )
                     .error( e )
@@ -117,7 +117,7 @@ public final class TokenEndPoint {
         accessToken.setToken( token );
         accessToken.setUser( authCode.getUser() );
         accessToken.setClient( authCode.getClient() );
-        accessToken.setScope ( new HashSet<>( authCode.getScope() ) );
+        accessToken.setPermission( authCode.getPermission() );
         accessTokenModel.persistAccessToken( accessToken );
 
         UserEntity user = authCode.getUser();
