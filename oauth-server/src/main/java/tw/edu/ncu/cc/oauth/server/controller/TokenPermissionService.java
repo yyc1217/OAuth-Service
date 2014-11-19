@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.webservice;
+package tw.edu.ncu.cc.oauth.server.controller;
 
 //import javax.inject.Inject;
 //import javax.ws.rs.*;

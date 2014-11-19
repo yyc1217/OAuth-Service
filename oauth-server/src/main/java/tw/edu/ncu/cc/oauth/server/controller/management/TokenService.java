@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.webservice.management;
+package tw.edu.ncu.cc.oauth.server.controller.management;
 
 //import tw.edu.ncu.cc.oauth.data.AccessToken;
 //import tw.edu.ncu.cc.oauth.data.Status;

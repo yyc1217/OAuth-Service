@@ -2,7 +2,10 @@ package tw.edu.ncu.cc.oauth.server.entity;
 
 import tw.edu.ncu.cc.oauth.server.entity.base.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
 @Entity
@@ -22,7 +25,7 @@ public class UserEntity extends BasicEntity {
         this.name = account;
     }
 
-    @OneToMany( fetch = FetchType.LAZY )
+    @OneToMany
     public Set<AccessTokenEntity> getTokens() {
         return tokens;
     }
@@ -31,7 +34,7 @@ public class UserEntity extends BasicEntity {
         this.tokens = tokens;
     }
 
-    @OneToMany( fetch = FetchType.LAZY )
+    @OneToMany
     public Set<ApplicationEntity> getClients() {
         return clients;
     }

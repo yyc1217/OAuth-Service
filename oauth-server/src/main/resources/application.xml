@@ -13,7 +13,12 @@
     <context:component-scan base-package="tw.edu.ncu.cc.oauth.server" />
     <tx:annotation-driven />
     <mvc:annotation-driven />
-    <!--<mvc:resources mapping="/resource/**" location="resource" />-->
+    <mvc:default-servlet-handler />
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
 
     <import resource="security.xml"/>
     <import resource="develope/spring/application.xml"/>

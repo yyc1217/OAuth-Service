@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.webservice.oauth;
+package tw.edu.ncu.cc.oauth.server.controller.oauth;
 
 //import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest;
 //import org.apache.oltu.oauth2.common.exception.OAuthProblemException;

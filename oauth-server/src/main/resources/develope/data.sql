@@ -1,17 +1,14 @@
 
-CREATE TABLE IF NOT EXISTS club (
-  clubID      VARCHAR(4)   NOT NULL,
-  club_name   VARCHAR(50)  NOT NULL DEFAULT '',
-  address     VARCHAR(50)  NOT NULL DEFAULT '',
-  web_site    VARCHAR(100) NOT NULL DEFAULT '',
-  description VARCHAR(500) NOT NULL DEFAULT '',
-  PRIMARY KEY (clubID)
+CREATE TABLE IF NOT EXISTS oauth_client_details (
+  client_id VARCHAR(255) PRIMARY KEY,
+  resource_ids VARCHAR(256),
+  client_secret VARCHAR(256)
 );
 
-INSERT INTO club (clubID, club_name, address, web_site, description) VALUES
-  ('A001', 'CLUB1', 'place1', 'site1', '1111'),
-  ('A002', 'CLUB2', 'place2', 'site2', '2222'),
-  ('A003', 'CLUB3', 'place3', 'site3', '3333'),
-  ('A004', 'CLUB4', 'place4', 'site4', '4444'),
-  ('A005', 'CLUB5', 'place5', 'site5', '5555'),
-  ('A006', 'CLUB6', 'place6', 'site6', '6666');
+INSERT INTO oauth_client_details (client_id, client_secret, web_server_redirect_uri) VALUES
+  ('I001', 'P001', 'http://example.com'),
+  ('I002', 'P002', 'http://example.com'),
+  ('I003', 'P003', 'http://example.com'),
+  ('I004', 'P004', 'http://example.com'),
+  ('I005', 'P005', 'http://example.com'),
+  ('I006', 'P006', 'http://example.com');

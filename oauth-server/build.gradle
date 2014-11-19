@@ -22,27 +22,30 @@ repositories{
 
 dependencies{
 
-    compile project(":oauth-data")
+    compile project(':oauth-data')
     compile name: 'manage-0.0.1-SNAPSHOT'
 
-    compile 'org.springframework:spring-orm:4.1.1.RELEASE'
-    compile 'org.springframework:spring-webmvc:4.1.1.RELEASE'
-    compile 'org.springframework:spring-test:4.1.1.RELEASE'
-    compile 'org.springframework.security.oauth:spring-security-oauth2:2.0.4.RELEASE'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.3'
+    compile 'org.springframework:spring-orm:4.1.1.RELEASE',
+            'org.springframework:spring-webmvc:4.1.1.RELEASE',
+            'org.springframework:spring-test:4.1.1.RELEASE',
+            'org.springframework.security:spring-security-openid:3.2.5.RELEASE',
+            'com.fasterxml.jackson.core:jackson-databind:2.4.3',
+            'c3p0:c3p0:0.9.1.2',
+            'org.hibernate:hibernate-entitymanager:4.3.6.Final',
+            'jstl:jstl:1.2'
 
-    compile 'c3p0:c3p0:0.9.1.2'
-    compile 'org.hibernate:hibernate-entitymanager:4.3.6.Final'
-
-    compile 'jstl:jstl:1.2'
+    compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.0')
+    compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.authzserver:1.0.0')
+    compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.0')
 
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 
-    runtime  'com.h2database:h2:1.4.181'
-    runtime  'mysql:mysql-connector-java:5.1.32'
+    runtime 'org.slf4j:slf4j-log4j12:1.7.7',
+            'com.h2database:h2:1.4.181',
+            'mysql:mysql-connector-java:5.1.32'
 
-    testCompile 'org.spockframework:spock-spring:1.0-groovy-2.3-SNAPSHOT'
-    testCompile 'com.jayway.jsonpath:json-path-assert:0.9.1'
+    testCompile 'org.spockframework:spock-spring:1.0-groovy-2.3-SNAPSHOT',
+                'com.jayway.jsonpath:json-path-assert:0.9.1'
 
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:7.0.11",
            "org.apache.tomcat.embed:tomcat-embed-logging-juli:7.0.11"
