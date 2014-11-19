@@ -1,6 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.view;
 
-import javax.inject.Inject;
+//import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import java.util.Set;
 
@@ -13,7 +13,7 @@ public class AuthBean {
     private String clientName;
     private String clientURL;
 
-    @Inject
+//    @Inject
     public AuthBean( HttpSession httpSession ) {
         this.httpSession = httpSession;
         this.httpSession.setMaxInactiveInterval( 180 );

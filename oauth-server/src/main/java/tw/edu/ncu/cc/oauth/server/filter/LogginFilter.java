@@ -1,7 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.filter;
 
 import tw.edu.ncu.cc.manage.openid.OpenIDManager;
-import tw.edu.ncu.cc.oauth.server.factory.OpenIDFactory;
 import tw.edu.ncu.cc.oauth.server.rule.LoginRule;
 
 import javax.servlet.*;
@@ -10,13 +9,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+//import tw.edu.ncu.cc.oauth.server.factory.OpenIDFactory;
+
 public class LogginFilter implements Filter {
 
     private OpenIDManager openIDManager;
 
     @Override
     public void init( FilterConfig filterConfig ) throws ServletException {
-        openIDManager = new OpenIDFactory().provide();
+//        openIDManager = new OpenIDFactory().provide();
     }
 
     @Override

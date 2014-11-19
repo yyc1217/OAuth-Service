@@ -6,6 +6,9 @@ public enum Permission {
 
     CLASS_READ, CLASS_WRITE;
 
+    public static final Permission[] index = values();
+    public static final int length = index.length;
+
     public static boolean isAllExist( Set<String> permissions ) {
         try{
             for( String permission : permissions ) {
