@@ -13,6 +13,7 @@
         <property name="locations">
             <list>
                 <value>classpath:production/database.properties</value>
+                <value>classpath:production/remote.properties</value>
             </list>
         </property>
     </bean>

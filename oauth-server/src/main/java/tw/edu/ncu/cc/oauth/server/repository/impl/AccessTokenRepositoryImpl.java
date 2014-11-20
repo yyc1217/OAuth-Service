@@ -5,6 +5,8 @@ import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
+import java.util.List;
+
 @Repository
 public class AccessTokenRepositoryImpl extends EntityManagerBean implements AccessTokenRepository {
 
@@ -25,12 +27,13 @@ public class AccessTokenRepositoryImpl extends EntityManagerBean implements Acce
 
     @Override
     public AccessTokenEntity getAccessToken( String token ) {
-        return getEntityManager()
+        List<AccessTokenEntity> list = getEntityManager()
                 .createQuery(
                         "SELECT token FROM AccessTokenEntity token " +
                         "WHERE  token.token = :token", AccessTokenEntity.class )
                 .setParameter( "token", token )
-                .getSingleResult();
+                .getResultList();
+        return ( list.isEmpty() ? null : list.get( 0 ) );
     }
 
 }

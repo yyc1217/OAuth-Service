@@ -5,6 +5,8 @@ import tw.edu.ncu.cc.oauth.server.entity.UserEntity;
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
+import java.util.List;
+
 @Repository
 public class UserRepositoryImpl extends EntityManagerBean implements UserRepository {
 
@@ -15,12 +17,13 @@ public class UserRepositoryImpl extends EntityManagerBean implements UserReposit
 
     @Override
     public UserEntity getUser( String name ) {
-        return getEntityManager()
+        List<UserEntity> list = getEntityManager()
                 .createQuery(
                         "SELECT user FROM UserEntity user " +
                         "WHERE user.name = :name", UserEntity.class )
                 .setParameter( "name", name )
-                .getSingleResult();
+                .getResultList();
+        return ( list.isEmpty() ? null : list.get( 0 ) );
     }
 
 }

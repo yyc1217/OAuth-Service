@@ -21,8 +21,8 @@ subprojects{
 
     dependencies {
 
-        testCompile "org.codehaus.groovy:groovy:2.3.6"
-        testCompile "org.spockframework:spock-core:1.0-groovy-2.3-SNAPSHOT"
+        testCompile 'org.codehaus.groovy:groovy-all:2.3.6'
+        testCompile 'org.spockframework:spock-core:1.0-groovy-2.3-SNAPSHOT'
 
     }
 

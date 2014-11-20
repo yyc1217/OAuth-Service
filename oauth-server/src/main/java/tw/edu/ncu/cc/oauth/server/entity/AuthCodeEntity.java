@@ -2,20 +2,18 @@ package tw.edu.ncu.cc.oauth.server.entity;
 
 import tw.edu.ncu.cc.oauth.server.entity.base.TokenEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
+@Table( name = "AUTHCODEENTITY" )
 public class AuthCodeEntity extends TokenEntity {
 
     private String code;
     private UserEntity user;
-    private ApplicationEntity client;
+    private ClientEntity client;
 
     @Basic
-    @Column( unique = true )
+    @Column( name = "CODE" )
     public String getCode() {
         return code;
     }
@@ -25,6 +23,7 @@ public class AuthCodeEntity extends TokenEntity {
     }
 
     @OneToOne
+    @JoinColumn( name = "USER_ID" )
     public UserEntity getUser() {
         return user;
     }
@@ -34,11 +33,12 @@ public class AuthCodeEntity extends TokenEntity {
     }
 
     @OneToOne
-    public ApplicationEntity getClient() {
+    @JoinColumn( name = "CLIENT_ID" )
+    public ClientEntity getClient() {
         return client;
     }
 
-    public void setClient( ApplicationEntity client ) {
+    public void setClient( ClientEntity client ) {
         this.client = client;
     }
 

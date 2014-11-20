@@ -2,21 +2,19 @@ package tw.edu.ncu.cc.oauth.server.entity;
 
 import tw.edu.ncu.cc.oauth.server.entity.base.BasicEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table( name = "USERENTITY" )
 public class UserEntity extends BasicEntity {
 
     private String name;
     private Set<AccessTokenEntity> tokens;
-    private Set<ApplicationEntity> clients;
+    private Set<ClientEntity > clients;
 
     @Basic
-    @Column( unique = true )
+    @Column( name = "NAME" )
     public String getName() {
         return name;
     }
@@ -25,7 +23,12 @@ public class UserEntity extends BasicEntity {
         this.name = account;
     }
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+        name = "USERENTITY_ACCESSTOKENENTITY",
+        joinColumns        = @JoinColumn( name = "USERENTITYS_ID" ),
+        inverseJoinColumns = @JoinColumn( name = "TOKENS_ID" )
+    )
     public Set<AccessTokenEntity> getTokens() {
         return tokens;
     }
@@ -34,12 +37,17 @@ public class UserEntity extends BasicEntity {
         this.tokens = tokens;
     }
 
-    @OneToMany
-    public Set<ApplicationEntity> getClients() {
+    @ManyToMany
+    @JoinTable(
+            name = "USERENTITY_CLIENTENTITY",
+            joinColumns        = @JoinColumn( name = "USERENTITYS_ID" ),
+            inverseJoinColumns = @JoinColumn( name = "CLIENTS_ID" )
+    )
+    public Set<ClientEntity > getClients() {
         return clients;
     }
 
-    public void setClients( Set<ApplicationEntity> clients ) {
+    public void setClients( Set<ClientEntity > clients ) {
         this.clients = clients;
     }
 

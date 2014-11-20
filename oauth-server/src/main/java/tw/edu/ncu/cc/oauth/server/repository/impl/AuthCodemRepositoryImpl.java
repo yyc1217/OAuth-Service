@@ -5,6 +5,8 @@ import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
+import java.util.List;
+
 @Repository
 public class AuthCodemRepositoryImpl extends EntityManagerBean implements AuthCodeRepository {
 
@@ -20,12 +22,13 @@ public class AuthCodemRepositoryImpl extends EntityManagerBean implements AuthCo
 
     @Override
     public AuthCodeEntity getAuthCode( String code ) {
-        return getEntityManager()
+        List<AuthCodeEntity> list = getEntityManager()
                 .createQuery(
                         "SELECT authCode FROM AuthCodeEntity authCode " +
-                                "WHERE authCode.code = :code", AuthCodeEntity.class )
+                        "WHERE authCode.code = :code", AuthCodeEntity.class )
                 .setParameter( "code", code )
-                .getSingleResult();
+                .getResultList();
+        return ( list.isEmpty() ? null : list.get( 0 ) );
     }
 
 }

@@ -4,22 +4,14 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-    <servlet>
-        <servlet-name>activityService</servlet-name>
-        <servlet-class>
-            org.springframework.web.servlet.DispatcherServlet
-        </servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>classpath*:application.xml</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath*:spring-core.xml</param-value>
+    </context-param>
 
-    <servlet-mapping>
-        <servlet-name>activityService</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
     <filter>
         <filter-name>encoding</filter-name>
@@ -38,25 +30,31 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     </filter-mapping>
 
     <filter>
-        <filter-name>LoginFilter</filter-name>
-        <filter-class>tw.edu.ncu.cc.oauth.server.filter.LogginFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>LoginFilter</filter-name>
-        <url-pattern>/auth</url-pattern>
-    </filter-mapping>
-
-    <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
-
 
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <servlet>
+        <servlet-name>BasicService</servlet-name>
+        <servlet-class>
+            org.springframework.web.servlet.DispatcherServlet
+        </servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath*:spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>BasicService</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 
     <security-constraint>
         <web-resource-collection>

@@ -1,8 +1,8 @@
 package tw.edu.ncu.cc.oauth.server.repository;
 
-import tw.edu.ncu.cc.oauth.server.entity.ApplicationEntity;
+import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 
 public interface ApplicationRepository {
-    public ApplicationEntity getApplication( int clientID ) ;
-    public void persistApplication( ApplicationEntity application ) ;
+    public ClientEntity getApplication( int clientID ) ;
+    public void persistApplication( ClientEntity application ) ;
 }

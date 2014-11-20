@@ -3,6 +3,8 @@ package tw.edu.ncu.cc.oauth.server.entity.base;
 import tw.edu.ncu.cc.oauth.data.Permission;
 import tw.edu.ncu.cc.oauth.server.rule.PermissionRule;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
@@ -27,6 +29,8 @@ public class TokenEntity extends BasicEntity {
         permission = stringBuilder.toString();
     }
 
+    @Basic
+    @Column( name = "PERMISSION" )
     public String getPermission() {
         return permission;
     }

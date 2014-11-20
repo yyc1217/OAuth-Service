@@ -32,4 +32,7 @@
         <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
+    <bean id="persistenceAnnotationBeanPostProcessor"
+          class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
 </beans>

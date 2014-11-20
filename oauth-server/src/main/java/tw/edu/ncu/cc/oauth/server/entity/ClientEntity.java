@@ -5,9 +5,11 @@ import tw.edu.ncu.cc.oauth.server.entity.base.BasicEntity;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
-public class ApplicationEntity extends BasicEntity {
+@Table( name = "CLIENTENTITY" )
+public class ClientEntity extends BasicEntity {
 
     private String secret;
     private String name;
@@ -16,6 +18,7 @@ public class ApplicationEntity extends BasicEntity {
     private String callback;
 
     @Basic
+    @Column( name = "SECRET" )
     public String getSecret() {
         return secret;
     }
@@ -25,7 +28,7 @@ public class ApplicationEntity extends BasicEntity {
     }
 
     @Basic
-    @Column( unique = true )
+    @Column( name = "NAME" )
     public String getName() {
         return name;
     }
@@ -35,6 +38,7 @@ public class ApplicationEntity extends BasicEntity {
     }
 
     @Basic
+    @Column( name = "DESCRIPTION" )
     public String getDescription() {
         return description;
     }
@@ -44,6 +48,7 @@ public class ApplicationEntity extends BasicEntity {
     }
 
     @Basic
+    @Column( name = "URL" )
     public String getUrl() {
         return url;
     }
@@ -53,6 +58,7 @@ public class ApplicationEntity extends BasicEntity {
     }
 
     @Basic
+    @Column( name = "CALLBACK" )
     public String getCallback() {
         return callback;
     }

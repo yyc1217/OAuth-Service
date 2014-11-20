@@ -1,8 +1,6 @@
-import org.gradle.api.plugins.tomcat.tasks.TomcatRun
-import org.gradle.api.plugins.tomcat.tasks.TomcatStop
 
-apply plugin: 'tomcat'
-apply plugin: 'tomcat-base'
+apply plugin: 'war'
+apply plugin: 'org.akhikhl.gretty'
 
 buildscript {
     repositories {
@@ -10,7 +8,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:1.2.4'
+        classpath 'org.akhikhl.gretty:gretty:1.1.7'
     }
 }
 
@@ -29,9 +27,13 @@ dependencies{
             'org.springframework:spring-webmvc:4.1.1.RELEASE',
             'org.springframework:spring-test:4.1.1.RELEASE',
             'org.springframework.security:spring-security-openid:3.2.5.RELEASE',
-            'com.fasterxml.jackson.core:jackson-databind:2.4.3',
-            'c3p0:c3p0:0.9.1.2',
+            'org.springframework.security.oauth:spring-security-oauth2:2.0.4.RELEASE',
+            'org.springframework.security:spring-security-taglibs:3.2.5.RELEASE',
             'org.hibernate:hibernate-entitymanager:4.3.6.Final',
+            'com.fasterxml.jackson.core:jackson-databind:2.4.3',
+            'javax.validation:validation-api:1.1.0.Final',
+            'org.apache.commons:commons-io:1.3.2',
+            'c3p0:c3p0:0.9.1.2',
             'jstl:jstl:1.2'
 
     compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.0')
@@ -47,35 +49,15 @@ dependencies{
     testCompile 'org.spockframework:spock-spring:1.0-groovy-2.3-SNAPSHOT',
                 'com.jayway.jsonpath:json-path-assert:0.9.1'
 
-    tomcat "org.apache.tomcat.embed:tomcat-embed-core:7.0.11",
-           "org.apache.tomcat.embed:tomcat-embed-logging-juli:7.0.11"
-    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:7.0.11") {
-        exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
-    }
-
 }
 
-war{
+war {
     archiveName = 'oauth-server.war'
 }
 
-ext {
-    tomcatStopPort = 8592
-    tomcatStopKey  = 'stopKey'
-}
-
-task SpringMVCRun( type: TomcatRun ) {
-    System.properties['spring.profiles.active'] = "production"
-    reloadable = true
-    enableSSL  = true
-    ajpPort   = 5566
+gretty {
+    jvmArgs = ["-Dspring.profiles.active=production"]
+    httpsEnabled = true
     httpsPort = 5278
-    stopPort = tomcatStopPort
-    stopKey  = tomcatStopKey
-}
-
-task SpringMVCStop( type: TomcatStop ) {
-    stopPort = tomcatStopPort
-    stopKey  = tomcatStopKey
 }
 

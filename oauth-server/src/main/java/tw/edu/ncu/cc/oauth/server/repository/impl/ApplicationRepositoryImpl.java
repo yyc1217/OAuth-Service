@@ -1,7 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import tw.edu.ncu.cc.oauth.server.entity.ApplicationEntity;
+import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.repository.ApplicationRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
@@ -9,12 +9,12 @@ import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 public class ApplicationRepositoryImpl extends EntityManagerBean implements ApplicationRepository {
 
     @Override
-    public ApplicationEntity getApplication( int clientID ) {
-        return getEntityManager().find( ApplicationEntity.class, clientID );
+    public ClientEntity getApplication( int clientID ) {
+        return getEntityManager().find( ClientEntity.class, clientID );
     }
 
     @Override
-    public void persistApplication( ApplicationEntity application ) {
+    public void persistApplication( ClientEntity application ) {
         getEntityManager().persist( application );
     }
 

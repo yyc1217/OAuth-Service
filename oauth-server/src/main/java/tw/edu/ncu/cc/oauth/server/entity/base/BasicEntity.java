@@ -16,6 +16,7 @@ public class BasicEntity {
 
     @Id
     @GeneratedValue
+    @Column( name = "ID" )
     public Integer getId() {
         return id;
     }
@@ -24,6 +25,7 @@ public class BasicEntity {
         this.id = id;
     }
 
+    @Column( name = "DATE_CREATED" )
     @Temporal( value = TemporalType.TIMESTAMP )
     public Date getDateCreated() {
         return dateCreated;
@@ -34,6 +36,7 @@ public class BasicEntity {
     }
 
     @Version
+    @Column( name = "DATE_UPDATED" )
     @Temporal( value = TemporalType.TIMESTAMP )
     public Date getDateUpdated() {
         return dateUpdated;
