@@ -22,5 +22,7 @@
 
     <bean id="authenticationService" class="tw.edu.ncu.cc.oauth.server.service.impl.StubAuthenticationService"/>
 
+    <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
 
 </beans>

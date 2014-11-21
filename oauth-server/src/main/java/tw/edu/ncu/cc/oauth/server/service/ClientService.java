@@ -6,5 +6,6 @@ public interface ClientService {
     public void persistClient( ClientEntity client ) ;
     public void deleteClient ( int clientID );
     public void revokeClientTokens( int clientID );
+    public ClientEntity regenerateClientSecret( int clientID );
     public ClientEntity getClient ( int clientID ) ;
 }

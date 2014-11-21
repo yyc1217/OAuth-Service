@@ -8,7 +8,6 @@ import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import tw.edu.ncu.cc.oauth.data.PermissionUtil;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.entity.UserEntity;
@@ -89,7 +88,7 @@ public final class AccessConfirmController {
         authCode.setClient( client );
         authCode.setUser( user );
         authCode.setCode( tokenIssuer.authorizationCode() );
-        authCode.setPermissions( PermissionUtil.valueOf( scopes ) );
+//        authCode.setPermissions( PermissionUtil.valueOf( scopes ) );
         authCodeRepository.persistAuthCode( authCode );
 
         return authCode.getCode();

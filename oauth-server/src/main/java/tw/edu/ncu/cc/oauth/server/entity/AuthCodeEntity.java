@@ -1,19 +1,19 @@
 package tw.edu.ncu.cc.oauth.server.entity;
 
-import tw.edu.ncu.cc.oauth.server.entity.base.TokenEntity;
+import tw.edu.ncu.cc.oauth.server.entity.base.PermissionEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table( name = "auth_code" )
-public class AuthCodeEntity extends TokenEntity {
+public class AuthCodeEntity extends PermissionEntity {
 
     private String code;
     private UserEntity user;
     private ClientEntity client;
 
     @Basic
-    @Column( name = "code" )
+    @Column( name = "code", unique = true )
     public String getCode() {
         return code;
     }

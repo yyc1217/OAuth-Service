@@ -6,4 +6,5 @@ public interface AuthCodeRepository {
     public void persistAuthCode( AuthCodeEntity authCode );
     public void deleteAuthCode( AuthCodeEntity authCode );
     public AuthCodeEntity getAuthCode( String code );
+    public AuthCodeEntity getAuthCode( int id );
 }

@@ -14,6 +14,11 @@ public class ClientRepositoryImpl extends EntityManagerBean implements ClientRep
     }
 
     @Override
+    public void updateClient( ClientEntity client ) {
+        getEntityManager().merge( client );
+    }
+
+    @Override
     public void deleteClient( ClientEntity client ) {
         getEntityManager().remove( client );
     }

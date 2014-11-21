@@ -16,6 +16,11 @@ public class UserRepositoryImpl extends EntityManagerBean implements UserReposit
     }
 
     @Override
+    public UserEntity getUser( int id ) {
+        return getEntityManager().find( UserEntity.class, id );
+    }
+
+    @Override
     public UserEntity getUser( String name ) {
         List<UserEntity> list = getEntityManager()
                 .createQuery(

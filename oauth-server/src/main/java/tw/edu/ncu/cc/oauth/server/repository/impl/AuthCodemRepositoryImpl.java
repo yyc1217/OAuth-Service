@@ -21,6 +21,11 @@ public class AuthCodemRepositoryImpl extends EntityManagerBean implements AuthCo
     }
 
     @Override
+    public AuthCodeEntity getAuthCode( int id ) {
+        return getEntityManager().find( AuthCodeEntity.class, id );
+    }
+
+    @Override
     public AuthCodeEntity getAuthCode( String code ) {
         List<AuthCodeEntity> list = getEntityManager()
                 .createQuery(

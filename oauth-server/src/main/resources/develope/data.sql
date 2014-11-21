@@ -1,28 +1,28 @@
-CREATE TABLE access_token
+CREATE TABLE IF NOT EXISTS access_token
 (
-  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   date_created DATETIME,
   date_updated DATETIME,
-  permission VARCHAR(255),
+  permission VARCHAR(255) NOT NULL,
   token VARCHAR(255),
   client_id INT NOT NULL,
   user_id INT NOT NULL
 );
 
-CREATE TABLE auth_code
+CREATE TABLE IF NOT EXISTS auth_code
 (
-  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   date_created DATETIME,
   date_updated DATETIME,
-  permission VARCHAR(255),
-  code VARCHAR(255),
+  permission VARCHAR(255) NOT NULL,
+  code VARCHAR(255) ,
   client_id INT NOT NULL,
   user_id INT NOT NULL
 );
 
-CREATE TABLE client
+CREATE TABLE IF NOT EXISTS client
 (
-  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   date_created DATETIME,
   date_updated DATETIME,
   callback VARCHAR(255),
@@ -33,28 +33,26 @@ CREATE TABLE client
   user_id INT NOT NULL
 );
 
-CREATE TABLE user
+CREATE TABLE IF NOT EXISTS user
 (
-  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   date_created DATETIME,
   date_updated DATETIME,
   name VARCHAR(255)
 );
 
-ALTER TABLE access_token ADD FOREIGN KEY (user_id) REFERENCES user (id);
-ALTER TABLE access_token ADD FOREIGN KEY (client_id) REFERENCES client (id);
-CREATE UNIQUE INDEX UK_1djybee0iap4odfl91gkxoxem ON access_token (token);
-CREATE INDEX FK_kqodiiamededdp9947dtk9ua5 ON access_token (user_id);
-CREATE INDEX FK_lrorbiqd6jsbl85pf1srlhtvr ON access_token (client_id);
-ALTER TABLE auth_code ADD FOREIGN KEY (user_id) REFERENCES user (id);
-ALTER TABLE auth_code ADD FOREIGN KEY (client_id) REFERENCES client (id);
-CREATE INDEX FK_jxea67rp4k544rk7o0n86jqss ON auth_code (client_id);
-CREATE INDEX FK_rhdpq7v84gecrpi0it14qa5qp ON auth_code (user_id);
-ALTER TABLE client ADD FOREIGN KEY (user_id) REFERENCES user (id);
-CREATE INDEX FK_1ixfyfepst9sjbo9op1v65fg0 ON client (user_id);
-
-INSERT INTO user ( id, name ) VALUES
-  ( 1, 'admin');
+INSERT INTO user ( name ) VALUES
+  ( 'admin1' ),
+  ( 'admin2' );
 
 INSERT INTO client ( name, secret, url, callback, description, user_id ) VALUES
-  ('A001', 'CLUB1', 'http://example.com', 'http://example.com', '1111', 1 );
+  ( 'APP1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1 ),
+  ( 'APP2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 );
+
+INSERT INTO access_token ( token, permission, client_id, user_id ) VALUES
+  ( 'TOKEN1', '110', 1,  1 ),
+  ( 'TOKEN2', '000', 2,  2 );
+
+INSERT INTO auth_code ( code, permission, client_id, user_id ) VALUES
+  ( 'CODE1', '110', 1,  1 ),
+  ( 'CODE2', '000', 2,  2 );

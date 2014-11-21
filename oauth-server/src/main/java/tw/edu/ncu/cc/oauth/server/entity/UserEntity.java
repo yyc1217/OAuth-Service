@@ -15,7 +15,7 @@ public class UserEntity extends BasicEntity {
     private Set<AccessTokenEntity> tokens = new HashSet<>();
 
     @Basic
-    @Column( name = "name" )
+    @Column( name = "name", unique = true )
     public String getName() {
         return name;
     }

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 @Component
-public class OAuthAuthorizationValidator implements Validator {
+public class OAuthRequestValidator implements Validator {
 
     private ClientRepository clientRepository;
 
