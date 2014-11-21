@@ -20,7 +20,7 @@
 
     </security:http>
 
-    <bean id="authenticationService" class="tw.edu.ncu.cc.oauth.server.service.StubAuthenticationService"/>
+    <bean id="authenticationService" class="tw.edu.ncu.cc.oauth.server.service.impl.StubAuthenticationService"/>
 
 
 </beans>

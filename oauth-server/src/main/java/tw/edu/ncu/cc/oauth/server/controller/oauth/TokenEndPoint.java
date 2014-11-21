@@ -16,8 +16,8 @@ import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.entity.UserEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
-import tw.edu.ncu.cc.oauth.server.repository.ApplicationRepository;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
+import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository;
 import tw.edu.ncu.cc.oauth.server.rule.OAuthRule;
 
@@ -30,7 +30,7 @@ import java.util.Date;
 public final class TokenEndPoint {
 
     private UserRepository userRepository;
-    private ApplicationRepository applicationRepository;
+    private ClientRepository clientRepository;
     private AuthCodeRepository authCodeRepository;
     private AccessTokenRepository accessTokenRepository;
 
@@ -69,7 +69,7 @@ public final class TokenEndPoint {
 
         String clientID     = request.getClientId();
         String clientSecret = request.getClientSecret();
-        ClientEntity client = applicationRepository.getApplication( Integer.parseInt( clientID ) );
+        ClientEntity client = clientRepository.getClient( Integer.parseInt( clientID ) );
 
         if ( client == null || ! client.getSecret().equals( clientSecret ) ) {
             throw OAuthProblemException.error( OAuthError.TokenResponse.INVALID_CLIENT, "INVALID CLIENT" );

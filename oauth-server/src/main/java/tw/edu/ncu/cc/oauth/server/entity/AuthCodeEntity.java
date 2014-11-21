@@ -5,7 +5,7 @@ import tw.edu.ncu.cc.oauth.server.entity.base.TokenEntity;
 import javax.persistence.*;
 
 @Entity
-@Table( name = "AUTHCODEENTITY" )
+@Table( name = "auth_code" )
 public class AuthCodeEntity extends TokenEntity {
 
     private String code;
@@ -13,7 +13,7 @@ public class AuthCodeEntity extends TokenEntity {
     private ClientEntity client;
 
     @Basic
-    @Column( name = "CODE" )
+    @Column( name = "code" )
     public String getCode() {
         return code;
     }
@@ -22,8 +22,8 @@ public class AuthCodeEntity extends TokenEntity {
         this.code = code;
     }
 
-    @OneToOne
-    @JoinColumn( name = "USER_ID" )
+    @ManyToOne( optional = false )
+    @JoinColumn( name = "user_id" )
     public UserEntity getUser() {
         return user;
     }
@@ -32,8 +32,8 @@ public class AuthCodeEntity extends TokenEntity {
         this.user = user;
     }
 
-    @OneToOne
-    @JoinColumn( name = "CLIENT_ID" )
+    @ManyToOne( optional = false )
+    @JoinColumn( name = "client_id" )
     public ClientEntity getClient() {
         return client;
     }

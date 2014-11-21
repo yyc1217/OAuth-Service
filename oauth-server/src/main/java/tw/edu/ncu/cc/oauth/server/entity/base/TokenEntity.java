@@ -30,7 +30,7 @@ public class TokenEntity extends BasicEntity {
     }
 
     @Basic
-    @Column( name = "PERMISSION" )
+    @Column( name = "permission" )
     public String getPermission() {
         return permission;
     }

@@ -1,58 +1,60 @@
-CREATE TABLE IF NOT EXISTS ACCESSTOKENENTITY
+CREATE TABLE access_token
 (
-  ID INTEGER PRIMARY KEY NOT NULL,
-  DATE_CREATED TIMESTAMP,
-  DATE_UPDATED TIMESTAMP,
-  PERMISSION VARCHAR(255),
-  TOKEN VARCHAR(255),
-  CLIENT_ID INTEGER,
-  USER_ID INTEGER
+  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  date_created DATETIME,
+  date_updated DATETIME,
+  permission VARCHAR(255),
+  token VARCHAR(255),
+  client_id INT NOT NULL,
+  user_id INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS AUTHCODEENTITY
+CREATE TABLE auth_code
 (
-  ID INTEGER PRIMARY KEY NOT NULL,
-  DATE_CREATED TIMESTAMP,
-  DATE_UPDATED TIMESTAMP,
-  PERMISSION VARCHAR(255),
-  CODE VARCHAR(255),
-  CLIENT_ID INTEGER,
-  USER_ID INTEGER
+  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  date_created DATETIME,
+  date_updated DATETIME,
+  permission VARCHAR(255),
+  code VARCHAR(255),
+  client_id INT NOT NULL,
+  user_id INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS CLIENTENTITY
+CREATE TABLE client
 (
-  ID INTEGER PRIMARY KEY NOT NULL,
-  DATE_CREATED TIMESTAMP,
-  DATE_UPDATED TIMESTAMP,
-  CALLBACK VARCHAR(255),
-  DESCRIPTION VARCHAR(512),
-  NAME VARCHAR(255),
-  SECRET VARCHAR(255),
-  URL VARCHAR(255)
+  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  date_created DATETIME,
+  date_updated DATETIME,
+  callback VARCHAR(255),
+  description VARCHAR(255),
+  name VARCHAR(255),
+  secret VARCHAR(255),
+  url VARCHAR(255),
+  user_id INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS USERENTITY
+CREATE TABLE user
 (
-  ID INTEGER PRIMARY KEY NOT NULL,
-  DATE_CREATED TIMESTAMP,
-  DATE_UPDATED TIMESTAMP,
-  NAME VARCHAR(255)
+  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  date_created DATETIME,
+  date_updated DATETIME,
+  name VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS USERENTITY_ACCESSTOKENENTITY
-(
-  USERENTITYS_ID INTEGER NOT NULL,
-  TOKENS_ID INTEGER NOT NULL
-);
+ALTER TABLE access_token ADD FOREIGN KEY (user_id) REFERENCES user (id);
+ALTER TABLE access_token ADD FOREIGN KEY (client_id) REFERENCES client (id);
+CREATE UNIQUE INDEX UK_1djybee0iap4odfl91gkxoxem ON access_token (token);
+CREATE INDEX FK_kqodiiamededdp9947dtk9ua5 ON access_token (user_id);
+CREATE INDEX FK_lrorbiqd6jsbl85pf1srlhtvr ON access_token (client_id);
+ALTER TABLE auth_code ADD FOREIGN KEY (user_id) REFERENCES user (id);
+ALTER TABLE auth_code ADD FOREIGN KEY (client_id) REFERENCES client (id);
+CREATE INDEX FK_jxea67rp4k544rk7o0n86jqss ON auth_code (client_id);
+CREATE INDEX FK_rhdpq7v84gecrpi0it14qa5qp ON auth_code (user_id);
+ALTER TABLE client ADD FOREIGN KEY (user_id) REFERENCES user (id);
+CREATE INDEX FK_1ixfyfepst9sjbo9op1v65fg0 ON client (user_id);
 
-CREATE TABLE IF NOT EXISTS USERENTITY_CLIENTENTITY
-(
-  USERENTITYS_ID INTEGER NOT NULL,
-  CLIENTS_ID INTEGER NOT NULL
-);
+INSERT INTO user ( id, name ) VALUES
+  ( 1, 'admin');
 
-INSERT INTO CLIENTENTITY ( NAME, SECRET, URL, CALLBACK, DESCRIPTION) VALUES
-  ('A001', 'CLUB1', 'http://example.com', 'http://example.com', '1111'),
-  ('A002', 'CLUB2', 'http://example.com', 'http://example.com', '2222'),
-  ('A003', 'CLUB3', 'http://example.com', 'http://example.com', '3333');
+INSERT INTO client ( name, secret, url, callback, description, user_id ) VALUES
+  ('A001', 'CLUB1', 'http://example.com', 'http://example.com', '1111', 1 );

@@ -12,8 +12,8 @@ import tw.edu.ncu.cc.oauth.data.PermissionUtil;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.entity.UserEntity;
-import tw.edu.ncu.cc.oauth.server.repository.ApplicationRepository;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
+import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository;
 import tw.edu.ncu.cc.oauth.server.view.AuthBean;
 
@@ -28,7 +28,7 @@ public final class AccessConfirmController {
 
 
     private UserRepository userRepository;
-    private ApplicationRepository applicationRepository;
+    private ClientRepository clientRepository;
     private AuthCodeRepository authCodeRepository;
 
     private OAuthIssuer tokenIssuer;
@@ -52,7 +52,7 @@ public final class AccessConfirmController {
         } catch ( NullPointerException ignore ) {
             throw new RuntimeException( "DATA FETCH ERROR" );
         }
-        if( applicationRepository.getApplication( Integer.parseInt( authBean.getClientID() ) ) == null ) {
+        if( clientRepository.getClient( Integer.parseInt( authBean.getClientID() ) ) == null ) {
             throw new RuntimeException( "CLIENT NOT EXISTS" );
         }
     }
@@ -67,7 +67,7 @@ public final class AccessConfirmController {
         OAuthASResponse.OAuthAuthorizationResponseBuilder builder =
                 OAuthASResponse.authorizationResponse( request, HttpServletResponse.SC_FOUND );
 
-        ClientEntity client = applicationRepository.getApplication( Integer.parseInt( clientID ) );
+        ClientEntity client = clientRepository.getClient( Integer.parseInt( clientID ) );
 
         builder.setCode ( prepareAuthCode( client, portalID, scopes ) );
         builder.location( prepareRedirect( client ) );

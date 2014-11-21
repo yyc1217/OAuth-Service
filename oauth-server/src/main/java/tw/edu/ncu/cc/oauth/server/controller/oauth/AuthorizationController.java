@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import tw.edu.ncu.cc.oauth.server.entity.AccessConfirmEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
-import tw.edu.ncu.cc.oauth.server.repository.ApplicationRepository;
+import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -22,11 +22,11 @@ import javax.validation.Valid;
 @SessionAttributes( "access_confirm" )
 public final class AuthorizationController {
 
-    private ApplicationRepository applicationRepository;
+    private ClientRepository clientRepository;
 
     @Autowired
-    public void setApplicationRepository( ApplicationRepository applicationRepository ) {
-        this.applicationRepository = applicationRepository;
+    public void setClientRepository( ClientRepository clientRepository ) {
+        this.clientRepository = clientRepository;
     }
 
     @RequestMapping( value = "oauth/authorize", method = RequestMethod.GET )
@@ -53,7 +53,7 @@ public final class AuthorizationController {
 
         OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest( request );
 
-        ClientEntity client = applicationRepository.getApplication( Integer.parseInt( oauthRequest.getClientId() ) );
+        ClientEntity client = clientRepository.getClient( Integer.parseInt( oauthRequest.getClientId() ) );
 
         AccessConfirmEntity confirmEntity = new AccessConfirmEntity();
         confirmEntity.setState( oauthRequest.getState() );

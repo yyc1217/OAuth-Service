@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import tw.edu.ncu.cc.oauth.data.PermissionUtil;
-import tw.edu.ncu.cc.oauth.server.repository.ApplicationRepository;
+import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
@@ -17,11 +17,11 @@ import java.util.Set;
 @Component
 public class OAuthAuthorizationValidator implements Validator {
 
-    private ApplicationRepository applicationRepository;
+    private ClientRepository clientRepository;
 
     @Autowired
-    public void setApplicationRepository( ApplicationRepository applicationRepository ) {
-        this.applicationRepository = applicationRepository;
+    public void setClientRepository( ClientRepository clientRepository ) {
+        this.clientRepository = clientRepository;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class OAuthAuthorizationValidator implements Validator {
             if ( ! responseType.equals( ResponseType.CODE.toString() ) ) {
                 errors.rejectValue( "request", "ONLY SUPPORT AUTH CODE" );
             }
-            if ( applicationRepository.getApplication( Integer.parseInt( clientID ) ) == null ) {
+            if ( clientRepository.getClient( Integer.parseInt( clientID ) ) == null ) {
                 errors.rejectValue( "request", "CLIENT NOT EXISTS" );
             }
             if ( ! PermissionUtil.isAllExist( scope ) ) {

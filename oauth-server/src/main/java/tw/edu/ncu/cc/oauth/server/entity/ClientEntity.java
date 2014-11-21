@@ -2,13 +2,12 @@ package tw.edu.ncu.cc.oauth.server.entity;
 
 import tw.edu.ncu.cc.oauth.server.entity.base.BasicEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table( name = "CLIENTENTITY" )
+@Table( name = "client" )
 public class ClientEntity extends BasicEntity {
 
     private String secret;
@@ -16,9 +15,11 @@ public class ClientEntity extends BasicEntity {
     private String description;
     private String url;
     private String callback;
+    private UserEntity user;
+    private Set<AccessTokenEntity> tokens = new HashSet<>();
 
     @Basic
-    @Column( name = "SECRET" )
+    @Column( name = "secret" )
     public String getSecret() {
         return secret;
     }
@@ -28,7 +29,7 @@ public class ClientEntity extends BasicEntity {
     }
 
     @Basic
-    @Column( name = "NAME" )
+    @Column( name = "name" )
     public String getName() {
         return name;
     }
@@ -38,7 +39,7 @@ public class ClientEntity extends BasicEntity {
     }
 
     @Basic
-    @Column( name = "DESCRIPTION" )
+    @Column( name = "description" )
     public String getDescription() {
         return description;
     }
@@ -48,7 +49,7 @@ public class ClientEntity extends BasicEntity {
     }
 
     @Basic
-    @Column( name = "URL" )
+    @Column( name = "url" )
     public String getUrl() {
         return url;
     }
@@ -58,13 +59,32 @@ public class ClientEntity extends BasicEntity {
     }
 
     @Basic
-    @Column( name = "CALLBACK" )
+    @Column( name = "callback" )
     public String getCallback() {
         return callback;
     }
 
     public void setCallback( String callback ) {
         this.callback = callback;
+    }
+
+    @ManyToOne( optional = false )
+    @JoinColumn( name = "user_id" )
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser( UserEntity user ) {
+        this.user = user;
+    }
+
+    @OneToMany( cascade = CascadeType.REMOVE, mappedBy = "client" )
+    public Set< AccessTokenEntity > getTokens() {
+        return tokens;
+    }
+
+    public void setTokens( Set< AccessTokenEntity > tokens ) {
+        this.tokens = tokens;
     }
 
 }

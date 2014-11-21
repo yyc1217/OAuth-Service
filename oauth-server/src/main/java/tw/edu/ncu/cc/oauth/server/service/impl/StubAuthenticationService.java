@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service;
+package tw.edu.ncu.cc.oauth.server.service.impl;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
