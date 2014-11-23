@@ -7,53 +7,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import tw.edu.ncu.cc.oauth.server.entity.AccessConfirmEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
-import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
+import tw.edu.ncu.cc.oauth.server.service.ClientService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 @Controller
 @SessionAttributes( "access_confirm" )
 public final class AuthorizationController {
 
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
-    public void setClientRepository( ClientRepository clientRepository ) {
-        this.clientRepository = clientRepository;
+    public void setClientService( ClientService clientService ) {
+        this.clientService = clientService;
     }
 
     @RequestMapping( value = "oauth/authorize", method = RequestMethod.GET )
-    public String authorize( @Valid HttpServletRequest request,
-                             ModelMap model,
-                             BindingResult result,
-                             Authentication authentication ) throws OAuthProblemException, OAuthSystemException {
-
-        if ( result.hasErrors() ) {
-            prepareFailModel( model, result );
-            return "oauth_error";
-        } else {
-            prepareSuccessModel( request, model, authentication );
-            return "oauth_approval";
-        }
-
-    }
-
-    private void prepareFailModel( ModelMap model, BindingResult result ) {
-        model.addAttribute( "errors", result.getFieldErrors() );
-    }
-
-    private void prepareSuccessModel( HttpServletRequest request, ModelMap model, Authentication authentication ) throws OAuthProblemException, OAuthSystemException {
+    public String authorize( HttpServletRequest request, ModelMap model, Authentication authentication ) throws OAuthProblemException, OAuthSystemException {
 
         OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest( request );
 
-        ClientEntity client = clientRepository.getClient( Integer.parseInt( oauthRequest.getClientId() ) );
+        ClientEntity client = clientService.getClient( Integer.parseInt( oauthRequest.getClientId() ) );
 
         AccessConfirmEntity confirmEntity = new AccessConfirmEntity();
         confirmEntity.setState( oauthRequest.getState() );
@@ -62,7 +41,11 @@ public final class AuthorizationController {
         confirmEntity.setUserID( authentication.getName() );
 
         model.addAttribute( "access_confirm", confirmEntity );
-        model.addAttribute( "confirm_page", "oauth/confirm" );
+        model.addAttribute( "confirm_page", "/oauth/confirm" );
+
+        return "oauth_approval";
+
     }
+
 
 }

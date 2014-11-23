@@ -4,17 +4,11 @@
 
 <html>
 <head>
-
     <title>OAuth Approval</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,800italic,400,600,800"
-          type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,800italic,400,600,800" type="text/css">
     <link rel="stylesheet" href="<c:url value="/resource/css/bootstrap.min.css"/>" type="text/css"/>
     <link rel="stylesheet" href="<c:url value="/resource/css/Login.css"/>" type="text/css"/>
-
 </head>
 
 <body>
@@ -41,12 +35,12 @@
             <form:form action="${confirm_page}" method="POST">
                 <input name='state' value='${access_confirm.state}' type='hidden'/>
                 <input name='approval' value='true' type='hidden'/>
-                <input type="submit" id="login-btn" class="btn btn-default" value="Agree"/>
+                <input type="submit" id="accept-btn" class="btn btn-default" value="Accept"/>
             </form:form>
             <form:form action="${confirm_page}" method="POST">
                 <input name='state' value='${access_confirm.state}' type='hidden'/>
                 <input name='approval' value='false' type='hidden'/>
-                <input type="submit" class="btn btn-default" value="Disagree"/>
+                <input type="submit" id="decline-btn" class="btn btn-default" value="Decline"/>
             </form:form>
         </div>
 

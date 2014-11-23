@@ -8,19 +8,32 @@
         http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-    <security:http pattern="/login" security="none"/>
     <security:http pattern="/resource/*" security="none"/>
 
     <security:http disable-url-rewriting="true" authentication-manager-ref="authenticationService">
 
         <security:intercept-url pattern="/oauth/**" access="ROLE_USER"/>
-        <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <security:intercept-url pattern="/**"       access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 
         <security:form-login login-page="/login"/>
+
+        <security:custom-filter ref="oauthFilter" after="LAST"/>
+        <security:custom-filter ref="openidLoginFilter" after="FORM_LOGIN_FILTER"/>
+
+        <security:csrf/>
 
     </security:http>
 
     <bean id="authenticationService" class="tw.edu.ncu.cc.oauth.server.service.impl.StubAuthenticationService"/>
+
+    <bean id="oauthFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthFilter">
+        <property name="filtPath" value="/oauth/authorize"/>
+    </bean>
+
+    <bean id="openidLoginFilter" class="tw.edu.ncu.cc.oauth.server.filter.OpenIDLoginFilter">
+        <property name="loginPath" value="/login"/>
+        <property name="loginConfirmPath" value="/login_confirm"/>
+    </bean>
 
     <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 

@@ -6,9 +6,7 @@
 </head>
 <body>
     <div>
-        <c:forEach items="${errors}" var="error">
-            <div>${error.objectName} : ${error.defaultMessage}</div><br/>
-        </c:forEach>
+
     </div>
 </body>
 </html>

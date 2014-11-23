@@ -53,11 +53,20 @@ h5{
     -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.65);
     box-shadow: 3px 3px 8px rgba(2, 2, 3, 0.8);
 }
-#login #login-btn {
+#login #accept-btn #decline-btn {
     padding: 5px 40px;
     font-size: 15px;
+}
+
+#accept-btn {
     background-color: rgb(233, 233, 233);
 }
+
+#decline-btn {
+    background-color: rgb(215, 96, 77);
+}
+
+
 .permission-group {
     font-weight: 800;
     margin: 10px auto;
