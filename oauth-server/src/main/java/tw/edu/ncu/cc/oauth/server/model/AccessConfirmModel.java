@@ -1,9 +1,11 @@
-package tw.edu.ncu.cc.oauth.server.entity;
+package tw.edu.ncu.cc.oauth.server.model;
+
+import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 
 import java.util.Set;
 
 
-public class AccessConfirmEntity {
+public class AccessConfirmModel {
 
     private String state;
     private String userID;

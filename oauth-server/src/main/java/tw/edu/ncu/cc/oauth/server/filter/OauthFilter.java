@@ -7,7 +7,7 @@ import org.apache.oltu.oauth2.common.message.types.ResponseType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import tw.edu.ncu.cc.oauth.data.PermissionUtil;
+import tw.edu.ncu.cc.oauth.server.helper.PermissionUtil;
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 
 import javax.servlet.FilterChain;

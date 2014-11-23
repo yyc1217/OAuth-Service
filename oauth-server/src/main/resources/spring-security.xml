@@ -35,7 +35,4 @@
         <property name="loginConfirmPath" value="/login_confirm"/>
     </bean>
 
-    <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-
-
 </beans>

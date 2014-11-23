@@ -11,8 +11,8 @@ public class ClientTokenRepositoryImpl extends EntityManagerBean implements Clie
     @Override
     public void deleteAllAccessTokenOfClient( ClientEntity client ) {
         getEntityManager()
-                .createQuery( "DELETE FROM AccessTokenEntity token WHERE token.client = :clientID " )
-                .setParameter( "clientID", client.getId() )
+                .createQuery( "DELETE FROM AccessTokenEntity token WHERE token.client = :client " )
+                .setParameter( "client", client )
                 .executeUpdate();
     }
 

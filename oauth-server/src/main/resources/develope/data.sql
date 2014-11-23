@@ -41,18 +41,18 @@ CREATE TABLE IF NOT EXISTS user
   name VARCHAR(255)
 );
 
-INSERT INTO user ( name ) VALUES
-  ( 'admin1' ),
-  ( 'admin2' );
+INSERT INTO user ( id, name ) VALUES
+  ( 1, 'ADMIN1' ),
+  ( 2, 'ADMIN2' );
 
-INSERT INTO client ( name, secret, url, callback, description, user_id ) VALUES
-  ( 'APP1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1 ),
-  ( 'APP2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 );
+INSERT INTO client ( id, name, secret, url, callback, description, user_id ) VALUES
+  ( 1, 'APP1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1 ),
+  ( 2, 'APP2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 );
 
-INSERT INTO access_token ( token, permission, client_id, user_id ) VALUES
-  ( 'TOKEN1', '110', 1,  1 ),
-  ( 'TOKEN2', '000', 2,  2 );
+INSERT INTO access_token ( id, token, permission, client_id, user_id ) VALUES
+  ( 1, 'TOKEN1', '110', 1,  1 ),
+  ( 2, 'TOKEN2', '000', 2,  2 );
 
-INSERT INTO auth_code ( code, permission, client_id, user_id ) VALUES
-  ( 'CODE1', '110', 1,  1 ),
-  ( 'CODE2', '000', 2,  2 );
+INSERT INTO auth_code ( id, code, permission, client_id, user_id ) VALUES
+  ( 1, 'CODE1', '110', 1,  1 ),
+  ( 2, 'CODE2', '000', 2,  2 );

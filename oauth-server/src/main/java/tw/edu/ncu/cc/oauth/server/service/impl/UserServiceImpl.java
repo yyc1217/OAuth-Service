@@ -9,7 +9,6 @@ import tw.edu.ncu.cc.oauth.server.repository.UserRepository;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
@@ -20,6 +19,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void persistUser( UserEntity user ) {
         userRepository.persistUser( user );
     }

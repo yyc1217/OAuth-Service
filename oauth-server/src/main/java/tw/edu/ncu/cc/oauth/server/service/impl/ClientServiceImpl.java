@@ -1,6 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,11 +11,16 @@ import tw.edu.ncu.cc.oauth.server.repository.ClientTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 
 @Service
-@Transactional
 public class ClientServiceImpl implements ClientService {
 
+    private PasswordEncoder encoder;
     private ClientRepository clientRepository;
     private ClientTokenRepository clientTokenRepository;
+
+    @Autowired
+    public void setEncoder( PasswordEncoder encoder ) {
+        this.encoder = encoder;
+    }
 
     @Autowired
     public void setClientRepository( ClientRepository clientRepository ) {
@@ -27,38 +33,40 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void persistClient( ClientEntity client ) {
-        clientRepository.persistClient( client );
-    }
-
-    @Override
-    public void deleteClient( int clientID ) {
-        clientRepository.deleteClient( loadClient( clientID ) );
-    }
-
-    @Override
-    public void revokeClientTokens( int clientID ) {
-        clientTokenRepository.deleteAllAccessTokenOfClient( loadClient( clientID ) );
-    }
-
-    @Override
-    public ClientEntity regenerateClientSecret( int clientID ) {
-        return null;//TODO IMPLEMENT
-    }
-
-    @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public ClientEntity getClient( int clientID ) {
         return clientRepository.getClient( clientID );
     }
 
-    private ClientEntity loadClient( int clientID ) {
-        ClientEntity clientEntity = clientRepository.getClient( clientID );
-        if( clientEntity != null ) {
-            return clientEntity;
-        } else {
-            throw new RuntimeException( "client of id : [" + clientID + "] not exists" );
-        }
+    @Override
+    public void updateClient( ClientEntity client ) {
+        clientRepository.updateClient( client );
+    }
+
+    @Override
+    @Transactional
+    public void deleteClient( ClientEntity client ) {
+        clientRepository.deleteClient( client );
+    }
+
+    @Override
+    @Transactional
+    public void revokeClientTokens( ClientEntity client ) {
+        clientTokenRepository.deleteAllAccessTokenOfClient( client );
+    }
+
+    @Override
+    @Transactional
+    public void generateClient( ClientEntity client ) {
+        ClientEntity clientEntity = new ClientEntity();
+        clientEntity.setId( client.getId() );
+        clientEntity.setUrl( client.getUrl() );
+        clientEntity.setName( client.getName() );
+        clientEntity.setUser( client.getUser() );
+        clientEntity.setCallback( client.getCallback() );
+        clientEntity.setDescription( client.getDescription() );
+        clientEntity.setSecret( encoder.encode( client.getSecret() ) );
+        clientRepository.persistClient( client );
     }
 
 }

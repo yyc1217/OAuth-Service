@@ -8,7 +8,7 @@ import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 import java.util.List;
 
 @Repository
-public class AuthCodemRepositoryImpl extends EntityManagerBean implements AuthCodeRepository {
+public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCodeRepository {
 
     @Override
     public void persistAuthCode( AuthCodeEntity authCode ) {

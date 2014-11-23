@@ -1,4 +1,6 @@
-package tw.edu.ncu.cc.oauth.data;
+package tw.edu.ncu.cc.oauth.server.helper;
+
+import tw.edu.ncu.cc.oauth.data.Permission;
 
 import java.util.Set;
 
@@ -25,6 +27,10 @@ public class PermissionUtil {
             permissions[ i++ ] = Permission.valueOf( permission );
         }
         return permissions;
+    }
+
+    public static String toPermission( Set<Permission> permissionSet ) {
+        return null;
     }
 
 }

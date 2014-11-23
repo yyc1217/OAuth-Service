@@ -10,8 +10,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import tw.edu.ncu.cc.oauth.server.entity.AccessConfirmEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
+import tw.edu.ncu.cc.oauth.server.model.AccessConfirmModel;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ public final class AuthorizationController {
 
         ClientEntity client = clientService.getClient( Integer.parseInt( oauthRequest.getClientId() ) );
 
-        AccessConfirmEntity confirmEntity = new AccessConfirmEntity();
+        AccessConfirmModel confirmEntity = new AccessConfirmModel();
         confirmEntity.setState( oauthRequest.getState() );
         confirmEntity.setScope( oauthRequest.getScopes() );
         confirmEntity.setClient( client );

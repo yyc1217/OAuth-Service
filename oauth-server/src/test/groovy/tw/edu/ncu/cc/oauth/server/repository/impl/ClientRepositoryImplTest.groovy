@@ -41,4 +41,18 @@ class ClientRepositoryImplTest extends SpringSpecification {
             clientRepository.getClient( 1 ).getDescription() == "NEW"
     }
 
+    @Transactional
+    def "it can delete ClientEntity"() {
+        given:
+            def client =  new ClientEntity(
+                    name: "TEST APP",
+                    user: userRepository.getUser( 1 )
+            )
+            clientRepository.persistClient( client )
+        when:
+            clientRepository.deleteClient( client )
+        then:
+            clientRepository.getClient( 3 ) == null
+    }
+
 }
