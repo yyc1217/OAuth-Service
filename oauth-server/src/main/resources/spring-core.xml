@@ -18,9 +18,9 @@
     <import resource="develope/spring/application.xml"/>
     <import resource="production/spring/application.xml"/>
 
+    <import resource="openid/openid.xml"/>
     <import resource="spring-security.xml"/>
 
-    <bean class="tw.edu.ncu.cc.manage.openid.OpenIDManager"/>
     <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
 </beans>

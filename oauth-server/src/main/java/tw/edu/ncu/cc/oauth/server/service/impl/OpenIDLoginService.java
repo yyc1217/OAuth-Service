@@ -8,10 +8,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Service;
-import tw.edu.ncu.cc.manage.openid.OpenIDManager;
 import tw.edu.ncu.cc.oauth.server.entity.UserEntity;
 import tw.edu.ncu.cc.oauth.server.service.LoginService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
+import tw.edu.ncu.cc.openid.consumer.ncu.NCUOpenIDHandler;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +21,12 @@ import java.util.Map;
 @Service
 public class OpenIDLoginService implements LoginService {
 
-    private OpenIDManager openIDManager;
+    private NCUOpenIDHandler openIDHandler;
     private UserService userService;
 
     @Autowired
-    public void setOpenIDManager( OpenIDManager openIDManager ) {
-        this.openIDManager = openIDManager;
+    public void setOpenIDHandler( NCUOpenIDHandler openIDHandler ) {
+        this.openIDHandler = openIDHandler;
     }
 
     @Autowired
@@ -36,7 +36,7 @@ public class OpenIDLoginService implements LoginService {
 
     @Override
     public String getLoginPath() {
-        return openIDManager.getURLString();
+        return openIDHandler.getAuthenticationURLString();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class OpenIDLoginService implements LoginService {
 
         if( hasPreviousPage( savedRequest ) ) {
             if( isOpenIDResponseCorrect( map ) ) {
-                String studentID = openIDManager.getStudentID( map );
+                String studentID = openIDHandler.getNCUConsumer( map ).getStudentID();
                 if( isUserNotExist( studentID ) ) {
                     createNewUser ( studentID );
                 }
@@ -76,7 +76,7 @@ public class OpenIDLoginService implements LoginService {
     }
 
     private boolean isOpenIDResponseCorrect( Map< String, ? > map ) {
-        return openIDManager.checkAuthentication( map );
+        return openIDHandler.isResponseMapValid( map );
     }
 
     private boolean isUserNotExist( String userName ) {

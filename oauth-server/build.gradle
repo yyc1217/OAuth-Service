@@ -21,7 +21,8 @@ repositories{
 dependencies{
 
     compile project(':oauth-data')
-    compile name: 'manage-0.0.1-SNAPSHOT'
+    compile name: 'openid-core-0.0.1-SNAPSHOT'
+    compile name: 'openid-ncu-0.0.1-SNAPSHOT'
 
     compile 'org.springframework:spring-orm:4.1.1.RELEASE',
             'org.springframework:spring-webmvc:4.1.1.RELEASE',
@@ -30,14 +31,12 @@ dependencies{
             'org.springframework.security:spring-security-taglibs:3.2.5.RELEASE',
             'org.hibernate:hibernate-entitymanager:4.3.6.Final',
             'com.fasterxml.jackson.core:jackson-databind:2.4.3',
-            'javax.validation:validation-api:1.1.0.Final',
-            'org.apache.commons:commons-io:1.3.2',
             'c3p0:c3p0:0.9.1.2',
             'jstl:jstl:1.2'
 
-    compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.0')
-    compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.authzserver:1.0.0')
-    compile ('org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.0')
+    compile 'org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.0',
+            'org.apache.oltu.oauth2:org.apache.oltu.oauth2.authzserver:1.0.0',
+            'org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.0'
 
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 
