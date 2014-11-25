@@ -21,6 +21,4 @@
     <import resource="openid/openid.xml"/>
     <import resource="spring-security.xml"/>
 
-    <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-
 </beans>

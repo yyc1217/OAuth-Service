@@ -6,7 +6,6 @@ import specification.SpringSpecification
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository
 import tw.edu.ncu.cc.oauth.server.repository.ClientTokenRepository
 
-
 class ClientTokenRepositoryImplTest extends SpringSpecification {
 
     @Autowired

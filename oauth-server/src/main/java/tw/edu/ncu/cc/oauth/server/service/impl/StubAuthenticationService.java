@@ -12,4 +12,5 @@ public class StubAuthenticationService implements AuthenticationManager {
     public Authentication authenticate( Authentication authentication ) throws AuthenticationException {
         throw new UsernameNotFoundException( "stub service" );
     }
+
 }

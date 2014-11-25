@@ -1,7 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,14 +12,8 @@ import tw.edu.ncu.cc.oauth.server.service.ClientService;
 @Service
 public class ClientServiceImpl implements ClientService {
 
-    private PasswordEncoder encoder;
     private ClientRepository clientRepository;
     private ClientTokenRepository clientTokenRepository;
-
-    @Autowired
-    public void setEncoder( PasswordEncoder encoder ) {
-        this.encoder = encoder;
-    }
 
     @Autowired
     public void setClientRepository( ClientRepository clientRepository ) {
@@ -39,8 +32,9 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void updateClient( ClientEntity client ) {
-        clientRepository.updateClient( client );
+    @Transactional
+    public ClientEntity updateClient( ClientEntity client ) {
+        return clientRepository.updateClient( client );
     }
 
     @Override
@@ -57,16 +51,23 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public void generateClient( ClientEntity client ) {
+    public void refreshClientSecret( ClientEntity client, String secret ) {
+        client.setSecret( secret );
+        updateClient( client );
+        client.setSecret( secret );
+    }
+
+    @Override
+    @Transactional
+    public ClientEntity generateClient( ClientEntity client ) {
         ClientEntity clientEntity = new ClientEntity();
-        clientEntity.setId( client.getId() );
         clientEntity.setUrl( client.getUrl() );
         clientEntity.setName( client.getName() );
         clientEntity.setUser( client.getUser() );
         clientEntity.setCallback( client.getCallback() );
         clientEntity.setDescription( client.getDescription() );
-        clientEntity.setSecret( encoder.encode( client.getSecret() ) );
-        clientRepository.persistClient( client );
+        clientEntity.setSecret( client.getSecret() );
+        return clientRepository.generateClient( client );
     }
 
 }

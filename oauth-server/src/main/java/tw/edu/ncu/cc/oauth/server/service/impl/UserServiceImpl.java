@@ -21,13 +21,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void persistUser( UserEntity user ) {
-        userRepository.persistUser( user );
+        userRepository.generateUser( user );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public UserEntity getUser( String name ) {
         return userRepository.getUser( name );
+    }
+
+    @Override
+    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
+    public UserEntity getUser( int id ) {
+        return userRepository.getUser( id );
     }
 
 }

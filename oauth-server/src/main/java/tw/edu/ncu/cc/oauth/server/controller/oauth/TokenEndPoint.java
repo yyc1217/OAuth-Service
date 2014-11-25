@@ -120,7 +120,7 @@ public final class TokenEndPoint {
 
         UserEntity user = authCode.getUser();
         user.getTokens().add( accessToken );
-        userRepository.persistUser( user );
+        userRepository.generateUser( user );
 
         authCodeRepository.deleteAuthCode( authCode );
 

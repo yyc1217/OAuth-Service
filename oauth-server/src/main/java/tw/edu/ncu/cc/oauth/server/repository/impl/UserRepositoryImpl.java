@@ -11,8 +11,13 @@ import java.util.List;
 public class UserRepositoryImpl extends EntityManagerBean implements UserRepository {
 
     @Override
-    public void persistUser( UserEntity user ) {
-        getEntityManager().persist( user );
+    public UserEntity generateUser( UserEntity user ) {
+        return getEntityManager().merge( user );
+    }
+
+    @Override
+    public UserEntity updateUser( UserEntity user ) {
+        return getEntityManager().merge( user );
     }
 
     @Override

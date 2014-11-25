@@ -19,14 +19,14 @@ class ClientRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can persist ClientEntity"() {
         when:
-            clientRepository.persistClient(
+            def client = clientRepository.generateClient(
                     new ClientEntity(
                             name: "TEST APP",
                             user: userRepository.getUser( 1 )
                     )
             )
         then:
-            clientRepository.getClient( 3 ).getName() == "TEST APP"
+            clientRepository.getClient( client.getId() ).getName() == "TEST APP"
     }
 
     @Transactional
@@ -38,21 +38,22 @@ class ClientRepositoryImplTest extends SpringSpecification {
         and:
             clientRepository.updateClient( client )
         then:
-            clientRepository.getClient( 1 ).getDescription() == "NEW"
+            clientRepository.getClient( client.getId() ).getDescription() == "NEW"
     }
 
     @Transactional
     def "it can delete ClientEntity"() {
         given:
-            def client =  new ClientEntity(
-                    name: "TEST APP",
-                    user: userRepository.getUser( 1 )
+            def client = clientRepository.generateClient(
+                new ClientEntity(
+                        name: "TEST APP",
+                        user: userRepository.getUser( 1 )
+                )
             )
-            clientRepository.persistClient( client )
         when:
             clientRepository.deleteClient( client )
         then:
-            clientRepository.getClient( 3 ) == null
+            clientRepository.getClient( client.getId() ) == null
     }
 
 }
