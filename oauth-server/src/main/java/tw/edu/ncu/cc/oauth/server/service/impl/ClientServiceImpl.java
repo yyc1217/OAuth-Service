@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
+import tw.edu.ncu.cc.oauth.server.helper.TokenGenerator;
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 import tw.edu.ncu.cc.oauth.server.repository.ClientTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
@@ -14,6 +15,7 @@ public class ClientServiceImpl implements ClientService {
 
     private ClientRepository clientRepository;
     private ClientTokenRepository clientTokenRepository;
+    private TokenGenerator tokenGenerator = new TokenGenerator();
 
     @Autowired
     public void setClientRepository( ClientRepository clientRepository ) {
@@ -60,14 +62,12 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public ClientEntity generateClient( ClientEntity client ) {
-        ClientEntity clientEntity = new ClientEntity();
-        clientEntity.setUrl( client.getUrl() );
-        clientEntity.setName( client.getName() );
-        clientEntity.setUser( client.getUser() );
-        clientEntity.setCallback( client.getCallback() );
-        clientEntity.setDescription( client.getDescription() );
-        clientEntity.setSecret( client.getSecret() );
-        return clientRepository.generateClient( client );
+        String secret = tokenGenerator.generate();
+        client.setSecret( secret );
+        ClientEntity clientEntity = clientRepository.generateClient( client );
+        client.setId( clientEntity.getId() );
+        client.setSecret( secret );
+        return client;
     }
 
 }

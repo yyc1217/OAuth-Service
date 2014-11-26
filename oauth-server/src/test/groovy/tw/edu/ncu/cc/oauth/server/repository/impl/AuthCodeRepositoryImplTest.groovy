@@ -22,7 +22,7 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can persist AuthCodeEntity"() {
         when:
-            authCodeRepository.persistAuthCode(
+            authCodeRepository.generateAuthCode(
                 new AuthCodeEntity(
                         code : "TEST01",
                         permission: "000",
@@ -37,13 +37,14 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can delete AuthCodeEntity"() {
         given:
-            def code = new AuthCodeEntity (
-                    code : "TEST02",
-                    permission: "000",
-                    user  : userRepository.getUser( 2 ),
-                    client: clientRepository.getClient( 2 )
+            def code = authCodeRepository.generateAuthCode(
+                new AuthCodeEntity (
+                        code : "TEST02",
+                        permission: "000",
+                        user  : userRepository.getUser( 2 ),
+                        client: clientRepository.getClient( 2 )
+                )
             )
-            authCodeRepository.persistAuthCode( code )
         when:
             authCodeRepository.deleteAuthCode( code )
         then:

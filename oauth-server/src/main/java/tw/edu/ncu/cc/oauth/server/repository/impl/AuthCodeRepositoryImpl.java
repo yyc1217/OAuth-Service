@@ -11,13 +11,13 @@ import java.util.List;
 public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCodeRepository {
 
     @Override
-    public void persistAuthCode( AuthCodeEntity authCode ) {
-       getEntityManager().persist( authCode );
+    public void deleteAuthCode( AuthCodeEntity authCode ) {
+        getEntityManager().remove( authCode );
     }
 
     @Override
-    public void deleteAuthCode( AuthCodeEntity authCode ) {
-        getEntityManager().remove( authCode );
+    public AuthCodeEntity generateAuthCode( AuthCodeEntity authCode ) {
+        return getEntityManager().merge( authCode );
     }
 
     @Override

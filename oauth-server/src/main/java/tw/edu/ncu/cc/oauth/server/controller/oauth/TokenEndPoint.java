@@ -116,7 +116,7 @@ public final class TokenEndPoint {
         accessToken.setUser( authCode.getUser() );
         accessToken.setClient( authCode.getClient() );
         accessToken.setPermission( authCode.getPermission() );
-        accessTokenRepository.persistAccessToken( accessToken );
+        accessTokenRepository.generateAccessToken( accessToken );
 
         UserEntity user = authCode.getUser();
         user.getTokens().add( accessToken );

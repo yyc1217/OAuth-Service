@@ -21,26 +21,24 @@ class AuthCodeServiceImplTest extends SpringSpecification {
     private UserService userService
 
     @Transactional
-    def "it can generate AuthCodeEntity with encoded code"() {
+    def "it can generate AuthCodeEntity"() {
         when:
-            authCodeService.generateAuthCode(
+            def code = authCodeService.generateAuthCode(
                 new AuthCodeEntity(
-                        code  : "TEST",
                         client: clientService.getClient( 1 ),
                         user  : userService.getUser( 1 ),
                         permission: "000"
                 )
             )
         then:
-            authCodeService.getAuthCode( "TEST" ).getUser().getId() == 1
+            authCodeService.getAuthCode( code.getCode() ).getUser().getId() == 1
     }
 
     @Transactional
     def "it can delete AuthCodeEntity"() {
         given:
-            authCodeService.generateAuthCode(
+            def code = authCodeService.generateAuthCode(
                 new AuthCodeEntity(
-                        code  : "TEST",
                         client: clientService.getClient( 1 ),
                         user  : userService.getUser( 1 ),
                         permission: "000"
@@ -48,10 +46,10 @@ class AuthCodeServiceImplTest extends SpringSpecification {
             )
         when:
             authCodeService.deleteAuthCode(
-                    authCodeService.getAuthCode( "TEST" )
+                    authCodeService.getAuthCode( code.getCode() )
             );
         then:
-            authCodeService.getAuthCode( "TEST" ) == null
+            authCodeService.getAuthCode( code.getCode() ) == null
     }
 
 }

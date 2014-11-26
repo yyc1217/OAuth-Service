@@ -22,7 +22,7 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can persist AccessTokenEntity"() {
         when:
-            accessTokenRepository.persistAccessToken(
+            accessTokenRepository.generateAccessToken(
                 new AccessTokenEntity(
                         token : "TEST01",
                         permission: "000",
@@ -37,13 +37,14 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can delete AccessTokenEntity"() {
         given:
-            def token = new AccessTokenEntity (
-                    token : "TEST02",
-                    permission: "000",
-                    user  : userRepository.getUser( 2 ),
-                    client: clientRepository.getClient( 2 )
+            def token = accessTokenRepository.generateAccessToken(
+                new AccessTokenEntity (
+                        token : "TEST02",
+                        permission: "000",
+                        user  : userRepository.getUser( 2 ),
+                        client: clientRepository.getClient( 2 )
+                )
             )
-            accessTokenRepository.persistAccessToken( token )
         when:
             accessTokenRepository.deleteAccessToken( token )
         then:

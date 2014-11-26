@@ -21,8 +21,8 @@ import java.util.Map;
 @Service
 public class OpenIDLoginService implements LoginService {
 
-    private NCUOpenIDHandler openIDHandler;
     private UserService userService;
+    private NCUOpenIDHandler openIDHandler;
 
     @Autowired
     public void setOpenIDHandler( NCUOpenIDHandler openIDHandler ) {

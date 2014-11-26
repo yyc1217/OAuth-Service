@@ -11,13 +11,13 @@ import java.util.List;
 public class AccessTokenRepositoryImpl extends EntityManagerBean implements AccessTokenRepository {
 
     @Override
-    public void persistAccessToken( AccessTokenEntity accessToken ) {
-       getEntityManager().persist( accessToken );
+    public void deleteAccessToken( AccessTokenEntity accessToken ) {
+      getEntityManager().remove( accessToken );
     }
 
     @Override
-    public void deleteAccessToken( AccessTokenEntity accessToken ) {
-      getEntityManager().remove( accessToken );
+    public AccessTokenEntity generateAccessToken( AccessTokenEntity accessToken ) {
+        return getEntityManager().merge( accessToken );
     }
 
     @Override

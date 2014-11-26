@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
+import tw.edu.ncu.cc.oauth.server.helper.TokenGenerator;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 
@@ -12,6 +13,7 @@ import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 public class AuthCodeServiceImpl implements AuthCodeService {
 
     private AuthCodeRepository authCodeRepository;
+    private TokenGenerator tokenGenerator = new TokenGenerator();
 
     @Autowired
     public void setAuthCodeRepository( AuthCodeRepository authCodeRepository ) {
@@ -32,13 +34,22 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Transactional
-    public void generateAuthCode( AuthCodeEntity authCode ) {
-        AuthCodeEntity authCodeEntity = new AuthCodeEntity();
-        authCodeEntity.setCode( authCode.getCode() );
-        authCodeEntity.setClient( authCode.getClient() );
-        authCodeEntity.setUser( authCode.getUser() );
-        authCodeEntity.setPermission( authCode.getPermission() );
-        authCodeRepository.persistAuthCode( authCodeEntity );
+    public AuthCodeEntity generateAuthCode( AuthCodeEntity authCode ) {
+        String code = generateUnusedCode();
+        authCode.setCode( code );
+        AuthCodeEntity authCodeEntity = authCodeRepository.generateAuthCode( authCode );
+        authCode.setCode( code );
+        authCode.setId( authCodeEntity.getId() );
+        return authCode;
+    }
+
+    private String generateUnusedCode() {
+        while( true ) {
+            String code = tokenGenerator.generate();
+            if( authCodeRepository.getAuthCode( code ) == null ) {
+                return code;
+            }
+        }
     }
 
 }
