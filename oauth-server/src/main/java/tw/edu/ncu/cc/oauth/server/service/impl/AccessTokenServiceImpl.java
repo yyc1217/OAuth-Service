@@ -1,19 +1,39 @@
 package tw.edu.ncu.cc.oauth.server.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tw.edu.ncu.cc.oauth.server.component.SecretCodec;
+import tw.edu.ncu.cc.oauth.server.component.StringGenerator;
+import tw.edu.ncu.cc.oauth.server.data.Secret;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
-import tw.edu.ncu.cc.oauth.server.helper.TokenGenerator;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.AccessTokenService;
 
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
 
+    private SecretCodec secretCodec;
+    private PasswordEncoder passwordEncoder;
+    private StringGenerator stringGenerator;
     private AccessTokenRepository accessTokenRepository;
-    private TokenGenerator tokenGenerator = new TokenGenerator();
+
+    @Autowired
+    public void setPasswordEncoder( PasswordEncoder passwordEncoder ) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setSecretCodec( SecretCodec secretCodec ) {
+        this.secretCodec = secretCodec;
+    }
+
+    @Autowired
+    public void setStringGenerator( StringGenerator stringGenerator ) {
+        this.stringGenerator = stringGenerator;
+    }
 
     @Autowired
     public void setAccessTokenRepository( AccessTokenRepository accessTokenRepository ) {
@@ -23,7 +43,13 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AccessTokenEntity getAccessToken( String token ) {
-        return accessTokenRepository.getAccessToken( token );
+        Secret secret = secretCodec.decode( token );
+        AccessTokenEntity accessToken = accessTokenRepository.getAccessToken( secret.getId() );
+        if( accessToken != null && passwordEncoder.matches( secret.getSecret(), accessToken.getToken() ) ) {
+            return accessToken;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -35,21 +61,12 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     @Transactional
     public AccessTokenEntity generateAccessToken( AccessTokenEntity accessToken ) {
-        String token = generateUnusedToken();
-        accessToken.setToken( token );
-        AccessTokenEntity accessTokenEntity = accessTokenRepository.generateAccessToken( accessToken );
-        accessToken.setToken( token );
-        accessToken.setId( accessTokenEntity.getId() );
+        String token = stringGenerator.generateToken();
+        accessToken.setToken( passwordEncoder.encode( token ) );
+        AccessTokenEntity newAccessToken = accessTokenRepository.generateAccessToken( accessToken );
+        accessToken.setToken( secretCodec.encode( new Secret( newAccessToken.getId(), token ) ) );
+        accessToken.setId( newAccessToken.getId() );
         return accessToken;
-    }
-
-    private String generateUnusedToken() {
-        while( true ) {
-            String token = tokenGenerator.generate();
-            if( accessTokenRepository.getAccessToken( token ) == null ) {
-                return token;
-            }
-        }
     }
 
 }

@@ -10,5 +10,6 @@ public interface ClientService {
     public void deleteClient  ( ClientEntity client );
     public void revokeClientTokens( ClientEntity client );
     public void refreshClientSecret( ClientEntity client, String secret );
+    public boolean isClientValid( int clientID, String clientSecret );
 
 }

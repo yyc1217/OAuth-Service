@@ -70,4 +70,21 @@ class ClientServiceImplTest extends SpringSpecification {
             clientService.getClient( client.getId() ).getSecret() == "NEWSECRET"
     }
 
+    @Transactional
+    def "it can validate the client id and secret"() {
+        when:
+            def client = clientService.generateClient(
+                    new ClientEntity(
+                            name : "TESTSERVICE",
+                            user : userService.getUser( 1 )
+                    )
+            )
+        then:
+            clientService.isClientValid( client.getId(), client.getSecret() )
+        and:
+            ! clientService.isClientValid( client.getId(), "secret" )
+            ! clientService.isClientValid( 50, "123" )
+
+    }
+
 }

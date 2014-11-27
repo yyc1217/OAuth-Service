@@ -1,11 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tw.edu.ncu.cc.oauth.server.component.StringGenerator;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
-import tw.edu.ncu.cc.oauth.server.helper.TokenGenerator;
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 import tw.edu.ncu.cc.oauth.server.repository.ClientTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
@@ -13,9 +14,20 @@ import tw.edu.ncu.cc.oauth.server.service.ClientService;
 @Service
 public class ClientServiceImpl implements ClientService {
 
+    private PasswordEncoder passwordEncoder;
+    private StringGenerator stringGenerator;
     private ClientRepository clientRepository;
     private ClientTokenRepository clientTokenRepository;
-    private TokenGenerator tokenGenerator = new TokenGenerator();
+
+    @Autowired
+    public void setPasswordEncoder( PasswordEncoder passwordEncoder ) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setStringGenerator( StringGenerator stringGenerator ) {
+        this.stringGenerator = stringGenerator;
+    }
 
     @Autowired
     public void setClientRepository( ClientRepository clientRepository ) {
@@ -60,10 +72,17 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
+    public boolean isClientValid( int clientID, String clientSecret ) {
+        ClientEntity client = getClient( clientID );
+        return client != null && passwordEncoder.matches( clientSecret, client.getSecret() );
+    }
+
+    @Override
     @Transactional
     public ClientEntity generateClient( ClientEntity client ) {
-        String secret = tokenGenerator.generate();
-        client.setSecret( secret );
+        String secret = stringGenerator.generateToken();
+        client.setSecret( passwordEncoder.encode( secret ) );
         ClientEntity clientEntity = clientRepository.generateClient( client );
         client.setId( clientEntity.getId() );
         client.setSecret( secret );
