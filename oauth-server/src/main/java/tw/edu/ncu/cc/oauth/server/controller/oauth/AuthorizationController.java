@@ -41,11 +41,10 @@ public final class AuthorizationController {
         confirmEntity.setUserID( authentication.getName() );
 
         model.addAttribute( "access_confirm", confirmEntity );
-        model.addAttribute( "confirm_page", "/oauth/confirm" );
+        model.addAttribute( "confirm_page", request.getContextPath() + "/oauth/confirm" );
 
         return "oauth_approval";
 
     }
-
 
 }

@@ -7,7 +7,7 @@ import org.apache.oltu.oauth2.common.message.types.ResponseType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import tw.edu.ncu.cc.oauth.server.helper.PermissionUtil;
+import tw.edu.ncu.cc.oauth.server.component.PermissionCodec;
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 
 import javax.servlet.FilterChain;
@@ -23,10 +23,16 @@ import java.util.Set;
 public class OauthFilter extends AbstractFilter {
 
     private String filtPath;
+    private PermissionCodec permissionCodec;
     private ClientRepository clientRepository;
 
     public void setFiltPath( String filtPath ) {
         this.filtPath = filtPath;
+    }
+
+    @Autowired
+    public void setPermissionCodec( PermissionCodec permissionCodec ) {
+        this.permissionCodec = permissionCodec;
     }
 
     @Autowired
@@ -71,7 +77,7 @@ public class OauthFilter extends AbstractFilter {
             if ( clientRepository.getClient( Integer.parseInt( clientID ) ) == null ) {
                 throw new Exception( "CLIENT NOT EXISTS" );
             }
-            if ( ! PermissionUtil.isAllExist( scope ) ) {
+            if ( ! permissionCodec.isValid( scope ) ) {
                 throw new Exception( "PERMISSION NOT EXISTS" );
             }
 

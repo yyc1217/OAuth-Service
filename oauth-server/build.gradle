@@ -27,10 +27,12 @@ dependencies{
     compile 'org.springframework:spring-orm:4.1.1.RELEASE',
             'org.springframework:spring-webmvc:4.1.1.RELEASE',
             'org.springframework:spring-test:4.1.1.RELEASE',
+            'org.springframework:spring-context-support:4.1.1.RELEASE',
             'org.springframework.security:spring-security-config:3.2.5.RELEASE' ,
             'org.springframework.security:spring-security-taglibs:3.2.5.RELEASE',
             'org.hibernate:hibernate-entitymanager:4.3.6.Final',
             'com.fasterxml.jackson.core:jackson-databind:2.4.3',
+            'net.sf.ehcache:ehcache:2.9.0',
             'c3p0:c3p0:0.9.1.2',
             'jstl:jstl:1.2'
 
