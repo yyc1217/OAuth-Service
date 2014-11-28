@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Service
-public class OpenIDLoginService implements LoginService {
+public class LoginServiceImpl implements LoginService {
 
     private UserService userService;
     private NCUOpenIDHandler openIDHandler;

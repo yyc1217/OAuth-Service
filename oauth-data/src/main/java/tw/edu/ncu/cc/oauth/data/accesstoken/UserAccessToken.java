@@ -1,6 +1,5 @@
 package tw.edu.ncu.cc.oauth.data.accesstoken;
 
-import tw.edu.ncu.cc.oauth.data.Permission;
 
 import java.util.Date;
 
@@ -10,7 +9,7 @@ public class UserAccessToken {
     private String clientName;
     private String clientUrl;
     private Date lastUpdate;
-    private Permission[] scope;
+    private String[] scope;
 
     public int getId() {
         return id;
@@ -44,11 +43,11 @@ public class UserAccessToken {
         this.lastUpdate = lastUpdate;
     }
 
-    public Permission[] getScope() {
+    public String[] getScope() {
         return scope;
     }
 
-    public void setScope( Permission[] scope ) {
+    public void setScope( String[] scope ) {
         this.scope = scope;
     }
 

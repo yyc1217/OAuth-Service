@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.server.component.SecretCodec;
 import tw.edu.ncu.cc.oauth.server.component.StringGenerator;
-import tw.edu.ncu.cc.oauth.server.data.Secret;
+import tw.edu.ncu.cc.oauth.server.data.SerialSecret;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
@@ -43,7 +43,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AuthCodeEntity getAuthCode( String code ) {
-        Secret secret = secretCodec.decode( code );
+        SerialSecret secret = secretCodec.decode( code );
         AuthCodeEntity authCode = authCodeRepository.getAuthCode( secret.getId() );
         if( authCode != null && passwordEncoder.matches( secret.getSecret(), authCode.getCode() ) ) {
             return authCode;
@@ -64,7 +64,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         String code = stringGenerator.generateToken();
         authCode.setCode( passwordEncoder.encode( code ) );
         AuthCodeEntity newAuthCode = authCodeRepository.generateAuthCode( authCode );
-        authCode.setCode( secretCodec.encode( new Secret( newAuthCode.getId(), code ) ) );
+        authCode.setCode( secretCodec.encode( new SerialSecret( newAuthCode.getId(), code ) ) );
         authCode.setId( newAuthCode.getId() );
         return authCode;
     }

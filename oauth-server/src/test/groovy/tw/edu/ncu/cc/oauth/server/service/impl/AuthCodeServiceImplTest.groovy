@@ -27,7 +27,7 @@ class AuthCodeServiceImplTest extends SpringSpecification {
                 new AuthCodeEntity(
                         client: clientService.getClient( 1 ),
                         user  : userService.getUser( 1 ),
-                        permission: "000"
+                        scope: "000"
                 )
             )
         then:
@@ -41,7 +41,7 @@ class AuthCodeServiceImplTest extends SpringSpecification {
                 new AuthCodeEntity(
                         client: clientService.getClient( 1 ),
                         user  : userService.getUser( 1 ),
-                        permission: "000"
+                        scope: "000"
                 )
             )
         when:

@@ -3,12 +3,8 @@ package tw.edu.ncu.cc.oauth.server.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tw.edu.ncu.cc.oauth.server.component.PermissionCodec;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
-import tw.edu.ncu.cc.oauth.server.service.AuthCodeBuilder;
-import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
-import tw.edu.ncu.cc.oauth.server.service.ClientService;
-import tw.edu.ncu.cc.oauth.server.service.UserService;
+import tw.edu.ncu.cc.oauth.server.service.*;
 
 import java.util.Set;
 
@@ -18,7 +14,7 @@ public class AuthCodeBuilderImpl implements AuthCodeBuilder {
     private UserService userService;
     private ClientService clientService;
     private AuthCodeService authCodeService;
-    private PermissionCodec permissionCodec;
+    private ScopeCodecService scopeCodecService;
 
     @Autowired
     public void setUserService( UserService userService ) {
@@ -36,8 +32,8 @@ public class AuthCodeBuilderImpl implements AuthCodeBuilder {
     }
 
     @Autowired
-    public void setPermissionCodec( PermissionCodec permissionCodec ) {
-        this.permissionCodec = permissionCodec;
+    public void setScopeCodecService( ScopeCodecService scopeCodecService ) {
+        this.scopeCodecService = scopeCodecService;
     }
 
     @Override
@@ -46,7 +42,7 @@ public class AuthCodeBuilderImpl implements AuthCodeBuilder {
         AuthCodeEntity authCode = new AuthCodeEntity();
         authCode.setUser( userService.getUser( userID ) );
         authCode.setClient( clientService.getClient( clientID ) );
-        authCode.setPermission( permissionCodec.encode( scope ) );
+        authCode.setScope( scopeCodecService.encode( scope ) );
         authCodeService.generateAuthCode( authCode );
         return authCode;
     }

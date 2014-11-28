@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.server.component.SecretCodec;
 import tw.edu.ncu.cc.oauth.server.component.StringGenerator;
-import tw.edu.ncu.cc.oauth.server.data.Secret;
+import tw.edu.ncu.cc.oauth.server.data.SerialSecret;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.AccessTokenService;
@@ -43,7 +43,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AccessTokenEntity getAccessToken( String token ) {
-        Secret secret = secretCodec.decode( token );
+        SerialSecret secret = secretCodec.decode( token );
         AccessTokenEntity accessToken = accessTokenRepository.getAccessToken( secret.getId() );
         if( accessToken != null && passwordEncoder.matches( secret.getSecret(), accessToken.getToken() ) ) {
             return accessToken;
@@ -64,7 +64,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         String token = stringGenerator.generateToken();
         accessToken.setToken( passwordEncoder.encode( token ) );
         AccessTokenEntity newAccessToken = accessTokenRepository.generateAccessToken( accessToken );
-        accessToken.setToken( secretCodec.encode( new Secret( newAccessToken.getId(), token ) ) );
+        accessToken.setToken( secretCodec.encode( new SerialSecret( newAccessToken.getId(), token ) ) );
         accessToken.setId( newAccessToken.getId() );
         return accessToken;
     }

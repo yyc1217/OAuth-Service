@@ -21,6 +21,7 @@
     <util:properties id="connectionProperties" location="classpath:production/connection.properties"/>
     <util:properties id="hibernteProperties" location="classpath:production/hibernate.properties"/>
 
+    <import resource="cache.xml"/>
     <import resource="converter.xml"/>
     <import resource="database.xml"/>
 

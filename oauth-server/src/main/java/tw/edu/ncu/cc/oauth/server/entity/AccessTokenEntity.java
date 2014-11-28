@@ -1,12 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.entity;
 
-import tw.edu.ncu.cc.oauth.server.entity.base.PermissionEntity;
+import tw.edu.ncu.cc.oauth.server.entity.base.ScopeEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table( name = "access_token" )
-public class AccessTokenEntity extends PermissionEntity {
+public class AccessTokenEntity extends ScopeEntity {
 
     private String token;
     private UserEntity user;

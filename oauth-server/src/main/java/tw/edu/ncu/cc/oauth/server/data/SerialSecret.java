@@ -1,11 +1,11 @@
 package tw.edu.ncu.cc.oauth.server.data;
 
-public class Secret {
+public class SerialSecret {
 
     private int id;
     private String secret;
 
-    public Secret( int id, String secret ) {
+    public SerialSecret( int id, String secret ) {
         this.id = id;
         this.secret = secret;
     }

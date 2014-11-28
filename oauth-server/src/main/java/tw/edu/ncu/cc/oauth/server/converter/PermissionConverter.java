@@ -1,15 +1,14 @@
 package tw.edu.ncu.cc.oauth.server.converter;
 
 import org.springframework.core.convert.converter.Converter;
-import tw.edu.ncu.cc.oauth.data.Permission;
-import tw.edu.ncu.cc.oauth.server.entity.base.PermissionEntity;
+import tw.edu.ncu.cc.oauth.server.entity.base.ScopeEntity;
 
 import java.util.Set;
 
-public class PermissionConverter implements Converter< PermissionEntity, Set<Permission> > {
+public class PermissionConverter implements Converter< ScopeEntity, Set<String> > {
 
     @Override
-    public Set< Permission > convert( PermissionEntity source ) {
+    public Set< String > convert( ScopeEntity source ) {
         return null;
     }
 

@@ -25,7 +25,7 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
             authCodeRepository.generateAuthCode(
                 new AuthCodeEntity(
                         code : "TEST01",
-                        permission: "000",
+                        scope: "000",
                         user  : userRepository.getUser( 1 ),
                         client: clientRepository.getClient( 1 )
                 )
@@ -40,7 +40,7 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
             def code = authCodeRepository.generateAuthCode(
                 new AuthCodeEntity (
                         code : "TEST02",
-                        permission: "000",
+                        scope: "000",
                         user  : userRepository.getUser( 2 ),
                         client: clientRepository.getClient( 2 )
                 )

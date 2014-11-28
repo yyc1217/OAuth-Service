@@ -12,7 +12,7 @@ class AuthCodeBuilderImplTest extends SpringSpecification {
 
     def "it can build an AuthCodeEntity"() {
         given:
-            def scope = [ "CLASS_READ" ] as Set
+            def scope = [ "READ" ] as Set
             def clientID = 1
             def userID = "ADMIN1"
         when:

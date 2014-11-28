@@ -1,11 +1,9 @@
 package tw.edu.ncu.cc.oauth.data.accesstoken;
 
-import tw.edu.ncu.cc.oauth.data.Permission;
-
 public class SimpleAccessToken {
 
     private String token;
-    private Permission[] scope;
+    private String[] scope;
 
     public String getToken() {
         return token;
@@ -15,11 +13,11 @@ public class SimpleAccessToken {
         this.token = token;
     }
 
-    public Permission[] getScope() {
+    public String[] getScope() {
         return scope;
     }
 
-    public void setScope( Permission[] scope ) {
+    public void setScope( String[] scope ) {
         this.scope = scope;
     }
 
