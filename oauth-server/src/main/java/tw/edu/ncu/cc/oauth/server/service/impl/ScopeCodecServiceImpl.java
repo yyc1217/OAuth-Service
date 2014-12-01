@@ -11,8 +11,8 @@ import java.util.Set;
 @Service
 public class ScopeCodecServiceImpl implements ScopeCodecService {
 
-    public static final char YES = '1';
-    public static final char NO  = '0';
+    public static final char YES  = '1';
+    public static final String NO = "00000";
 
     private PermissionService permissionService;
 
@@ -37,7 +37,7 @@ public class ScopeCodecServiceImpl implements ScopeCodecService {
         for ( String permission : scope ) {
             int position = permissionService.getPermission( permission ).getId();
             while( position > stringBuilder.length() ) {
-                stringBuilder.append( NO + NO + NO + NO + NO );
+                stringBuilder.append( NO );
             }
             stringBuilder.setCharAt( position, YES );
         }

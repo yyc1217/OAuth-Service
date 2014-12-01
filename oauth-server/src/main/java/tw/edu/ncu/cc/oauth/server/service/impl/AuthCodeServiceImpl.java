@@ -42,6 +42,12 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
+    public AuthCodeEntity getAuthCode( int id ) {
+        return authCodeRepository.getAuthCode( id );
+    }
+
+    @Override
+    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AuthCodeEntity getAuthCode( String code ) {
         SerialSecret secret = secretCodec.decode( code );
         AuthCodeEntity authCode = authCodeRepository.getAuthCode( secret.getId() );
@@ -54,8 +60,8 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Transactional
-    public void deleteAuthCode( AuthCodeEntity authCode ) {
-        authCodeRepository.deleteAuthCode( authCode );
+    public void deleteAuthCode( int id ) {
+        authCodeRepository.deleteAuthCode( id );
     }
 
     @Override

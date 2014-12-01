@@ -42,6 +42,12 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
+    public AccessTokenEntity getAccessToken( int id ) {
+        return accessTokenRepository.getAccessToken( id );
+    }
+
+    @Override
+    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AccessTokenEntity getAccessToken( String token ) {
         SerialSecret secret = secretCodec.decode( token );
         AccessTokenEntity accessToken = accessTokenRepository.getAccessToken( secret.getId() );

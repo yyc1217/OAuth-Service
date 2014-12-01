@@ -32,6 +32,7 @@ dependencies{
             'org.springframework.security:spring-security-taglibs:3.2.5.RELEASE',
             'org.hibernate:hibernate-entitymanager:4.3.6.Final',
             'com.fasterxml.jackson.core:jackson-databind:2.4.3',
+            'org.aspectj:aspectjweaver:1.8.4',
             'net.sf.ehcache:ehcache:2.9.0',
             'c3p0:c3p0:0.9.1.2',
             'jstl:jstl:1.2'

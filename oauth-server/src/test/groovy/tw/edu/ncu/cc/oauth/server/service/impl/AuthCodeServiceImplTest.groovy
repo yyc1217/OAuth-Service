@@ -45,11 +45,14 @@ class AuthCodeServiceImplTest extends SpringSpecification {
                 )
             )
         when:
-            authCodeService.deleteAuthCode(
-                    authCodeService.getAuthCode( code.getCode() )
-            );
+            authCodeService.deleteAuthCode( code.getId() );
         then:
             authCodeService.getAuthCode( code.getCode() ) == null
+    }
+
+    def "it can get AuthCodeEntity by id"() {
+        expect:
+            authCodeService.getAuthCode( 1 ).getCode() == "CODE1"
     }
 
 }

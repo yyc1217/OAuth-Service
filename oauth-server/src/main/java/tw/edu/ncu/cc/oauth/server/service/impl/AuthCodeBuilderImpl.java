@@ -43,8 +43,7 @@ public class AuthCodeBuilderImpl implements AuthCodeBuilder {
         authCode.setUser( userService.getUser( userID ) );
         authCode.setClient( clientService.getClient( clientID ) );
         authCode.setScope( scopeCodecService.encode( scope ) );
-        authCodeService.generateAuthCode( authCode );
-        return authCode;
+        return authCodeService.generateAuthCode( authCode );
     }
 
 }

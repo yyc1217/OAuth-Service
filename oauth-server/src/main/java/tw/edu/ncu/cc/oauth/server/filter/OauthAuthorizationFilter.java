@@ -1,8 +1,8 @@
 package tw.edu.ncu.cc.oauth.server.filter;
 
 import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest;
+import org.apache.oltu.oauth2.common.error.OAuthError;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.ResponseType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Set;
 
 @Component
-public class OauthFilter extends AbstractFilter {
+public class OauthAuthorizationFilter extends AbstractFilter {
 
     private String filtPath;
     private ScopeCodecService scopeCodecService;
@@ -51,7 +51,7 @@ public class OauthFilter extends AbstractFilter {
             try {
                 validate( httpRequest );
             } catch ( Exception e ) {
-                httpResponse.sendError( HttpServletResponse.SC_BAD_REQUEST, "OAUTH : " + e.getMessage() );
+                httpResponse.sendError( HttpServletResponse.SC_BAD_REQUEST, e.getMessage() );
                 return;
             }
         }
@@ -60,29 +60,31 @@ public class OauthFilter extends AbstractFilter {
 
     public void validate( HttpServletRequest httpServletRequest  ) throws Exception {
 
-        try {
+        OAuthAuthzRequest oauthRequest =  new OAuthAuthzRequest( httpServletRequest );
+        Set<String> scope   = oauthRequest.getScopes();
+        String responseType = oauthRequest.getResponseType();
+        String clientState  = oauthRequest.getState();
+        String clientID     = oauthRequest.getClientId();
 
-            OAuthAuthzRequest oauthRequest =  new OAuthAuthzRequest( httpServletRequest );
-            Set<String> scope   = oauthRequest.getScopes();
-            String responseType = oauthRequest.getResponseType();
-            String clientState  = oauthRequest.getState();
-            String clientID     = oauthRequest.getClientId();
-
-            if ( StringUtils.isEmpty( clientState ) ) {
-                throw new Exception( "STATE IS NOT PROVIDED" );
-            }
-            if ( ! responseType.equals( ResponseType.CODE.toString() ) ) {
-                throw new Exception( "ONLY SUPPORT AUTH CODE" );
-            }
-            if ( clientRepository.getClient( Integer.parseInt( clientID ) ) == null ) {
-                throw new Exception( "CLIENT NOT EXISTS" );
-            }
-            if ( ! scopeCodecService.exist( scope ) ) {
-                throw new Exception( "PERMISSION NOT EXISTS" );
-            }
-
-        } catch ( OAuthProblemException | OAuthSystemException e ) {
-            throw new Exception( e.getMessage() );
+        if ( StringUtils.isEmpty( clientState ) ) {
+            throw OAuthProblemException.error(
+                    OAuthError.CodeResponse.INVALID_REQUEST, "STATE NOT PROVIDED"
+            );
+        }
+        if ( ! responseType.equals( ResponseType.CODE.toString() ) ) {
+            throw OAuthProblemException.error(
+                    OAuthError.CodeResponse.UNSUPPORTED_RESPONSE_TYPE, "ONLY SUPPORT AUTH CODE"
+            );
+        }
+        if ( clientRepository.getClient( Integer.parseInt( clientID ) ) == null ) {
+            throw OAuthProblemException.error(
+                    OAuthError.CodeResponse.UNAUTHORIZED_CLIENT, "CLIENT NOT EXISTS"
+            );
+        }
+        if ( ! scopeCodecService.exist( scope ) ) {
+            throw OAuthProblemException.error(
+                    OAuthError.CodeResponse.INVALID_SCOPE, "PERMISSION NOT EXISTS"
+            );
         }
     }
 

@@ -55,7 +55,8 @@ INSERT INTO user ( id, name ) VALUES
 
 INSERT INTO client ( id, name, secret, url, callback, description, user_id ) VALUES
   ( 1, 'APP1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1 ),
-  ( 2, 'APP2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 );
+  ( 2, 'APP2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 ),
+  ( 3, 'APP3', '$2a$10$Sm07H4pIys2Ae45rdO5rJuiEe/swFKoJneZLg.bU9HjFsBBZktwua', 'http://example.com', 'http://example.com', '3333', 2 );
 
 INSERT INTO access_token ( id, token, scope, client_id, user_id ) VALUES
   ( 1, 'TOKEN1', '11', 1,  1 ),

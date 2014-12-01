@@ -9,6 +9,7 @@
         http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
     <security:http pattern="/resource/*" security="none"/>
+    <security:http pattern="/oauth/token" security="none"/>
 
     <security:http disable-url-rewriting="true" authentication-manager-ref="authenticationService">
 
@@ -17,7 +18,8 @@
 
         <security:form-login login-page="/login"/>
 
-        <security:custom-filter ref="oauthFilter" after="LAST"/>
+        <security:custom-filter ref="oauthAuthorizationFilter" before="LAST"/>
+        <security:custom-filter ref="oauthTokenExchangeFilter" after ="LAST"/>
         <security:custom-filter ref="openidLoginFilter" after="FORM_LOGIN_FILTER"/>
 
         <security:csrf/>
@@ -26,8 +28,13 @@
 
     <bean id="authenticationService" class="tw.edu.ncu.cc.oauth.server.service.impl.StubAuthenticationService"/>
 
-    <bean id="oauthFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthFilter">
+    <bean id="oauthAuthorizationFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthAuthorizationFilter">
         <property name="filtPath" value="/oauth/authorize"/>
+    </bean>
+
+    <bean id="oauthTokenExchangeFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthTokenExchangeFilter">
+        <property name="filtPath" value="/oauth/token"/>
+        <property name="codeExpireSeconds" value="180"/>
     </bean>
 
     <bean id="openidLoginFilter" class="tw.edu.ncu.cc.oauth.server.filter.OpenIDLoginFilter">

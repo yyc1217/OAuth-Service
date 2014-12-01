@@ -3,6 +3,7 @@ OAuth Athorization Server writtern in Java
 
 ### Dependencies
 - c3p0 0.9.1.2
+- ehcache 2.9.0
 - hibernate 4.3.6
 - oltu.oauth2 1.0.0
 - spring-webmvc 4.1.1

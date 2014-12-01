@@ -52,4 +52,9 @@ class AccessTokenServiceImplTest extends SpringSpecification {
             accessTokenService.getAccessToken( token.getToken() ) == null
     }
 
+    def "it can get AccessTokenEntity by id"() {
+        expect:
+            accessTokenService.getAccessToken( 1 ).getToken() == "TOKEN1"
+    }
+
 }

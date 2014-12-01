@@ -11,8 +11,8 @@ import java.util.List;
 public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCodeRepository {
 
     @Override
-    public void deleteAuthCode( AuthCodeEntity authCode ) {
-        getEntityManager().remove( authCode );
+    public void deleteAuthCode( int id ) {
+        getEntityManager().remove( getAuthCode( id ) );
     }
 
     @Override

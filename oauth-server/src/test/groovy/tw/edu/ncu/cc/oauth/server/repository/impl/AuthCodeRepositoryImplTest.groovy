@@ -46,7 +46,7 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
                 )
             )
         when:
-            authCodeRepository.deleteAuthCode( code )
+            authCodeRepository.deleteAuthCode( code.getId() )
         then:
             authCodeRepository.getAuthCode( "TEST02" ) == null
     }
