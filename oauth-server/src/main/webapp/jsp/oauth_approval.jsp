@@ -33,12 +33,10 @@
                 </c:forEach>
             </div>
             <form:form action="${confirm_page}" method="POST">
-                <input name='state' value='${access_confirm.state}' type='hidden'/>
                 <input name='approval' value='true' type='hidden'/>
                 <input type="submit" id="accept-btn" class="btn btn-default" value="Accept"/>
             </form:form>
             <form:form action="${confirm_page}" method="POST">
-                <input name='state' value='${access_confirm.state}' type='hidden'/>
                 <input name='approval' value='false' type='hidden'/>
                 <input type="submit" id="decline-btn" class="btn btn-default" value="Decline"/>
             </form:form>

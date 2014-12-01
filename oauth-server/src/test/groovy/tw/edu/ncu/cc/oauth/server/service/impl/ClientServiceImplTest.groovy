@@ -21,7 +21,7 @@ class ClientServiceImplTest extends SpringSpecification {
             def client = clientService.generateClient(
                 new ClientEntity(
                         name : "TESTSERVICE",
-                        user : userService.getUser( 1 )
+                        owner: userService.getUser( 1 )
                 )
             )
         then:
@@ -76,7 +76,7 @@ class ClientServiceImplTest extends SpringSpecification {
             def client = clientService.generateClient(
                     new ClientEntity(
                             name : "TESTSERVICE",
-                            user : userService.getUser( 1 )
+                            owner: userService.getUser( 1 )
                     )
             )
         then:
@@ -84,7 +84,12 @@ class ClientServiceImplTest extends SpringSpecification {
         and:
             ! clientService.isClientValid( client.getId(), "secret" )
             ! clientService.isClientValid( 50, "123" )
+    }
 
+    def "it can validate the client id and secret 2"() {
+        expect:
+            clientService.isClientValid( 3, "SECRET" )
+            ! clientService.isClientValid( 3, "SECR" )
     }
 
 }

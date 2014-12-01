@@ -22,7 +22,7 @@ class ClientRepositoryImplTest extends SpringSpecification {
             def client = clientRepository.generateClient(
                     new ClientEntity(
                             name: "TEST APP",
-                            user: userRepository.getUser( 1 )
+                            owner: userRepository.getUser( 1 )
                     )
             )
         then:
@@ -47,7 +47,7 @@ class ClientRepositoryImplTest extends SpringSpecification {
             def client = clientRepository.generateClient(
                 new ClientEntity(
                         name: "TEST APP",
-                        user: userRepository.getUser( 1 )
+                        owner: userRepository.getUser( 1 )
                 )
             )
         when:

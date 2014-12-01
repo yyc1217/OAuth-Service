@@ -17,4 +17,14 @@ class SecretCodecImplTest extends Specification {
             secret1.getSecret() == secret2.getSecret()
     }
 
+    def "it will decode invalid format of String into Secret with specified value"() {
+        when:
+            def secret = secretCodec.decode( code )
+        then:
+            secret.getId() == 0
+            secret.getSecret() == ""
+        where:
+            code << [ "CODE:S", "MTIzSGVsbG8=", "MTIzOjpIZWxsbw==" ]
+    }
+
 }

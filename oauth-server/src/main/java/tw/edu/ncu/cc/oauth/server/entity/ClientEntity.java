@@ -15,7 +15,7 @@ public class ClientEntity extends BasicEntity {
     private String description;
     private String url;
     private String callback;
-    private UserEntity user;
+    private UserEntity owner;
     private Set<AccessTokenEntity> tokens = new HashSet<>();
 
     @Basic
@@ -69,13 +69,13 @@ public class ClientEntity extends BasicEntity {
     }
 
     @ManyToOne( optional = false )
-    @JoinColumn( name = "user_id" )
-    public UserEntity getUser() {
-        return user;
+    @JoinColumn( name = "owner_id" )
+    public UserEntity getOwner() {
+        return owner;
     }
 
-    public void setUser( UserEntity user ) {
-        this.user = user;
+    public void setOwner( UserEntity user ) {
+        this.owner = user;
     }
 
     @OneToMany( cascade = CascadeType.REMOVE, mappedBy = "client" )

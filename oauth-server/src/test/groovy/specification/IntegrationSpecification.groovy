@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
-@ContextConfiguration( [ "classpath:spring-core.xml", "classpath:spring-mvc.xml" ] )
+@ContextConfiguration( [ "classpath:spring-mvc.xml" ] )
 public abstract class IntegrationSpecification extends SpringSpecification {
 
     private WebApplicationContext webApplicationContext

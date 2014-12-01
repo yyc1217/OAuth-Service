@@ -9,24 +9,23 @@
         http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
     <security:http pattern="/resource/*" security="none"/>
-    <security:http pattern="/oauth/token" security="none"/>
+
+    <security:http pattern="/oauth/token" authentication-manager-ref="authenticationService">
+        <security:form-login/>
+        <security:custom-filter ref="oauthTokenExchangeFilter" after="LAST"/>
+    </security:http>
 
     <security:http disable-url-rewriting="true" authentication-manager-ref="authenticationService">
 
-        <security:intercept-url pattern="/oauth/**" access="ROLE_USER"/>
-        <security:intercept-url pattern="/**"       access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <security:intercept-url pattern="/oauth/authorize" access="ROLE_USER"/>
+        <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 
         <security:form-login login-page="/login"/>
-
-        <security:custom-filter ref="oauthAuthorizationFilter" before="LAST"/>
-        <security:custom-filter ref="oauthTokenExchangeFilter" after ="LAST"/>
         <security:custom-filter ref="openidLoginFilter" after="FORM_LOGIN_FILTER"/>
-
+        <security:custom-filter ref="oauthAuthorizationFilter" after="LAST"/>
         <security:csrf/>
 
     </security:http>
-
-    <bean id="authenticationService" class="tw.edu.ncu.cc.oauth.server.service.impl.StubAuthenticationService"/>
 
     <bean id="oauthAuthorizationFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthAuthorizationFilter">
         <property name="filtPath" value="/oauth/authorize"/>
@@ -36,6 +35,8 @@
         <property name="filtPath" value="/oauth/token"/>
         <property name="codeExpireSeconds" value="180"/>
     </bean>
+
+    <bean id="authenticationService" class="tw.edu.ncu.cc.oauth.server.service.impl.StubAuthenticationService"/>
 
     <bean id="openidLoginFilter" class="tw.edu.ncu.cc.oauth.server.filter.OpenIDLoginFilter">
         <property name="loginPath" value="/login"/>

@@ -24,7 +24,7 @@ public class UserEntity extends BasicEntity {
         this.name = account;
     }
 
-    @OneToMany( mappedBy = "user" )
+    @OneToMany( mappedBy = "owner")
     public Set<ClientEntity > getClients() {
         return clients;
     }

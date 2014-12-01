@@ -3,10 +3,11 @@ package tw.edu.ncu.cc.oauth.server.filter;
 import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest;
 import org.apache.oltu.oauth2.common.error.OAuthError;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.message.types.ResponseType;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder;
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
 
@@ -50,41 +51,70 @@ public class OauthAuthorizationFilter extends AbstractFilter {
         if( filtPath == null ||  requestPath.startsWith( filtPath ) ) {
             try {
                 validate( httpRequest );
-            } catch ( Exception e ) {
-                httpResponse.sendError( HttpServletResponse.SC_BAD_REQUEST, e.getMessage() );
+            } catch ( OAuthSystemException ignore ) {
+                return;
+            } catch ( OAuthProblemException e ) {
+                if( e.getRedirectUri() == null ) {
+                    httpResponse.sendError( HttpServletResponse.SC_BAD_REQUEST, e.getMessage() );
+                } else if( e.getState() == null ) {
+                    httpResponse.sendRedirect(
+                            String.format(
+                                    "%s?error=%s&error_description=%s",
+                                    e.getRedirectUri(),
+                                    e.getError(),
+                                    e.getDescription()
+                            )
+                    );
+                } else {
+                    httpResponse.sendRedirect(
+                            String.format(
+                                    "%s?error=%s&error_description=%s&state=%s",
+                                    e.getRedirectUri(),
+                                    e.getError(),
+                                    e.getDescription(),
+                                    e.getState()
+                            )
+                    );
+                }
                 return;
             }
         }
         chain.doFilter( request, response );
     }
 
-    public void validate( HttpServletRequest httpServletRequest  ) throws Exception {
+    public void validate( HttpServletRequest httpServletRequest  ) throws OAuthSystemException, OAuthProblemException {
 
         OAuthAuthzRequest oauthRequest =  new OAuthAuthzRequest( httpServletRequest );
-        Set<String> scope   = oauthRequest.getScopes();
-        String responseType = oauthRequest.getResponseType();
-        String clientState  = oauthRequest.getState();
-        String clientID     = oauthRequest.getClientId();
+        Set<String> scope  = oauthRequest.getScopes();
+        String clientState = oauthRequest.getState();
+        String clientIDS   = oauthRequest.getClientId();
+        int clientID = Integer.parseInt( clientIDS );
+
+        if ( clientRepository.getClient( clientID )  == null ) {
+            throw OAuthProblemBuilder
+                    .error( OAuthError.CodeResponse.INVALID_REQUEST )
+                    .description( "CLIENT NOT EXIST" )
+                    .state( clientState )
+                    .build();
+        }
+
+        String callback = clientRepository.getClient( clientID ).getCallback();
 
         if ( StringUtils.isEmpty( clientState ) ) {
-            throw OAuthProblemException.error(
-                    OAuthError.CodeResponse.INVALID_REQUEST, "STATE NOT PROVIDED"
-            );
-        }
-        if ( ! responseType.equals( ResponseType.CODE.toString() ) ) {
-            throw OAuthProblemException.error(
-                    OAuthError.CodeResponse.UNSUPPORTED_RESPONSE_TYPE, "ONLY SUPPORT AUTH CODE"
-            );
-        }
-        if ( clientRepository.getClient( Integer.parseInt( clientID ) ) == null ) {
-            throw OAuthProblemException.error(
-                    OAuthError.CodeResponse.UNAUTHORIZED_CLIENT, "CLIENT NOT EXISTS"
-            );
+            throw OAuthProblemBuilder
+                    .error( OAuthError.CodeResponse.INVALID_REQUEST )
+                    .description( "STATE NOT PROVIDED" )
+                    .redirectUri( callback )
+                    .state( clientState )
+                    .build();
         }
         if ( ! scopeCodecService.exist( scope ) ) {
-            throw OAuthProblemException.error(
-                    OAuthError.CodeResponse.INVALID_SCOPE, "PERMISSION NOT EXISTS"
-            );
+            throw OAuthProblemBuilder
+                    .error( OAuthError.CodeResponse.INVALID_SCOPE )
+                    .description( "PERMISSION NOT EXISTS" )
+                    .redirectUri( callback )
+                    .state( clientState )
+                    .build();
         }
     }
 
