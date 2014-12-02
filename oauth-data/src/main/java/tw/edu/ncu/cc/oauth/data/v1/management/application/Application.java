@@ -1,11 +1,12 @@
-package tw.edu.ncu.cc.oauth.data.application;
+package tw.edu.ncu.cc.oauth.data.v1.management.application;
 
-public class SimpleApplication {
+public class Application {
 
     private String name;
     private String description;
     private String url;
     private String callback;
+    private String owner;
 
     public String getName() {
         return name;
@@ -37,6 +38,14 @@ public class SimpleApplication {
 
     public void setCallback( String callback ) {
         this.callback = callback;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner( String owner ) {
+        this.owner = owner;
     }
 
 }
