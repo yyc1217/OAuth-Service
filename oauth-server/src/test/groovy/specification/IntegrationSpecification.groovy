@@ -2,17 +2,22 @@ package specification
 
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
+import org.springframework.security.web.FilterChainProxy
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
-@ContextConfiguration( [ "classpath:spring-mvc.xml" ] )
 public abstract class IntegrationSpecification extends SpringSpecification {
 
-    private WebApplicationContext webApplicationContext
     private MockMvc mockMvc
+    private FilterChainProxy securityFilterChain;
+    private WebApplicationContext webApplicationContext
+
+    @Autowired
+    public void setSecurityFilterChain( FilterChainProxy securityFilterChain ) {
+        this.securityFilterChain = securityFilterChain
+    }
 
     @Autowired
     public void setWebApplicationContext( WebApplicationContext webApplicationContext ) {
@@ -20,7 +25,10 @@ public abstract class IntegrationSpecification extends SpringSpecification {
     }
 
     def setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup( webApplicationContext ).build()
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup( webApplicationContext )
+                .addFilters( securityFilterChain )
+                .build()
     }
 
     public MockMvc server() {

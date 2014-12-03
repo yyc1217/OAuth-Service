@@ -51,22 +51,25 @@ CREATE TABLE IF NOT EXISTS permission
 
 INSERT INTO user ( id, name ) VALUES
   ( 1, 'ADMIN1' ),
-  ( 2, 'ADMIN2' );
+  ( 2, 'ADMIN2' ),
+  ( 3, 'ADMIN3' );
 
 INSERT INTO client ( id, name, secret, url, callback, description, owner_id ) VALUES
   ( 1, 'APP1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1 ),
   ( 2, 'APP2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 ),
   ( 3, 'APP3', '$2a$10$Sm07H4pIys2Ae45rdO5rJuiEe/swFKoJneZLg.bU9HjFsBBZktwua', 'http://example.com', 'http://example.com', '3333', 2 );
 
-INSERT INTO access_token ( id, token, scope, client_id, user_id ) VALUES
-  ( 1, 'TOKEN1', '11', 1,  1 ),
-  ( 2, 'TOKEN2', '00', 2,  2 ),
-  ( 3, 'Mzo6OiQyYSQxMCRRNzU5RzUvdGViSm9BWUc4OTVvRFhlTDJDZnlIVUFBRG1PaXUyTTdoeS9UZDFqa0RUN1lkRw==', '11', 2, 2 );
+INSERT INTO access_token ( id, token, scope, client_id, user_id, date_created ) VALUES
+  ( 1, 'TOKEN1', '11', 1,  1, '2050-12-25' ),
+  ( 2, 'TOKEN2', '00', 2,  2, '2050-12-25' ),
+  ( 3, '$2a$10$dEFh.Tw.s05K66oj0gOopObZePAyYRGuTCkBLN5dvrdfS4x2RxtHO', '11', 2, 2, '2050-12-25' );
+-- Mzo6OlRPS0VO
 
-INSERT INTO auth_code ( id, code, scope, client_id, user_id ) VALUES
-  ( 1, 'CODE1', '11', 1,  1 ),
-  ( 2, 'CODE2', '00', 2,  2 ),
-  ( 3, 'Mzo6OiQyYSQxMCRxNDNlY3FydHZVUFJOUld1UE9OSmF1Zjd0QXlYTURsb0ppTFd6RkNVaGkueDBScUtWVVpoSw==', '11', 2, 2 );
+INSERT INTO auth_code ( id, code, scope, client_id, user_id, date_created ) VALUES
+  ( 1, 'CODE1', '11', 1,  1, '2050-12-25' ),
+  ( 2, 'CODE2', '00', 2,  2, '2050-12-25' ),
+  ( 3, '$2a$10$BCU4w83RytKXMUswUcflw.nhZdAAq.lr4Mf873a0C6zXX/IclxTIC', '11', 3, 3, '2050-12-25' );
+-- Mzo6OkNPREU=
 
 INSERT INTO permission ( id, name ) VALUES
   ( 1, 'READ' ),

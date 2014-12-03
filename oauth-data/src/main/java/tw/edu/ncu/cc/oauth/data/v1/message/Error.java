@@ -1,11 +1,11 @@
-package tw.edu.ncu.cc.oauth.data.v1.response;
+package tw.edu.ncu.cc.oauth.data.v1.message;
 
-public class ResponseError {
+public class Error {
 
     private int error;
     private String error_description;
 
-    public ResponseError( int error, String error_description ) {
+    public Error( int error, String error_description ) {
         this.error = error;
         this.error_description = error_description;
     }

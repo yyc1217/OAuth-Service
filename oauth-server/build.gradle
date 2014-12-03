@@ -16,6 +16,9 @@ repositories{
     flatDir {
         dirs '../lib'
     }
+    maven {
+        url "http://repo.springsource.org/libs-milestone/"
+    }
 }
 
 dependencies{
@@ -28,8 +31,9 @@ dependencies{
             'org.springframework:spring-webmvc:4.1.1.RELEASE',
             'org.springframework:spring-test:4.1.1.RELEASE',
             'org.springframework:spring-context-support:4.1.1.RELEASE',
-            'org.springframework.security:spring-security-config:3.2.5.RELEASE' ,
-            'org.springframework.security:spring-security-taglibs:3.2.5.RELEASE',
+            'org.springframework.security:spring-security-config:4.0.0.M2' ,
+            'org.springframework.security:spring-security-taglibs:4.0.0.M2',
+            'org.springframework.security:spring-security-test:4.0.0.M2',
             'org.hibernate:hibernate-entitymanager:4.3.6.Final',
             'com.fasterxml.jackson.core:jackson-databind:2.4.3',
             'org.aspectj:aspectjweaver:1.8.4',

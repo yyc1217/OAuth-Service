@@ -52,14 +52,17 @@ public class OauthTokenExchangeFilter extends AbstractFilter {
 
         HttpServletRequest httpRequest   = ( HttpServletRequest ) request;
         HttpServletResponse httpResponse = ( HttpServletResponse ) response;
+
         String requestPath = httpRequest.getRequestURI().substring( httpRequest.getContextPath().length() );
+
+        httpRequest = new EditableRequest( httpRequest ).setParameter( "redirect_uri", "" );
 
         if( filtPath == null ||  requestPath.startsWith( filtPath ) ) {
 
             try {
-                validate( new EditableRequest( httpRequest ).setParameter( "redirect_uri", "stub" ) );
+                validate( httpRequest );
             } catch ( OAuthSystemException ignore ) {
-                httpResponse.sendError( HttpServletResponse.SC_BAD_REQUEST, "oauth system error" );
+                httpResponse.sendError( HttpServletResponse.SC_BAD_REQUEST, "filter oauth system error" );
                 return;
             } catch ( OAuthProblemException e ) {
                 httpResponse.setHeader( "Content-Type","application/json" );
@@ -76,7 +79,7 @@ public class OauthTokenExchangeFilter extends AbstractFilter {
                 return;
             }
         }
-        chain.doFilter( request, response );
+        chain.doFilter( httpRequest, response );
     }
 
     public void validate( HttpServletRequest httpServletRequest  ) throws OAuthProblemException, OAuthSystemException {
