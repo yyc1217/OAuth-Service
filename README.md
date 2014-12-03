@@ -1,6 +1,6 @@
-Web-Service
-===========
+## OAuth-Service [![Build Status](http://140.115.3.96:8080/jenkins/buildStatus/icon?job=OAuth-Service)](http://140.115.3.96:8080/jenkins/job/OAuth-Service/)
+OAuth Athorization Service for NCU
 
-Supply school information using OAuth
-
-Provide client applications a 'secure delegated access' to server resources 
+### Module
+- oauth-server : oauth service provider
+- oauth-data   : oauth service data

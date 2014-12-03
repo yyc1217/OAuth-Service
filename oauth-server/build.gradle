@@ -1,0 +1,68 @@
+
+apply plugin: 'war'
+apply plugin: 'org.akhikhl.gretty'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.akhikhl.gretty:gretty:1.1.7'
+    }
+}
+
+repositories{
+    flatDir {
+        dirs '../lib'
+    }
+    maven {
+        url "http://repo.springsource.org/libs-milestone/"
+    }
+}
+
+dependencies{
+
+    compile project(':oauth-data')
+    compile name: 'openid-core-0.0.1-SNAPSHOT'
+    compile name: 'openid-ncu-0.0.1-SNAPSHOT'
+
+    compile 'org.springframework:spring-orm:4.1.1.RELEASE',
+            'org.springframework:spring-webmvc:4.1.1.RELEASE',
+            'org.springframework:spring-test:4.1.1.RELEASE',
+            'org.springframework:spring-context-support:4.1.1.RELEASE',
+            'org.springframework.security:spring-security-config:4.0.0.M2' ,
+            'org.springframework.security:spring-security-taglibs:4.0.0.M2',
+            'org.springframework.security:spring-security-test:4.0.0.M2',
+            'org.hibernate:hibernate-entitymanager:4.3.6.Final',
+            'com.fasterxml.jackson.core:jackson-databind:2.4.3',
+            'org.aspectj:aspectjweaver:1.8.4',
+            'net.sf.ehcache:ehcache:2.9.0',
+            'c3p0:c3p0:0.9.1.2',
+            'jstl:jstl:1.2'
+
+    compile 'org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.0',
+            'org.apache.oltu.oauth2:org.apache.oltu.oauth2.authzserver:1.0.0',
+            'org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.0'
+
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+
+    runtime 'org.slf4j:slf4j-log4j12:1.7.7',
+            'com.h2database:h2:1.4.181',
+            'mysql:mysql-connector-java:5.1.32'
+
+    testCompile 'org.spockframework:spock-spring:1.0-groovy-2.3-SNAPSHOT',
+                'com.jayway.jsonpath:json-path-assert:0.9.1'
+
+}
+
+war {
+    archiveName = 'oauth-server.war'
+}
+
+gretty {
+    jvmArgs = ["-Dspring.profiles.active=production"]
+    httpsEnabled = true
+    httpsPort = 5278
+}
+
