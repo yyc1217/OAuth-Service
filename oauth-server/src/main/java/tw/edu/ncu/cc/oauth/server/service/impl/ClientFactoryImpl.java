@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.data.v1.management.application.Application;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
-import tw.edu.ncu.cc.oauth.server.service.ClientBuilder;
+import tw.edu.ncu.cc.oauth.server.service.ClientFactory;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
 
 @Service
-public class ClientBuilderImpl implements ClientBuilder {
+public class ClientFactoryImpl implements ClientFactory {
 
     private UserService userService;
     private ClientService clientService;
@@ -27,7 +27,7 @@ public class ClientBuilderImpl implements ClientBuilder {
 
     @Override
     @Transactional
-    public ClientEntity buildClient( Application application ) {
+    public ClientEntity createClient( Application application ) {
         ClientEntity clientEntity = new ClientEntity();
         clientEntity.setUrl( application.getUrl() );
         clientEntity.setName( application.getName() );

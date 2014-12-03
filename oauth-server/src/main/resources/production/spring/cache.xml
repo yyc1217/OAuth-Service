@@ -13,7 +13,7 @@
         http://www.springframework.org/schema/aop/spring-aop-4.1.xsd ">
 
     <bean id="cacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:production/ehcache.xml"/>
+        <property name="configLocation" value="classpath:production/cache-setting.xml"/>
         <property name="shared" value="false"/>
     </bean>
 
@@ -22,7 +22,7 @@
     </bean>
 
     <cache:advice id="PermissionDictionaryAdvice">
-        <cache:caching cache="production">
+        <cache:caching cache="permissionDictionary">
             <cache:cacheable method="generateDictionary" key="'PermissionDictionary'"/>
         </cache:caching>
     </cache:advice>

@@ -3,20 +3,20 @@ package tw.edu.ncu.cc.oauth.server.service.impl
 import org.springframework.beans.factory.annotation.Autowired
 import specification.SpringSpecification
 import tw.edu.ncu.cc.oauth.data.v1.management.application.Application
-import tw.edu.ncu.cc.oauth.server.service.ClientBuilder
+import tw.edu.ncu.cc.oauth.server.service.ClientFactory
 import tw.edu.ncu.cc.oauth.server.service.ClientService
 
-class ClientBuilderImplTest extends SpringSpecification {
+class ClientFactoryImplTest extends SpringSpecification {
 
     @Autowired
-    private ClientBuilder clientBuilder
+    private ClientFactory clientBuilder
 
     @Autowired
     private ClientService clientService
 
     def "it can build a ClientEntity"() {
         when:
-            def client = clientBuilder.buildClient(
+            def client = clientBuilder.createClient(
                 new Application(
                         name: "HelloWorld",
                         description: "description",

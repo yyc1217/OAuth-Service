@@ -16,11 +16,6 @@ public class UserRepositoryImpl extends EntityManagerBean implements UserReposit
     }
 
     @Override
-    public UserEntity updateUser( UserEntity user ) {
-        return getEntityManager().merge( user );
-    }
-
-    @Override
     public UserEntity getUser( int id ) {
         return getEntityManager().find( UserEntity.class, id );
     }

@@ -7,7 +7,7 @@ OAuth Athorization Server writtern in Java
 - hibernate 4.3.6
 - oltu.oauth2 1.0.0
 - spring-webmvc 4.1.1
-- spring-security 3.2.5
+- spring-security 4.0.0.M2
 
 ### Gradle
 - jettyStart : run embedded server in 'production' environment

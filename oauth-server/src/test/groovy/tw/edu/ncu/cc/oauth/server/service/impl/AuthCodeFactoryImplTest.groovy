@@ -2,13 +2,13 @@ package tw.edu.ncu.cc.oauth.server.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.service.AuthCodeBuilder
+import tw.edu.ncu.cc.oauth.server.service.AuthCodeFactory
 
 
-class AuthCodeBuilderImplTest extends SpringSpecification {
+class AuthCodeFactoryImplTest extends SpringSpecification {
 
     @Autowired
-    private AuthCodeBuilder authCodeBuilder
+    private AuthCodeFactory authCodeBuilder
 
     def "it can build an AuthCodeEntity"() {
         given:
@@ -16,7 +16,7 @@ class AuthCodeBuilderImplTest extends SpringSpecification {
             def clientID = 1
             def userID = "ADMIN1"
         when:
-            def code = authCodeBuilder.buildAuthCode(
+            def code = authCodeBuilder.createAuthCode(
                     clientID, userID, scope
             )
         then:

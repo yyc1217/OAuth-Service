@@ -14,7 +14,7 @@ import tw.edu.ncu.cc.oauth.data.v1.management.application.SecretIdApplication;
 import tw.edu.ncu.cc.oauth.data.v1.message.Error;
 import tw.edu.ncu.cc.oauth.data.v1.message.ErrorCode;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
-import tw.edu.ncu.cc.oauth.server.service.ClientBuilder;
+import tw.edu.ncu.cc.oauth.server.service.ClientFactory;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 import tw.edu.ncu.cc.oauth.server.validator.ApplicationValidator;
 
@@ -23,7 +23,7 @@ import tw.edu.ncu.cc.oauth.server.validator.ApplicationValidator;
 public class ApplicationController {
 
     private ClientService clientService;
-    private ClientBuilder clientBuilder;
+    private ClientFactory clientFactory;
     private ConversionService conversionService;
 
     @Autowired
@@ -32,8 +32,8 @@ public class ApplicationController {
     }
 
     @Autowired
-    public void setClientBuilder( ClientBuilder clientBuilder ) {
-        this.clientBuilder = clientBuilder;
+    public void setClientFactory( ClientFactory clientFactory ) {
+        this.clientFactory = clientFactory;
     }
 
     @Autowired
@@ -57,7 +57,7 @@ public class ApplicationController {
         } else {
             return new ResponseEntity<>(
                     conversionService.convert(
-                            clientBuilder.buildClient( application ), SecretIdApplication.class
+                            clientFactory.createClient( application ), SecretIdApplication.class
                     ), HttpStatus.OK
             );
         }

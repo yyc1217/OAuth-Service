@@ -18,7 +18,7 @@
     <import resource="develope/spring/application.xml"/>
     <import resource="production/spring/application.xml"/>
 
-    <import resource="openid/openid.xml"/>
+    <import resource="custom-openid.xml"/>
     <import resource="spring-security.xml"/>
     <import resource="spring-converter.xml"/>
 

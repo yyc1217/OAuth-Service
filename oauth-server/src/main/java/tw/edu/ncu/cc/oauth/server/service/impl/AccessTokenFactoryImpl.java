@@ -10,7 +10,7 @@ import tw.edu.ncu.cc.oauth.server.service.*;
 import java.util.Set;
 
 @Service
-public class AccessTokenBuilderImpl implements AccessTokenBuilder {
+public class AccessTokenFactoryImpl implements AccessTokenFactory {
 
     private UserService userService;
     private ClientService clientService;
@@ -45,7 +45,7 @@ public class AccessTokenBuilderImpl implements AccessTokenBuilder {
 
     @Override
     @Transactional
-    public AccessTokenEntity buildAccessToken( int clientID, String userID, Set< String > scope ) {
+    public AccessTokenEntity createAccessToken( int clientID, String userID, Set< String > scope ) {
         AccessTokenEntity accessToken = new AccessTokenEntity();
         accessToken.setUser( userService.getUser( userID ) );
         accessToken.setScope( scopeCodecService.encode( scope ) );
@@ -55,7 +55,7 @@ public class AccessTokenBuilderImpl implements AccessTokenBuilder {
 
     @Override
     @Transactional
-    public AccessTokenEntity buildAccessToken( String code ) {
+    public AccessTokenEntity createAccessToken( String code ) {
         AuthCodeEntity authCode = authCodeService.getAuthCode( code );
         authCodeService.deleteAuthCode( authCode.getId() );
         AccessTokenEntity accessToken = new AccessTokenEntity();

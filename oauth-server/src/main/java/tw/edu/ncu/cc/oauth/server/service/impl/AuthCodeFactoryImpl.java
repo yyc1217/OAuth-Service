@@ -9,7 +9,7 @@ import tw.edu.ncu.cc.oauth.server.service.*;
 import java.util.Set;
 
 @Service
-public class AuthCodeBuilderImpl implements AuthCodeBuilder {
+public class AuthCodeFactoryImpl implements AuthCodeFactory {
 
     private UserService userService;
     private ClientService clientService;
@@ -38,7 +38,7 @@ public class AuthCodeBuilderImpl implements AuthCodeBuilder {
 
     @Override
     @Transactional
-    public AuthCodeEntity buildAuthCode( int clientID, String userID, Set< String > scope ) {
+    public AuthCodeEntity createAuthCode( int clientID, String userID, Set< String > scope ) {
         AuthCodeEntity authCode = new AuthCodeEntity();
         authCode.setUser( userService.getUser( userID ) );
         authCode.setClient( clientService.getClient( clientID ) );
