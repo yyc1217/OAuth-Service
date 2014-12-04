@@ -53,8 +53,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public void deleteClient( ClientEntity client ) {
+    public ClientEntity deleteClient( ClientEntity client ) {
         clientRepository.deleteClient( client );
+        return client;
     }
 
     @Override
@@ -65,10 +66,12 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public void refreshClientSecret( ClientEntity client, String secret ) {
-        client.setSecret( secret );
+    public ClientEntity refreshClientSecret( ClientEntity client ) {
+        String secret = stringGenerator.generateToken();
+        client.setSecret( passwordEncoder.encode( secret ) );
         updateClient( client );
         client.setSecret( secret );
+        return client;
     }
 
     @Override

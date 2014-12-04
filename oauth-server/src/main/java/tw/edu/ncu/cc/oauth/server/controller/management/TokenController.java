@@ -1,62 +1,63 @@
 package tw.edu.ncu.cc.oauth.server.controller.management;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import tw.edu.ncu.cc.oauth.data.v1.management.application.IdApplication;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
-
-import java.util.Date;
+import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
+import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
+import tw.edu.ncu.cc.oauth.server.service.AccessTokenAPIService;
 
 
 @RestController
 @RequestMapping( value = "management/v1/token" )
-public class TokenController {
+public class TokenController extends APIExceptionHandler {
 
-    @RequestMapping( value = "{id}", method = RequestMethod.GET )
-    public ResponseEntity getToken( @PathVariable( "id" ) String id ) {
+    private ConversionService conversionService;
+    private AccessTokenAPIService accessTokenAPIService;
 
-        IdApplication application = new IdApplication();
-        application.setId( "1" );
-        application.setName( "demo" );
-        application.setDescription( "description" );
-        application.setUrl( "http://example.com" );
-        application.setCallback( "http://example.com" );
-        application.setOwner( "101502550" );
-
-        AccessToken accessToken = new AccessToken();
-        accessToken.setId( "1" );
-        accessToken.setUser( "101502549" );
-        accessToken.setScope( new String[]{ "READ", "WRITE" } );
-        accessToken.setLast_updated( new Date() );
-        accessToken.setApplication( application );
-
-        return new ResponseEntity<>( accessToken, HttpStatus.OK );
+    @Autowired
+    public void setConversionService( ConversionService conversionService ) {
+        this.conversionService = conversionService;
     }
 
+    @Autowired
+    public void setAccessTokenAPIService( AccessTokenAPIService accessTokenAPIService ) {
+        this.accessTokenAPIService = accessTokenAPIService;
+    }
+
+    @RequestMapping( value = "{id}", method = RequestMethod.GET )
+    public ResponseEntity getToken( @PathVariable( "id" ) final String id ) {
+        return ResponseBuilder
+                .noneValidation()
+                .resource( new ResponseBuilder.ResourceBuilder() {
+                    @Override
+                    public Object build() {
+                        return conversionService.convert(
+                                accessTokenAPIService.readAccessTokenByID( id ), AccessToken.class
+                        );
+                    }
+                } )
+                .build();
+    }
 
     @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
-    public ResponseEntity deleteToken( @PathVariable( "id" ) String id ) {
-
-        IdApplication application = new IdApplication();
-        application.setId( "1" );
-        application.setName( "demo" );
-        application.setDescription( "description" );
-        application.setUrl( "http://example.com" );
-        application.setCallback( "http://example.com" );
-        application.setOwner( "101502550" );
-
-        AccessToken accessToken = new AccessToken();
-        accessToken.setId( "1" );
-        accessToken.setUser( "101502549" );
-        accessToken.setScope( new String[]{ "READ", "WRITE" } );
-        accessToken.setLast_updated( new Date() );
-        accessToken.setApplication( application );
-
-        return new ResponseEntity<>( accessToken, HttpStatus.OK );
+    public ResponseEntity deleteToken( @PathVariable( "id" ) final String id ) {
+        return ResponseBuilder
+                .noneValidation()
+                .resource( new ResponseBuilder.ResourceBuilder() {
+                    @Override
+                    public Object build() {
+                        return conversionService.convert(
+                                accessTokenAPIService.deleteAccessTokenByID( id ), AccessToken.class
+                        );
+                    }
+                } )
+                .build();
     }
 
 }

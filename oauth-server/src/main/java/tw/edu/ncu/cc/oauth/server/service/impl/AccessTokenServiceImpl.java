@@ -60,8 +60,9 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     @Transactional
-    public void deleteAccessToken( AccessTokenEntity accessToken ) {
+    public AccessTokenEntity deleteAccessToken( AccessTokenEntity accessToken ) {
         accessTokenRepository.deleteAccessToken( accessToken );
+        return accessToken;
     }
 
     @Override

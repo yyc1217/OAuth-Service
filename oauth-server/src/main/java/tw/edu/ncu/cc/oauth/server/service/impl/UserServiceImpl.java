@@ -20,8 +20,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void persistUser( UserEntity user ) {
-        userRepository.generateUser( user );
+    public UserEntity createUser( UserEntity user ) {
+        return userRepository.generateUser( user );
     }
 
     @Override

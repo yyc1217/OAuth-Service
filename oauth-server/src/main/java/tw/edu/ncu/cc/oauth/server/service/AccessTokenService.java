@@ -8,6 +8,6 @@ public interface AccessTokenService {
     public AccessTokenEntity getAccessToken( int id );
     public AccessTokenEntity getAccessToken( String token );
     public AccessTokenEntity generateAccessToken( AccessTokenEntity accessToken );
-    public void deleteAccessToken  ( AccessTokenEntity accessToken );
+    public AccessTokenEntity deleteAccessToken  ( AccessTokenEntity accessToken );
 
 }

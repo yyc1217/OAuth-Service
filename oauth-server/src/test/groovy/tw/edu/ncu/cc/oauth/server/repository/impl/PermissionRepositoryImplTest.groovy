@@ -40,7 +40,7 @@ class PermissionRepositoryImplTest extends SpringSpecification {
 
     def "it can get all PermissionEntity"() {
         expect:
-            permissionRepository.getAllPermissions().size() == 2
+            permissionRepository.getAllPermissions().size() == 3
     }
 
 }

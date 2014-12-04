@@ -2,6 +2,7 @@ package tw.edu.ncu.cc.oauth.server.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.service.*;
@@ -9,7 +10,7 @@ import tw.edu.ncu.cc.oauth.server.service.*;
 import java.util.Set;
 
 @Service
-public class AuthCodeFactoryImpl implements AuthCodeFactory {
+public class AuthCodeAPIServiceImpl implements AuthCodeAPIService {
 
     private UserService userService;
     private ClientService clientService;
@@ -44,6 +45,18 @@ public class AuthCodeFactoryImpl implements AuthCodeFactory {
         authCode.setClient( clientService.getClient( clientID ) );
         authCode.setScope( scopeCodecService.encode( scope ) );
         return authCodeService.generateAuthCode( authCode );
+    }
+
+    @Override
+    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
+    public AuthCodeEntity readAuthCodeByID( String id ) {
+        return authCodeService.getAuthCode( Integer.parseInt( id ) );
+    }
+
+    @Override
+    @Transactional
+    public AuthCodeEntity deleteAuthCodeByID( String id ) {
+        return authCodeService.deleteAuthCode( readAuthCodeByID( id ) );
     }
 
 }

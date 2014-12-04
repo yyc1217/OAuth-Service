@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import tw.edu.ncu.cc.oauth.server.service.AccessTokenFactory;
+import tw.edu.ncu.cc.oauth.server.service.AccessTokenAPIService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,11 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public final class TokenExchangeController {
 
-    private AccessTokenFactory accessTokenFactory;
+    private AccessTokenAPIService accessTokenAPIService;
 
     @Autowired
-    public void setAccessTokenFactory( AccessTokenFactory accessTokenFactory ) {
-        this.accessTokenFactory = accessTokenFactory;
+    public void setAccessTokenAPIService( AccessTokenAPIService accessTokenAPIService ) {
+        this.accessTokenAPIService = accessTokenAPIService;
     }
 
     @RequestMapping( value = "oauth/token", method = RequestMethod.POST )
@@ -38,8 +38,8 @@ public final class TokenExchangeController {
     }
 
     private String prepareAccessToken( OAuthTokenRequest request ) {
-        return accessTokenFactory
-                .createAccessToken( request.getCode() )
+        return accessTokenAPIService
+                .createAccessTokenByCode( request.getCode() )
                 .getToken();
     }
 

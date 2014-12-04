@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.model.AccessConfirmModel;
-import tw.edu.ncu.cc.oauth.server.service.ClientService;
+import tw.edu.ncu.cc.oauth.server.service.ClientAPIService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,11 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 @SessionAttributes( "access_confirm" )
 public final class AuthorizationController {
 
-    private ClientService clientService;
+    private ClientAPIService clientAPIService;
 
     @Autowired
-    public void setClientService( ClientService clientService ) {
-        this.clientService = clientService;
+    public void setClientAPIService( ClientAPIService clientAPIService ) {
+        this.clientAPIService = clientAPIService;
     }
 
     @RequestMapping( value = "oauth/authorize", method = RequestMethod.GET )
@@ -32,7 +32,7 @@ public final class AuthorizationController {
 
         OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest( request );
 
-        ClientEntity client = clientService.getClient( Integer.parseInt( oauthRequest.getClientId() ) );
+        ClientEntity client = clientAPIService.readClient( oauthRequest.getClientId() );
 
         AccessConfirmModel confirmEntity = new AccessConfirmModel();
         confirmEntity.setState( oauthRequest.getState() );
