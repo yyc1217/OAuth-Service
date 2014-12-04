@@ -3,7 +3,7 @@ package tw.edu.ncu.cc.oauth.server.service.impl
 import org.springframework.beans.factory.annotation.Autowired
 import specification.SpringSpecification
 import tw.edu.ncu.cc.oauth.server.service.AccessTokenAPIService
-import tw.edu.ncu.cc.oauth.server.service.AuthCodeFactory
+import tw.edu.ncu.cc.oauth.server.service.AuthCodeAPIService
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService
 
 class AccessTokenAPIServiceImplTest extends SpringSpecification {
@@ -12,7 +12,7 @@ class AccessTokenAPIServiceImplTest extends SpringSpecification {
     private AccessTokenAPIService accessTokenAPIService
 
     @Autowired
-    private AuthCodeFactory authCodeBuilder
+    private AuthCodeAPIService authCodeBuilder
 
     @Autowired
     private AuthCodeService authCodeService

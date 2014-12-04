@@ -7,8 +7,9 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder;
-import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
+import tw.edu.ncu.cc.oauth.server.service.ClientAPIService;
 import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
 
 import javax.servlet.FilterChain;
@@ -24,21 +25,21 @@ import java.util.Set;
 public class OauthAuthorizationFilter extends AbstractFilter {
 
     private String filtPath;
+    private ClientAPIService clientAPIService;
     private ScopeCodecService scopeCodecService;
-    private ClientRepository clientRepository;
 
     public void setFiltPath( String filtPath ) {
         this.filtPath = filtPath;
     }
 
     @Autowired
-    public void setScopeCodec( ScopeCodecService scopeCodecService ) {
+    public void setScopeCodecService( ScopeCodecService scopeCodecService ) {
         this.scopeCodecService = scopeCodecService;
     }
 
     @Autowired
-    public void setClientRepository( ClientRepository clientRepository ) {
-        this.clientRepository = clientRepository;
+    public void setClientAPIService( ClientAPIService clientAPIService ) {
+        this.clientAPIService = clientAPIService;
     }
 
     @Override
@@ -87,10 +88,11 @@ public class OauthAuthorizationFilter extends AbstractFilter {
         OAuthAuthzRequest oauthRequest =  new OAuthAuthzRequest( httpServletRequest );
         Set<String> scope  = oauthRequest.getScopes();
         String clientState = oauthRequest.getState();
-        String clientIDS   = oauthRequest.getClientId();
-        int clientID = Integer.parseInt( clientIDS );
+        String clientID    = oauthRequest.getClientId();
 
-        if ( clientRepository.getClient( clientID )  == null ) {
+        ClientEntity client = clientAPIService.readClient( clientID );
+
+        if ( client == null ) {
             throw OAuthProblemBuilder
                     .error( OAuthError.CodeResponse.INVALID_REQUEST )
                     .description( "CLIENT NOT EXIST" )
@@ -98,7 +100,7 @@ public class OauthAuthorizationFilter extends AbstractFilter {
                     .build();
         }
 
-        String callback = clientRepository.getClient( clientID ).getCallback();
+        String callback = client.getCallback();
 
         if ( StringUtils.isEmpty( clientState ) ) {
             throw OAuthProblemBuilder

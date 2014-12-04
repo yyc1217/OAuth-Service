@@ -60,8 +60,9 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Transactional
-    public void deleteAuthCode( int id ) {
-        authCodeRepository.deleteAuthCode( id );
+    public AuthCodeEntity deleteAuthCode( AuthCodeEntity authCode ) {
+        authCodeRepository.deleteAuthCode( authCode );
+        return authCode;
     }
 
     @Override

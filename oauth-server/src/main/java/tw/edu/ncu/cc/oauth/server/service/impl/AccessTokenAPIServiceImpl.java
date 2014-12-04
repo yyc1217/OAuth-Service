@@ -58,7 +58,7 @@ public class AccessTokenAPIServiceImpl implements AccessTokenAPIService {
     @Transactional
     public AccessTokenEntity createAccessTokenByCode( String code ) {
         AuthCodeEntity authCode = authCodeService.getAuthCode( code );
-        authCodeService.deleteAuthCode( authCode.getId() );
+        authCodeService.deleteAuthCode( authCode );
         AccessTokenEntity accessToken = new AccessTokenEntity();
         accessToken.setScope( authCode.getScope() );
         accessToken.setUser( userService.getUser( authCode.getUser().getId() ) );
