@@ -65,9 +65,9 @@ class ClientServiceImplTest extends SpringSpecification {
         given:
             def client = clientService.getClient( 1 )
         when:
-            clientService.refreshClientSecret( client, "NEWSECRET" )
+            clientService.refreshClientSecret( client  )
         then:
-            clientService.getClient( client.getId() ).getSecret() == "NEWSECRET"
+            clientService.getClient( client.getId() ).getSecret() != "SECRET1"
     }
 
     @Transactional
