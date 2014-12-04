@@ -46,7 +46,7 @@ class PermissionServiceImplTest extends SpringSpecification {
 
     def "it can get PermissionEntity by id"() {
         expect:
-            permissionService.getPermission( 1 ).getName() == "READ"
+            permissionService.getPermission( 2 ).getName() == "READ"
     }
 
 }

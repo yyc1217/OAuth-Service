@@ -2,7 +2,6 @@ package tw.edu.ncu.cc.oauth.server.controller.management
 
 import org.springframework.http.MediaType
 import specification.IntegrationSpecification
-import spock.lang.Ignore
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -79,7 +78,6 @@ class ApplicationControllerTest extends IntegrationSpecification {
             ).andExpect( status().isNotFound() )
     }
 
-    @Ignore
     def "it can handle secret refresh of Client"() {
         given:
             def createResponse = JSON(

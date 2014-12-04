@@ -10,6 +10,6 @@ OAuth Athorization Server writtern in Java
 - spring-security 4.0.0.M2
 
 ### Gradle
-- jettyStart : run embedded server in 'production' environment
+- jettyStart : run embedded server
 - jettyStop  : stop embedded server above
 

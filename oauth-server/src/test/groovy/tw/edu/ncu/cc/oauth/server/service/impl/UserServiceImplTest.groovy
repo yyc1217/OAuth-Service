@@ -13,7 +13,7 @@ class UserServiceImplTest extends SpringSpecification {
 
     def "it can persist UserEntity"() {
         when:
-            userService.persistUser(
+            userService.createUser(
                 new UserEntity(
                         name: "NEW USER"
                 )
