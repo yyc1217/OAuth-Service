@@ -84,4 +84,10 @@ public class AccessTokenAPIServiceImpl implements AccessTokenAPIService {
         return accessTokenService.deleteAccessToken( readAccessTokenByID( id ) );
     }
 
+    @Override
+    public Set< String > readTokenScopeByToken( String token ) {
+        AccessTokenEntity accessToken = readAccessTokenByToken( token );
+        return accessToken == null ? null : scopeCodecService.decode( accessToken.getScope() );
+    }
+
 }

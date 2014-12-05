@@ -12,5 +12,6 @@ public interface AccessTokenAPIService {
     public AccessTokenEntity readAccessTokenByToken ( String token );
     public AccessTokenEntity readAccessTokenByID  ( String id );
     public AccessTokenEntity deleteAccessTokenByID( String id );
+    public Set< String > readTokenScopeByToken( String token );
 
 }

@@ -61,4 +61,12 @@ class AccessTokenAPIServiceImplTest extends SpringSpecification {
             accessTokenAPIService.readAccessTokenByID( token.getId() as String ) == null
     }
 
+    def "it can read AccessToken scope by token"() {
+        when:
+            def scope = accessTokenAPIService.readTokenScopeByToken( "Mzo6OlRPS0VO" )
+        then:
+            scope.contains( "ADMIN" )
+            scope.contains( "READ" )
+    }
+
 }

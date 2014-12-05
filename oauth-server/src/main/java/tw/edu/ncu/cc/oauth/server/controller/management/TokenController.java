@@ -60,4 +60,17 @@ public class TokenController extends APIExceptionHandler {
                 .build();
     }
 
+    @RequestMapping( value = "{token}/scope", method = RequestMethod.GET )
+    public ResponseEntity getTokenScope( @PathVariable( "token" ) final String token ) {
+        return ResponseBuilder
+                .noneValidation()
+                .resource( new ResponseBuilder.ResourceBuilder() {
+                    @Override
+                    public Object build() {
+                        return accessTokenAPIService.readTokenScopeByToken( token );
+                    }
+                } )
+                .build();
+    }
+
 }
