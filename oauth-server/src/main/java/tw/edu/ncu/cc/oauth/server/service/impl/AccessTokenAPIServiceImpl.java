@@ -85,6 +85,7 @@ public class AccessTokenAPIServiceImpl implements AccessTokenAPIService {
     }
 
     @Override
+    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public Set< String > readTokenScopeByToken( String token ) {
         AccessTokenEntity accessToken = readAccessTokenByToken( token );
         return accessToken == null ? null : scopeCodecService.decode( accessToken.getScope() );
