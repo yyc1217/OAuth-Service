@@ -33,7 +33,7 @@ public class UserAPIServiceImpl implements UserAPIService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public UserEntity readUser( String name ) {
-        return userService.getUser( name );
+        return userService.readUser( name );
     }
 
     @Override

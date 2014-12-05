@@ -37,7 +37,7 @@ class AccessTokenAPIServiceImplTest extends SpringSpecification {
         then:
             token.getUser().getId() == 1
             token.getClient().getId() == 1
-            authCodeService.getAuthCode( code.getId() ) == null
+            authCodeService.readAuthCode( code.getId() ) == null
     }
 
     def "it can read AccessTokenEntity by id"() {

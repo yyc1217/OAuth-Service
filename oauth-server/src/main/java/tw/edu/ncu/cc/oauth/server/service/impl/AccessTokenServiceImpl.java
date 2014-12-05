@@ -42,15 +42,15 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public AccessTokenEntity getAccessToken( int id ) {
-        return accessTokenRepository.getAccessToken( id );
+    public AccessTokenEntity readAccessToken( int id ) {
+        return accessTokenRepository.readAccessToken( id );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public AccessTokenEntity getAccessToken( String token ) {
+    public AccessTokenEntity readAccessToken( String token ) {
         SerialSecret secret = secretCodec.decode( token );
-        AccessTokenEntity accessToken = accessTokenRepository.getAccessToken( secret.getId() );
+        AccessTokenEntity accessToken = accessTokenRepository.readAccessToken( secret.getId() );
         if( accessToken != null && passwordEncoder.matches( secret.getSecret(), accessToken.getToken() ) ) {
             return accessToken;
         } else {
@@ -67,10 +67,10 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     @Transactional
-    public AccessTokenEntity generateAccessToken( AccessTokenEntity accessToken ) {
+    public AccessTokenEntity createAccessToken( AccessTokenEntity accessToken ) {
         String token = stringGenerator.generateToken();
         accessToken.setToken( passwordEncoder.encode( token ) );
-        AccessTokenEntity newAccessToken = accessTokenRepository.generateAccessToken( accessToken );
+        AccessTokenEntity newAccessToken = accessTokenRepository.createAccessToken( accessToken );
         accessToken.setToken( secretCodec.encode( new SerialSecret( newAccessToken.getId(), token ) ) );
         accessToken.setId( newAccessToken.getId() );
         return accessToken;

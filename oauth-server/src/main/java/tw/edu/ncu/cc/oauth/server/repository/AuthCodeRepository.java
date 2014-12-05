@@ -4,7 +4,7 @@ import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 
 public interface AuthCodeRepository {
     public void deleteAuthCode( AuthCodeEntity authCode );
-    public AuthCodeEntity generateAuthCode( AuthCodeEntity authCode );
-    public AuthCodeEntity getAuthCode( String code );
-    public AuthCodeEntity getAuthCode( int id );
+    public AuthCodeEntity createAuthCode( AuthCodeEntity authCode );
+    public AuthCodeEntity readAuthCode( String code );
+    public AuthCodeEntity readAuthCode( int id );
 }

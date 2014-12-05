@@ -48,34 +48,34 @@ public class AccessTokenAPIServiceImpl implements AccessTokenAPIService {
     @Transactional
     public AccessTokenEntity createAccessToken( int clientID, String userID, Set< String > scope ) {
         AccessTokenEntity accessToken = new AccessTokenEntity();
-        accessToken.setUser( userService.getUser( userID ) );
+        accessToken.setUser( userService.readUser( userID ) );
         accessToken.setScope( scopeCodecService.encode( scope ) );
-        accessToken.setClient( clientService.getClient( clientID ) );
-        return accessTokenService.generateAccessToken( accessToken );
+        accessToken.setClient( clientService.readClient( clientID ) );
+        return accessTokenService.createAccessToken( accessToken );
     }
 
     @Override
     @Transactional
     public AccessTokenEntity createAccessTokenByCode( String code ) {
-        AuthCodeEntity authCode = authCodeService.getAuthCode( code );
+        AuthCodeEntity authCode = authCodeService.readAuthCode( code );
         authCodeService.deleteAuthCode( authCode );
         AccessTokenEntity accessToken = new AccessTokenEntity();
         accessToken.setScope( authCode.getScope() );
-        accessToken.setUser( userService.getUser( authCode.getUser().getId() ) );
-        accessToken.setClient( clientService.getClient( authCode.getClient().getId() ) );
-        return accessTokenService.generateAccessToken( accessToken );
+        accessToken.setUser( userService.readUser( authCode.getUser().getId() ) );
+        accessToken.setClient( clientService.readClient( authCode.getClient().getId() ) );
+        return accessTokenService.createAccessToken( accessToken );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AccessTokenEntity readAccessTokenByToken( String token ) {
-        return accessTokenService.getAccessToken( token );
+        return accessTokenService.readAccessToken( token );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AccessTokenEntity readAccessTokenByID( String id ) {
-        return accessTokenService.getAccessToken( Integer.parseInt( id ) );
+        return accessTokenService.readAccessToken( Integer.parseInt( id ) );
     }
 
     @Override

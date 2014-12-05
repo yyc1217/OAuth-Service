@@ -16,14 +16,14 @@ public class PermissionRepositoryImpl extends EntityManagerBean implements Permi
     }
 
     @Override
-    public List< PermissionEntity > getAllPermissions() {
+    public List< PermissionEntity > readAllPermissions() {
         return getEntityManager()
                 .createQuery( "SELECT permission FROM PermissionEntity permission", PermissionEntity.class )
                 .getResultList();
     }
 
     @Override
-    public PermissionEntity getPermission( String name ) {
+    public PermissionEntity readPermission( String name ) {
         List< PermissionEntity > list = getEntityManager()
                 .createQuery(
                         "SELECT permission FROM PermissionEntity permission " +
@@ -34,7 +34,7 @@ public class PermissionRepositoryImpl extends EntityManagerBean implements Permi
     }
 
     @Override
-    public PermissionEntity generatePermission( PermissionEntity permission ) {
+    public PermissionEntity createPermission( PermissionEntity permission ) {
         return getEntityManager().merge( permission );
     }
 

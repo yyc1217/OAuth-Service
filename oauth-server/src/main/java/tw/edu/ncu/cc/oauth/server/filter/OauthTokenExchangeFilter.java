@@ -112,7 +112,7 @@ public class OauthTokenExchangeFilter extends AbstractFilter {
     }
 
     private boolean isAuthCodeValid( String authCode, Integer clientID ) {
-        AuthCodeEntity code = authCodeService.getAuthCode( authCode );
+        AuthCodeEntity code = authCodeService.readAuthCode( authCode );
         if( code == null || ! code.getClient().getId().equals( clientID ) ) {
             return false;
         } else  if( codeExpireSeconds == 0 ) {

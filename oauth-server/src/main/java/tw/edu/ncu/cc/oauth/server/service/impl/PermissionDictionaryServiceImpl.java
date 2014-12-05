@@ -17,8 +17,8 @@ public class PermissionDictionaryServiceImpl implements PermissionDictionaryServ
     }
 
     @Override
-    public PermissionDictionary generateDictionary() {
-        return new PermissionDictionary( permissionRepository.getAllPermissions() );
+    public PermissionDictionary createDictionary() {
+        return new PermissionDictionary( permissionRepository.readAllPermissions() );
     }
 
 }

@@ -29,13 +29,13 @@ public class ClientAPIServiceImpl implements ClientAPIService {
     @Override
     @Transactional
     public ClientEntity createClient( Application application ) {
-        return clientService.generateClient( buildClientEntity( application ) );
+        return clientService.createClient( buildClientEntity( application ) );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public ClientEntity readClient( String id ) {
-        return clientService.getClient( Integer.parseInt( id ) );
+        return clientService.readClient( Integer.parseInt( id ) );
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ClientAPIServiceImpl implements ClientAPIService {
         clientEntity.setName( application.getName() );
         clientEntity.setCallback( application.getCallback() );
         clientEntity.setDescription( application.getDescription() );
-        clientEntity.setOwner( userService.getUser( application.getOwner() ) );
+        clientEntity.setOwner( userService.readUser( application.getOwner() ) );
         return clientEntity;
     }
 

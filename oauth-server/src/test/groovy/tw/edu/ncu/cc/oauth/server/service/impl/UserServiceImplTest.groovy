@@ -19,7 +19,7 @@ class UserServiceImplTest extends SpringSpecification {
                 )
             )
         then:
-            userService.getUser( "NEW USER" ) != null
+            userService.readUser( "NEW USER" ) != null
     }
 
 }

@@ -7,9 +7,9 @@ import java.util.List;
 public interface PermissionService {
 
     public void deletePermission( PermissionEntity permission );
-    public PermissionEntity generatePermission( PermissionEntity permission );
-    public PermissionEntity getPermission( int id );
-    public PermissionEntity getPermission( String name );
-    public List< PermissionEntity > getAllPermissions();
+    public PermissionEntity createPermission( PermissionEntity permission );
+    public PermissionEntity readPermission( int id );
+    public PermissionEntity readPermission( String name );
+    public List< PermissionEntity > readAllPermissions();
 
 }

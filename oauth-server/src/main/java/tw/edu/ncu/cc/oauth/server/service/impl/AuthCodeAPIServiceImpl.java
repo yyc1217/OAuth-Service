@@ -41,16 +41,16 @@ public class AuthCodeAPIServiceImpl implements AuthCodeAPIService {
     @Transactional
     public AuthCodeEntity createAuthCode( int clientID, String userID, Set< String > scope ) {
         AuthCodeEntity authCode = new AuthCodeEntity();
-        authCode.setUser( userService.getUser( userID ) );
-        authCode.setClient( clientService.getClient( clientID ) );
+        authCode.setUser( userService.readUser( userID ) );
+        authCode.setClient( clientService.readClient( clientID ) );
         authCode.setScope( scopeCodecService.encode( scope ) );
-        return authCodeService.generateAuthCode( authCode );
+        return authCodeService.createAuthCode( authCode );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AuthCodeEntity readAuthCodeByID( String id ) {
-        return authCodeService.getAuthCode( Integer.parseInt( id ) );
+        return authCodeService.readAuthCode( Integer.parseInt( id ) );
     }
 
     @Override

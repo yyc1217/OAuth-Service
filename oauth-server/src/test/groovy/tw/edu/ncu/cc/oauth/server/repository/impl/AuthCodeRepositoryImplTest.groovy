@@ -22,38 +22,38 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can persist AuthCodeEntity"() {
         when:
-            authCodeRepository.generateAuthCode(
+            authCodeRepository.createAuthCode(
                 new AuthCodeEntity(
                         code : "TEST01",
                         scope: "000",
-                        user  : userRepository.getUser( 1 ),
-                        client: clientRepository.getClient( 1 )
+                        user  : userRepository.readUser( 1 ),
+                        client: clientRepository.readClient( 1 )
                 )
             )
         then:
-            authCodeRepository.getAuthCode( "TEST01" ) != null
+            authCodeRepository.readAuthCode( "TEST01" ) != null
     }
 
     @Transactional
     def "it can delete AuthCodeEntity"() {
         given:
-            def code = authCodeRepository.generateAuthCode(
+            def code = authCodeRepository.createAuthCode(
                 new AuthCodeEntity (
                         code : "TEST02",
                         scope: "000",
-                        user  : userRepository.getUser( 2 ),
-                        client: clientRepository.getClient( 2 )
+                        user  : userRepository.readUser( 2 ),
+                        client: clientRepository.readClient( 2 )
                 )
             )
         when:
             authCodeRepository.deleteAuthCode( code )
         then:
-            authCodeRepository.getAuthCode( "TEST02" ) == null
+            authCodeRepository.readAuthCode( "TEST02" ) == null
     }
 
     def "it can get AuthCodeEntity by id"() {
         expect:
-            authCodeRepository.getAuthCode( 1 ).getCode() == "CODE1"
+            authCodeRepository.readAuthCode( 1 ).getCode() == "CODE1"
     }
 
 }

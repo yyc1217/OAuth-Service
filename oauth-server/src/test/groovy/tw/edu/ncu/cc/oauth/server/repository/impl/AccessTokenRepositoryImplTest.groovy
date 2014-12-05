@@ -22,38 +22,38 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can persist AccessTokenEntity"() {
         when:
-            accessTokenRepository.generateAccessToken(
+            accessTokenRepository.createAccessToken(
                 new AccessTokenEntity(
                         token : "TEST01",
                         scope: "000",
-                        user  : userRepository.getUser( 1 ),
-                        client: clientRepository.getClient( 1 )
+                        user  : userRepository.readUser( 1 ),
+                        client: clientRepository.readClient( 1 )
                 )
             )
         then:
-            accessTokenRepository.getAccessToken( "TEST01" ) != null
+            accessTokenRepository.readAccessToken( "TEST01" ) != null
     }
 
     @Transactional
     def "it can delete AccessTokenEntity"() {
         given:
-            def token = accessTokenRepository.generateAccessToken(
+            def token = accessTokenRepository.createAccessToken(
                 new AccessTokenEntity (
                         token : "TEST02",
                         scope: "000",
-                        user  : userRepository.getUser( 2 ),
-                        client: clientRepository.getClient( 2 )
+                        user  : userRepository.readUser( 2 ),
+                        client: clientRepository.readClient( 2 )
                 )
             )
         when:
             accessTokenRepository.deleteAccessToken( token )
         then:
-            accessTokenRepository.getAccessToken( "TEST02" ) == null
+            accessTokenRepository.readAccessToken( "TEST02" ) == null
     }
 
     def "it can get AccessTokenEntity by id"() {
         expect:
-            accessTokenRepository.getAccessToken( 1 ).getToken() == "TOKEN1"
+            accessTokenRepository.readAccessToken( 1 ).getToken() == "TOKEN1"
     }
 
 }

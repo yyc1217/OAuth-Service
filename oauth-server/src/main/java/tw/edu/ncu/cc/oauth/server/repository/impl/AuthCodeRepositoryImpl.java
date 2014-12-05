@@ -16,17 +16,17 @@ public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCod
     }
 
     @Override
-    public AuthCodeEntity generateAuthCode( AuthCodeEntity authCode ) {
+    public AuthCodeEntity createAuthCode( AuthCodeEntity authCode ) {
         return getEntityManager().merge( authCode );
     }
 
     @Override
-    public AuthCodeEntity getAuthCode( int id ) {
+    public AuthCodeEntity readAuthCode( int id ) {
         return getEntityManager().find( AuthCodeEntity.class, id );
     }
 
     @Override
-    public AuthCodeEntity getAuthCode( String code ) {
+    public AuthCodeEntity readAuthCode( String code ) {
         List<AuthCodeEntity> list = getEntityManager()
                 .createQuery(
                         "SELECT authCode FROM AuthCodeEntity authCode " +

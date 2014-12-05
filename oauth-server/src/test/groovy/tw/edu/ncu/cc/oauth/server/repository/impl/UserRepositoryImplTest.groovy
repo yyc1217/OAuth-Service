@@ -15,17 +15,17 @@ class UserRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can persist UserEntity"() {
         when:
-            userRepository.generateUser(
+            userRepository.createUser(
                     new UserEntity(
                             name: "TEST"
                     )
             )
         then:
-            userRepository.getUser( "TEST" ) != null
+            userRepository.readUser( "TEST" ) != null
     }
 
     def "it can get UserEntity by id"() {
-        userRepository.getUser( 1 ).getName() == "ADMIN1"
+        userRepository.readUser( 1 ).getName() == "ADMIN1"
     }
 
 }

@@ -35,24 +35,24 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     @Transactional
-    public PermissionEntity generatePermission( PermissionEntity permission ) {
-        return permissionRepository.generatePermission( permission );
+    public PermissionEntity createPermission( PermissionEntity permission ) {
+        return permissionRepository.createPermission( permission );
     }
 
     @Override
-    public PermissionEntity getPermission( int id ) {
-        return dictionaryService.generateDictionary().getPermission( id );
+    public PermissionEntity readPermission( int id ) {
+        return dictionaryService.createDictionary().getPermission( id );
     }
 
     @Override
-    public PermissionEntity getPermission( String name ) {
-        return dictionaryService.generateDictionary().getPermission( name );
+    public PermissionEntity readPermission( String name ) {
+        return dictionaryService.createDictionary().getPermission( name );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public List< PermissionEntity > getAllPermissions() {
-        return permissionRepository.getAllPermissions();
+    public List< PermissionEntity > readAllPermissions() {
+        return permissionRepository.readAllPermissions();
     }
 
 }

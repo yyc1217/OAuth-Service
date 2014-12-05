@@ -4,7 +4,7 @@ import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 
 public interface AccessTokenRepository {
     public void deleteAccessToken( AccessTokenEntity accessToken );
-    public AccessTokenEntity generateAccessToken( AccessTokenEntity accessToken );
-    public AccessTokenEntity getAccessToken( String token ) ;
-    public AccessTokenEntity getAccessToken( int id );
+    public AccessTokenEntity createAccessToken( AccessTokenEntity accessToken );
+    public AccessTokenEntity readAccessToken( String token ) ;
+    public AccessTokenEntity readAccessToken( int id );
 }

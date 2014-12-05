@@ -16,17 +16,17 @@ public class AccessTokenRepositoryImpl extends EntityManagerBean implements Acce
     }
 
     @Override
-    public AccessTokenEntity generateAccessToken( AccessTokenEntity accessToken ) {
+    public AccessTokenEntity createAccessToken( AccessTokenEntity accessToken ) {
         return getEntityManager().merge( accessToken );
     }
 
     @Override
-    public AccessTokenEntity getAccessToken( int id ) {
+    public AccessTokenEntity readAccessToken( int id ) {
         return getEntityManager().find( AccessTokenEntity.class, id );
     }
 
     @Override
-    public AccessTokenEntity getAccessToken( String token ) {
+    public AccessTokenEntity readAccessToken( String token ) {
         List<AccessTokenEntity> list = getEntityManager()
                 .createQuery(
                         "SELECT token FROM AccessTokenEntity token " +
