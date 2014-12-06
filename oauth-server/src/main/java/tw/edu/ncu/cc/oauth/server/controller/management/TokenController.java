@@ -53,7 +53,7 @@ public class TokenController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenAPIService.deleteAccessTokenByID( id ), AccessToken.class
+                                accessTokenAPIService.revokeAccessTokenByID( id ), AccessToken.class
                         );
                     }
                 } )

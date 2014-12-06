@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.impl;
+package tw.edu.ncu.cc.oauth.server.security.impl;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

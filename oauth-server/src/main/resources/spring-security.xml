@@ -32,7 +32,7 @@
 
     <security:authentication-manager alias="authenticationManager"/>
 
-    <bean id="stubEntry" class="tw.edu.ncu.cc.oauth.server.service.impl.StubAuthenticationEntry"/>
+    <bean id="stubEntry" class="tw.edu.ncu.cc.oauth.server.security.impl.StubAuthenticationEntry"/>
 
     <bean id="oauthAuthorizationFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthAuthorizationFilter">
         <property name="filtPath" value="/oauth/authorize"/>
@@ -40,7 +40,12 @@
 
     <bean id="oauthTokenExchangeFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthTokenExchangeFilter">
         <property name="filtPath" value="/oauth/token"/>
-        <property name="codeExpireSeconds" value="180"/>
+        <property name="authorizationCodeService">
+            <bean class="tw.edu.ncu.cc.oauth.server.security.impl.AuthorizationCodeService">
+                <property name="codeExpireSeconds" value="600"/>
+                <property name="tokenExpireSeconds" value="28800"/>
+            </bean>
+        </property>
     </bean>
 
     <bean id="openidLoginFilter" class="tw.edu.ncu.cc.oauth.server.filter.OpenIDLoginFilter">

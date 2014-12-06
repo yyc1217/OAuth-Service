@@ -35,7 +35,7 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
     }
 
     @Transactional
-    def "it can delete AccessTokenEntity"() {
+    def "it can revoke AccessTokenEntity"() {
         given:
             def token = accessTokenRepository.createAccessToken(
                 new AccessTokenEntity (
@@ -46,9 +46,9 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
                 )
             )
         when:
-            accessTokenRepository.deleteAccessToken( token )
+            accessTokenRepository.revokeAccessToken( token )
         then:
-            accessTokenRepository.readAccessToken( "TEST02" ) == null
+            accessTokenRepository.readAccessToken( "TEST02" ).getDateExpired().before( timeNow() )
     }
 
     def "it can get AccessTokenEntity by id"() {

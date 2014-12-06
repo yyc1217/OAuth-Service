@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.impl;
+package tw.edu.ncu.cc.oauth.server.security.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Service;
-import tw.edu.ncu.cc.oauth.server.service.LoginService;
+import tw.edu.ncu.cc.oauth.server.security.LoginService;
 import tw.edu.ncu.cc.oauth.server.service.UserAPIService;
 import tw.edu.ncu.cc.openid.consumer.ncu.NCUOpenIDHandler;
 

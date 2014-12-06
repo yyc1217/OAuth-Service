@@ -5,14 +5,16 @@ import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCodeRepository {
 
     @Override
-    public void deleteAuthCode( AuthCodeEntity authCode ) {
-        getEntityManager().remove( authCode );
+    public AuthCodeEntity revokeAuthCode( AuthCodeEntity authCode ) {
+        authCode.setDateExpired( new Date() );
+        return getEntityManager().merge( authCode );
     }
 
     @Override

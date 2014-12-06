@@ -35,7 +35,7 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
     }
 
     @Transactional
-    def "it can delete AuthCodeEntity"() {
+    def "it can revoke AuthCodeEntity"() {
         given:
             def code = authCodeRepository.createAuthCode(
                 new AuthCodeEntity (
@@ -46,9 +46,9 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
                 )
             )
         when:
-            authCodeRepository.deleteAuthCode( code )
+            authCodeRepository.revokeAuthCode( code )
         then:
-            authCodeRepository.readAuthCode( "TEST02" ) == null
+            authCodeRepository.readAuthCode( "TEST02" ).getDateExpired().before( timeNow() )
     }
 
     def "it can get AuthCodeEntity by id"() {

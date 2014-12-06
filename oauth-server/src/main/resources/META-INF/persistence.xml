@@ -6,8 +6,9 @@
 
     <persistence-unit name="jpa" transaction-type="RESOURCE_LOCAL">
         <class>tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity</class>
-        <class>tw.edu.ncu.cc.oauth.server.entity.ClientEntity</class>
+        <class>tw.edu.ncu.cc.oauth.server.entity.RefreshTokenEntity</class>
         <class>tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity</class>
+        <class>tw.edu.ncu.cc.oauth.server.entity.ClientEntity</class>
         <class>tw.edu.ncu.cc.oauth.server.entity.UserEntity</class>
         <class>tw.edu.ncu.cc.oauth.server.entity.PermissionEntity</class>
     </persistence-unit>

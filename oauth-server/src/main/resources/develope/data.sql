@@ -3,10 +3,24 @@ CREATE TABLE IF NOT EXISTS access_token
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   date_created DATETIME,
   date_updated DATETIME,
+  date_expired DATETIME,
   scope VARCHAR(255) NOT NULL,
   token VARCHAR(255),
   client_id INT NOT NULL,
   user_id INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS refresh_token
+(
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  date_created DATETIME,
+  date_updated DATETIME,
+  date_expired DATETIME,
+  scope VARCHAR(255) NOT NULL,
+  token VARCHAR(255),
+  client_id INT NOT NULL,
+  user_id INT NOT NULL,
+  access_token_id INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS auth_code
@@ -14,6 +28,7 @@ CREATE TABLE IF NOT EXISTS auth_code
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   date_created DATETIME,
   date_updated DATETIME,
+  date_expired DATETIME,
   scope VARCHAR(255) NOT NULL,
   code VARCHAR(255) ,
   client_id INT NOT NULL,

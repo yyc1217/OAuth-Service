@@ -5,14 +5,16 @@ import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public class AccessTokenRepositoryImpl extends EntityManagerBean implements AccessTokenRepository {
 
     @Override
-    public void deleteAccessToken( AccessTokenEntity accessToken ) {
-      getEntityManager().remove( accessToken );
+    public AccessTokenEntity revokeAccessToken( AccessTokenEntity accessToken ) {
+        accessToken.setDateExpired( new Date() );
+        return getEntityManager().merge( accessToken );
     }
 
     @Override

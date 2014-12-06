@@ -7,6 +7,6 @@ public interface AuthCodeService {
     public AuthCodeEntity readAuthCode( int id );
     public AuthCodeEntity readAuthCode( String code );
     public AuthCodeEntity createAuthCode( AuthCodeEntity authCode );
-    public AuthCodeEntity deleteAuthCode  ( AuthCodeEntity authCode );
+    public AuthCodeEntity revokeAuthCode( AuthCodeEntity authCode );
 
 }

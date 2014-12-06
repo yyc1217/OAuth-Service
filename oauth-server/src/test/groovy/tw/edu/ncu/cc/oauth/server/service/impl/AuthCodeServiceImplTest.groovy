@@ -35,7 +35,7 @@ class AuthCodeServiceImplTest extends SpringSpecification {
     }
 
     @Transactional
-    def "it can delete AuthCodeEntity"() {
+    def "it can revoke AuthCodeEntity"() {
         given:
             def code = authCodeService.createAuthCode(
                 new AuthCodeEntity(
@@ -45,7 +45,7 @@ class AuthCodeServiceImplTest extends SpringSpecification {
                 )
             )
         when:
-            authCodeService.deleteAuthCode( authCodeService.readAuthCode( code.getId() ) );
+            authCodeService.revokeAuthCode( authCodeService.readAuthCode( code.getId() ) );
         then:
             authCodeService.readAuthCode( code.getCode() ) == null
     }

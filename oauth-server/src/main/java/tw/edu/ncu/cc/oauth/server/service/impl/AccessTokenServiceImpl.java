@@ -12,6 +12,8 @@ import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.AccessTokenService;
 
+import java.util.Date;
+
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
 
@@ -51,7 +53,9 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     public AccessTokenEntity readAccessToken( String token ) {
         SerialSecret secret = secretCodec.decode( token );
         AccessTokenEntity accessToken = accessTokenRepository.readAccessToken( secret.getId() );
-        if( accessToken != null && passwordEncoder.matches( secret.getSecret(), accessToken.getToken() ) ) {
+        if( accessToken != null
+                && passwordEncoder.matches( secret.getSecret(), accessToken.getToken() )
+                && ( accessToken.getDateExpired() == null || accessToken.getDateExpired().after( new Date() ) ) ) {
             return accessToken;
         } else {
             return null;
@@ -60,9 +64,8 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     @Transactional
-    public AccessTokenEntity deleteAccessToken( AccessTokenEntity accessToken ) {
-        accessTokenRepository.deleteAccessToken( accessToken );
-        return accessToken;
+    public AccessTokenEntity revokeAccessToken( AccessTokenEntity accessToken ) {
+        return accessTokenRepository.revokeAccessToken( accessToken );
     }
 
     @Override

@@ -55,8 +55,8 @@ public class AuthCodeAPIServiceImpl implements AuthCodeAPIService {
 
     @Override
     @Transactional
-    public AuthCodeEntity deleteAuthCodeByID( String id ) {
-        return authCodeService.deleteAuthCode( readAuthCodeByID( id ) );
+    public AuthCodeEntity revokeAuthCodeByID( String id ) {
+        return authCodeService.revokeAuthCode( readAuthCodeByID( id ) );
     }
 
 }

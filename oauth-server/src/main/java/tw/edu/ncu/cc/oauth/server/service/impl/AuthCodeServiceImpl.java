@@ -12,6 +12,8 @@ import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 
+import java.util.Date;
+
 @Service
 public class AuthCodeServiceImpl implements AuthCodeService {
 
@@ -51,7 +53,9 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     public AuthCodeEntity readAuthCode( String code ) {
         SerialSecret secret = secretCodec.decode( code );
         AuthCodeEntity authCode = authCodeRepository.readAuthCode( secret.getId() );
-        if( authCode != null && passwordEncoder.matches( secret.getSecret(), authCode.getCode() ) ) {
+        if( authCode != null
+                && passwordEncoder.matches( secret.getSecret(), authCode.getCode() )
+                && ( authCode.getDateExpired() == null || authCode.getDateExpired().after( new Date() ) ) ) {
             return authCode;
         } else {
             return null;
@@ -60,9 +64,8 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Transactional
-    public AuthCodeEntity deleteAuthCode( AuthCodeEntity authCode ) {
-        authCodeRepository.deleteAuthCode( authCode );
-        return authCode;
+    public AuthCodeEntity revokeAuthCode( AuthCodeEntity authCode ) {
+        return authCodeRepository.revokeAuthCode( authCode );
     }
 
     @Override
