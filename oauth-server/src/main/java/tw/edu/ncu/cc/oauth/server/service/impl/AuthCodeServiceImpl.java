@@ -12,8 +12,6 @@ import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 
-import java.util.Date;
-
 @Service
 public class AuthCodeServiceImpl implements AuthCodeService {
 
@@ -45,17 +43,15 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AuthCodeEntity readAuthCode( int id ) {
-        return authCodeRepository.readAuthCode( id );
+        return authCodeRepository.readUnexpiredAuthCode( id );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AuthCodeEntity readAuthCode( String code ) {
         SerialSecret secret = secretCodec.decode( code );
-        AuthCodeEntity authCode = authCodeRepository.readAuthCode( secret.getId() );
-        if( authCode != null
-                && passwordEncoder.matches( secret.getSecret(), authCode.getCode() )
-                && ( authCode.getDateExpired() == null || authCode.getDateExpired().after( new Date() ) ) ) {
+        AuthCodeEntity authCode = authCodeRepository.readUnexpiredAuthCode( secret.getId() );
+        if( authCode != null && passwordEncoder.matches( secret.getSecret(), authCode.getCode() ) ) {
             return authCode;
         } else {
             return null;

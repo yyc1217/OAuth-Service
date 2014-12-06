@@ -23,16 +23,26 @@ public class AccessTokenRepositoryImpl extends EntityManagerBean implements Acce
     }
 
     @Override
-    public AccessTokenEntity readAccessToken( int id ) {
-        return getEntityManager().find( AccessTokenEntity.class, id );
-    }
-
-    @Override
-    public AccessTokenEntity readAccessToken( String token ) {
+    public AccessTokenEntity readUnexpiredAccessToken( int id ) {
         List<AccessTokenEntity> list = getEntityManager()
                 .createQuery(
                         "SELECT token FROM AccessTokenEntity token " +
-                        "WHERE  token.token = :token", AccessTokenEntity.class )
+                                "WHERE  token.id = :id " +
+                                "AND ( token.dateExpired = NULL OR token.dateExpired > CURRENT_TIMESTAMP )",
+                        AccessTokenEntity.class )
+                .setParameter( "id", id )
+                .getResultList();
+        return ( list.isEmpty() ? null : list.get( 0 ) );
+    }
+
+    @Override
+    public AccessTokenEntity readUnexpiredAccessToken( String token ) {
+        List<AccessTokenEntity> list = getEntityManager()
+                .createQuery(
+                        "SELECT token FROM AccessTokenEntity token " +
+                                "WHERE  token.token = :token " +
+                                "AND ( token.dateExpired = NULL OR token.dateExpired > CURRENT_TIMESTAMP )",
+                        AccessTokenEntity.class )
                 .setParameter( "token", token )
                 .getResultList();
         return ( list.isEmpty() ? null : list.get( 0 ) );

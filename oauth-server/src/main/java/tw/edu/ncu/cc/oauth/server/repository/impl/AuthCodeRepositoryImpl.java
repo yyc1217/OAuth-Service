@@ -23,16 +23,24 @@ public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCod
     }
 
     @Override
-    public AuthCodeEntity readAuthCode( int id ) {
-        return getEntityManager().find( AuthCodeEntity.class, id );
+    public AuthCodeEntity readUnexpiredAuthCode( int id ) {
+        List<AuthCodeEntity> list = getEntityManager()
+                .createQuery(
+                        "SELECT code FROM AuthCodeEntity code " +
+                                "WHERE code.id = :id " +
+                                "AND ( code.dateExpired = NULL OR code.dateExpired > CURRENT_TIMESTAMP )", AuthCodeEntity.class )
+                .setParameter( "id", id )
+                .getResultList();
+        return ( list.isEmpty() ? null : list.get( 0 ) );
     }
 
     @Override
-    public AuthCodeEntity readAuthCode( String code ) {
+    public AuthCodeEntity readUnexpiredAuthCode( String code ) {
         List<AuthCodeEntity> list = getEntityManager()
                 .createQuery(
-                        "SELECT authCode FROM AuthCodeEntity authCode " +
-                        "WHERE authCode.code = :code", AuthCodeEntity.class )
+                        "SELECT code FROM AuthCodeEntity code " +
+                        "WHERE code.code = :code " +
+                        "AND ( code.dateExpired = NULL OR code.dateExpired > CURRENT_TIMESTAMP )", AuthCodeEntity.class )
                 .setParameter( "code", code )
                 .getResultList();
         return ( list.isEmpty() ? null : list.get( 0 ) );

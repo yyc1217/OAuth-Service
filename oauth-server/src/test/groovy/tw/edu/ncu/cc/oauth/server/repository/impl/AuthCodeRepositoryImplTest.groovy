@@ -20,7 +20,7 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
     private ClientRepository clientRepository
 
     @Transactional
-    def "it can persist AuthCodeEntity"() {
+    def "it can create AuthCodeEntity"() {
         when:
             authCodeRepository.createAuthCode(
                 new AuthCodeEntity(
@@ -31,7 +31,7 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
                 )
             )
         then:
-            authCodeRepository.readAuthCode( "TEST01" ) != null
+            authCodeRepository.readUnexpiredAuthCode( "TEST01" ) != null
     }
 
     @Transactional
@@ -48,12 +48,12 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
         when:
             authCodeRepository.revokeAuthCode( code )
         then:
-            authCodeRepository.readAuthCode( "TEST02" ).getDateExpired().before( timeNow() )
+            authCodeRepository.readUnexpiredAuthCode( "TEST02" ) == null
     }
 
-    def "it can get AuthCodeEntity by id"() {
+    def "it can read AuthCodeEntity by id"() {
         expect:
-            authCodeRepository.readAuthCode( 1 ).getCode() == "CODE1"
+            authCodeRepository.readUnexpiredAuthCode( 1 ).getCode() == "CODE1"
     }
 
 }

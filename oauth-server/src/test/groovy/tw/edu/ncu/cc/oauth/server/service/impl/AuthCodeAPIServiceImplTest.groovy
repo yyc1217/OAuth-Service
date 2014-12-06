@@ -41,7 +41,7 @@ class AuthCodeAPIServiceImplTest extends SpringSpecification {
         when:
             authCodeAPIService.revokeAuthCodeByID( codeID )
         then:
-            authCodeAPIService.readAuthCodeByID( codeID ).getDateExpired().before( timeNow() )
+            authCodeAPIService.readAuthCodeByID( codeID ) == null
     }
 
 }

@@ -12,8 +12,6 @@ import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.AccessTokenService;
 
-import java.util.Date;
-
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
 
@@ -45,17 +43,15 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AccessTokenEntity readAccessToken( int id ) {
-        return accessTokenRepository.readAccessToken( id );
+        return accessTokenRepository.readUnexpiredAccessToken( id );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AccessTokenEntity readAccessToken( String token ) {
         SerialSecret secret = secretCodec.decode( token );
-        AccessTokenEntity accessToken = accessTokenRepository.readAccessToken( secret.getId() );
-        if( accessToken != null
-                && passwordEncoder.matches( secret.getSecret(), accessToken.getToken() )
-                && ( accessToken.getDateExpired() == null || accessToken.getDateExpired().after( new Date() ) ) ) {
+        AccessTokenEntity accessToken = accessTokenRepository.readUnexpiredAccessToken( secret.getId() );
+        if( accessToken != null && passwordEncoder.matches( secret.getSecret(), accessToken.getToken() ) ) {
             return accessToken;
         } else {
             return null;

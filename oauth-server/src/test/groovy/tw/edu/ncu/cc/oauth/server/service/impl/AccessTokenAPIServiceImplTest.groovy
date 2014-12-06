@@ -62,7 +62,7 @@ class AccessTokenAPIServiceImplTest extends SpringSpecification {
         when:
             accessTokenAPIService.revokeAccessTokenByID( tokenID )
         then:
-            accessTokenAPIService.readAccessTokenByID( tokenID ).getDateExpired().before( timeNow() )
+            accessTokenAPIService.readAccessTokenByID( tokenID ) == null
     }
 
     def "it can read AccessToken scope by token"() {

@@ -31,7 +31,7 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
                 )
             )
         then:
-            accessTokenRepository.readAccessToken( "TEST01" ) != null
+            accessTokenRepository.readUnexpiredAccessToken( "TEST01" ) != null
     }
 
     @Transactional
@@ -48,12 +48,12 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
         when:
             accessTokenRepository.revokeAccessToken( token )
         then:
-            accessTokenRepository.readAccessToken( "TEST02" ).getDateExpired().before( timeNow() )
+            accessTokenRepository.readUnexpiredAccessToken( "TEST02" ) == null
     }
 
-    def "it can get AccessTokenEntity by id"() {
+    def "it can read unexpired AccessTokenEntity by id"() {
         expect:
-            accessTokenRepository.readAccessToken( 1 ).getToken() == "TOKEN1"
+            accessTokenRepository.readUnexpiredAccessToken( 1 ).getToken() == "TOKEN1"
     }
 
 }

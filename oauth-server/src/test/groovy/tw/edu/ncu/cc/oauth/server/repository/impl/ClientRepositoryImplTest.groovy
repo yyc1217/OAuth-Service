@@ -17,7 +17,7 @@ class ClientRepositoryImplTest extends SpringSpecification {
     private UserRepository userRepository
 
     @Transactional
-    def "it can persist ClientEntity"() {
+    def "it can create ClientEntity"() {
         when:
             def client = clientRepository.createClient(
                     new ClientEntity(

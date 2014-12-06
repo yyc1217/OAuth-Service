@@ -87,7 +87,6 @@ public class OauthTokenExchangeFilter extends AbstractFilter {
     private void responseMessage( HttpServletResponse httpResponse, String msg ) throws IOException {
         httpResponse.setHeader( "Content-Type","application/json" );
         httpResponse.getWriter().write( msg );
-        httpResponse.getWriter().flush();
     }
 
     private void responseRequestError( HttpServletResponse httpResponse, OAuthProblemException e  ) throws IOException {

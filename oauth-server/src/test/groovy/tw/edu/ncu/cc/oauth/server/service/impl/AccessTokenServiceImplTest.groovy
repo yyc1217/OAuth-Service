@@ -21,7 +21,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     private UserService userService
 
     @Transactional
-    def "it can generate AccessTokenEntity"() {
+    def "it can create AccessTokenEntity"() {
         when:
             def token = accessTokenService.createAccessToken(
                     new AccessTokenEntity(
@@ -52,7 +52,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
             accessTokenService.readAccessToken( token.getToken() ) == null
     }
 
-    def "it can get AccessTokenEntity by id"() {
+    def "it can read AccessTokenEntity by id"() {
         expect:
             accessTokenService.readAccessToken( 1 ).getToken() == "TOKEN1"
     }
