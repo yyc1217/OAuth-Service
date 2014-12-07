@@ -12,7 +12,7 @@ class PermissionDictionaryServiceImplTest extends SpringSpecification {
 
     def "it can generate PermissionDictionary"() {
         when:
-            def dictionary = dictionaryService.generateDictionary()
+            def dictionary = dictionaryService.createDictionary()
         then:
             dictionary.getPermission( 1 ) != null
             dictionary.getPermission( 2 ) != null

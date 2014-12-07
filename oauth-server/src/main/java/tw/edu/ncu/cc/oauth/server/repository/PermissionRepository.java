@@ -7,7 +7,7 @@ import java.util.List;
 public interface PermissionRepository {
 
     public void deletePermission( PermissionEntity permission );
-    public PermissionEntity generatePermission( PermissionEntity permission );
-    public PermissionEntity getPermission( String name );
-    public List< PermissionEntity > getAllPermissions();
+    public PermissionEntity createPermission( PermissionEntity permission );
+    public PermissionEntity readPermission( String name );
+    public List< PermissionEntity > readAllPermissions();
 }

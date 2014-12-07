@@ -11,17 +11,17 @@ import java.util.List;
 public class UserRepositoryImpl extends EntityManagerBean implements UserRepository {
 
     @Override
-    public UserEntity generateUser( UserEntity user ) {
+    public UserEntity createUser( UserEntity user ) {
         return getEntityManager().merge( user );
     }
 
     @Override
-    public UserEntity getUser( int id ) {
+    public UserEntity readUser( int id ) {
         return getEntityManager().find( UserEntity.class, id );
     }
 
     @Override
-    public UserEntity getUser( String name ) {
+    public UserEntity readUser( String name ) {
         List<UserEntity> list = getEntityManager()
                 .createQuery(
                         "SELECT user FROM UserEntity user " +

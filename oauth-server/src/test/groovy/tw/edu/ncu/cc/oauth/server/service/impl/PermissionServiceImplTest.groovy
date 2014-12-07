@@ -15,19 +15,19 @@ class PermissionServiceImplTest extends SpringSpecification {
     @Transactional
     def "it can generate PermissionEntity"() {
         when:
-            def permission = permissionService.generatePermission(
+            def permission = permissionService.createPermission(
                 new PermissionEntity(
                         name: "TESTNAME"
                 )
             )
         then:
-            permissionService.getPermission( permission.getName() ) != null
+            permissionService.readPermission( permission.getName() ) != null
     }
 
     @Transactional
     def "it can delete PermissionEntity"() {
         given:
-            def permission = permissionService.generatePermission(
+            def permission = permissionService.createPermission(
                     new PermissionEntity(
                             name: "TESTNAME"
                     )
@@ -35,18 +35,18 @@ class PermissionServiceImplTest extends SpringSpecification {
         when:
             permissionService.deletePermission( permission )
         then:
-            permissionService.getPermission( permission.getName() ) == null
+            permissionService.readPermission( permission.getName() ) == null
 
     }
 
     def "it can get all PermissionEntity"() {
         expect:
-            permissionService.getAllPermissions().size() == 3
+            permissionService.readAllPermissions().size() == 3
     }
 
     def "it can get PermissionEntity by id"() {
         expect:
-            permissionService.getPermission( 2 ).getName() == "READ"
+            permissionService.readPermission( 2 ).getName() == "READ"
     }
 
 }

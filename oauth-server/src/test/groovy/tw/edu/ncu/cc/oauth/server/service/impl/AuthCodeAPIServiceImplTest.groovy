@@ -31,15 +31,17 @@ class AuthCodeAPIServiceImplTest extends SpringSpecification {
             code.getCode() == "CODE1"
     }
 
-    def "it can delete AuthCodeEntity by id"() {
+    def "it can revoke AuthCodeEntity by id"() {
         given:
             def code = authCodeAPIService.createAuthCode(
                     1, "ADMIN1", [ "READ" ] as Set
             )
+        and:
+            def codeID = code.getId() as String
         when:
-            authCodeAPIService.deleteAuthCodeByID( code.getId() as String )
+            authCodeAPIService.revokeAuthCodeByID( codeID )
         then:
-            authCodeAPIService.readAuthCodeByID( code.getId() as String ) == null
+            authCodeAPIService.readAuthCodeByID( codeID ) == null
     }
 
 }

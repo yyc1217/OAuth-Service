@@ -20,40 +20,40 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
     private ClientRepository clientRepository
 
     @Transactional
-    def "it can persist AuthCodeEntity"() {
+    def "it can create AuthCodeEntity"() {
         when:
-            authCodeRepository.generateAuthCode(
+            authCodeRepository.createAuthCode(
                 new AuthCodeEntity(
                         code : "TEST01",
                         scope: "000",
-                        user  : userRepository.getUser( 1 ),
-                        client: clientRepository.getClient( 1 )
+                        user  : userRepository.readUser( 1 ),
+                        client: clientRepository.readClient( 1 )
                 )
             )
         then:
-            authCodeRepository.getAuthCode( "TEST01" ) != null
+            authCodeRepository.readUnexpiredAuthCode( "TEST01" ) != null
     }
 
     @Transactional
-    def "it can delete AuthCodeEntity"() {
+    def "it can revoke AuthCodeEntity"() {
         given:
-            def code = authCodeRepository.generateAuthCode(
+            def code = authCodeRepository.createAuthCode(
                 new AuthCodeEntity (
                         code : "TEST02",
                         scope: "000",
-                        user  : userRepository.getUser( 2 ),
-                        client: clientRepository.getClient( 2 )
+                        user  : userRepository.readUser( 2 ),
+                        client: clientRepository.readClient( 2 )
                 )
             )
         when:
-            authCodeRepository.deleteAuthCode( code )
+            authCodeRepository.revokeAuthCode( code )
         then:
-            authCodeRepository.getAuthCode( "TEST02" ) == null
+            authCodeRepository.readUnexpiredAuthCode( "TEST02" ) == null
     }
 
-    def "it can get AuthCodeEntity by id"() {
+    def "it can read AuthCodeEntity by id"() {
         expect:
-            authCodeRepository.getAuthCode( 1 ).getCode() == "CODE1"
+            authCodeRepository.readUnexpiredAuthCode( 1 ).getCode() == "CODE1"
     }
 
 }

@@ -23,36 +23,36 @@ class AuthCodeServiceImplTest extends SpringSpecification {
     @Transactional
     def "it can generate AuthCodeEntity"() {
         when:
-            def code = authCodeService.generateAuthCode(
+            def code = authCodeService.createAuthCode(
                 new AuthCodeEntity(
-                        client: clientService.getClient( 1 ),
-                        user  : userService.getUser( 1 ),
+                        client: clientService.readClient( 1 ),
+                        user  : userService.readUser( 1 ),
                         scope: "000"
                 )
             )
         then:
-            authCodeService.getAuthCode( code.getCode() ).getUser().getId() == 1
+            authCodeService.readAuthCode( code.getCode() ).getUser().getId() == 1
     }
 
     @Transactional
-    def "it can delete AuthCodeEntity"() {
+    def "it can revoke AuthCodeEntity"() {
         given:
-            def code = authCodeService.generateAuthCode(
+            def code = authCodeService.createAuthCode(
                 new AuthCodeEntity(
-                        client: clientService.getClient( 1 ),
-                        user  : userService.getUser( 1 ),
+                        client: clientService.readClient( 1 ),
+                        user  : userService.readUser( 1 ),
                         scope: "000"
                 )
             )
         when:
-            authCodeService.deleteAuthCode( authCodeService.getAuthCode( code.getId() ) );
+            authCodeService.revokeAuthCode( authCodeService.readAuthCode( code.getId() ) );
         then:
-            authCodeService.getAuthCode( code.getCode() ) == null
+            authCodeService.readAuthCode( code.getCode() ) == null
     }
 
     def "it can get AuthCodeEntity by id"() {
         expect:
-            authCodeService.getAuthCode( 1 ).getCode() == "CODE1"
+            authCodeService.readAuthCode( 1 ).getCode() == "CODE1"
     }
 
 }

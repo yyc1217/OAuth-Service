@@ -17,9 +17,9 @@ class ClientTokenRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can delete all permitted tokens of the specified client"() {
         when:
-            clientTokenRepository.deleteAllAccessTokenOfClient( clientRepository.getClient( 1 ) )
+            clientTokenRepository.deleteAllAccessTokenOfClient( clientRepository.readClient( 1 ) )
         then:
-            clientRepository.getClient( 1 ).getTokens().size() == 0
+            clientRepository.readClient( 1 ).getTokens().size() == 0
     }
 
 }

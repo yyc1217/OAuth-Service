@@ -9,7 +9,7 @@ import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 public class ClientRepositoryImpl extends EntityManagerBean implements ClientRepository {
 
     @Override
-    public ClientEntity generateClient( ClientEntity client ) {
+    public ClientEntity createClient( ClientEntity client ) {
         return getEntityManager().merge( client );
     }
 
@@ -24,7 +24,7 @@ public class ClientRepositoryImpl extends EntityManagerBean implements ClientRep
     }
 
     @Override
-    public ClientEntity getClient( int clientID ) {
+    public ClientEntity readClient( int clientID ) {
         return getEntityManager().find( ClientEntity.class, clientID );
     }
 

@@ -21,40 +21,40 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     private UserService userService
 
     @Transactional
-    def "it can generate AccessTokenEntity"() {
+    def "it can create AccessTokenEntity"() {
         when:
-            def token = accessTokenService.generateAccessToken(
+            def token = accessTokenService.createAccessToken(
                     new AccessTokenEntity(
-                            client: clientService.getClient( 1 ),
-                            user  : userService.getUser( 1 ),
+                            client: clientService.readClient( 1 ),
+                            user  : userService.readUser( 1 ),
                             scope: "000"
                     )
             )
         then:
-            accessTokenService.getAccessToken( token.getToken() ).getUser().getId() == 1
+            accessTokenService.readAccessToken( token.getToken() ).getUser().getId() == 1
     }
 
     @Transactional
-    def "it can delete AccessTokenEntity"() {
+    def "it can revoke AccessTokenEntity"() {
         given:
-            def token = accessTokenService.generateAccessToken(
+            def token = accessTokenService.createAccessToken(
                     new AccessTokenEntity(
-                            client: clientService.getClient( 1 ),
-                            user  : userService.getUser( 1 ),
+                            client: clientService.readClient( 1 ),
+                            user  : userService.readUser( 1 ),
                             scope: "000"
                     )
             )
         when:
-            accessTokenService.deleteAccessToken(
-                    accessTokenService.getAccessToken( token.getToken() )
+            accessTokenService.revokeAccessToken(
+                    accessTokenService.readAccessToken( token.getToken() )
             );
         then:
-            accessTokenService.getAccessToken( token.getToken() ) == null
+            accessTokenService.readAccessToken( token.getToken() ) == null
     }
 
-    def "it can get AccessTokenEntity by id"() {
+    def "it can read AccessTokenEntity by id"() {
         expect:
-            accessTokenService.getAccessToken( 1 ).getToken() == "TOKEN1"
+            accessTokenService.readAccessToken( 1 ).getToken() == "TOKEN1"
     }
 
 }

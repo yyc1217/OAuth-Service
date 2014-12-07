@@ -53,8 +53,21 @@ public class TokenController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenAPIService.deleteAccessTokenByID( id ), AccessToken.class
+                                accessTokenAPIService.revokeAccessTokenByID( id ), AccessToken.class
                         );
+                    }
+                } )
+                .build();
+    }
+
+    @RequestMapping( value = "{token}/scope", method = RequestMethod.GET )
+    public ResponseEntity getTokenScope( @PathVariable( "token" ) final String token ) {
+        return ResponseBuilder
+                .noneValidation()
+                .resource( new ResponseBuilder.ResourceBuilder() {
+                    @Override
+                    public Object build() {
+                        return accessTokenAPIService.readTokenScopeByToken( token );
                     }
                 } )
                 .build();

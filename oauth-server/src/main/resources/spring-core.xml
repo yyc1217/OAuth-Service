@@ -11,6 +11,7 @@
     <context:component-scan base-package="tw.edu.ncu.cc.oauth.server.converter"/>
     <context:component-scan base-package="tw.edu.ncu.cc.oauth.server.component"/>
     <context:component-scan base-package="tw.edu.ncu.cc.oauth.server.repository"/>
+    <context:component-scan base-package="tw.edu.ncu.cc.oauth.server.security"/>
     <context:component-scan base-package="tw.edu.ncu.cc.oauth.server.service"/>
 
     <tx:annotation-driven />
@@ -19,7 +20,6 @@
     <import resource="production/spring/application.xml"/>
 
     <import resource="custom-openid.xml"/>
-    <import resource="spring-security.xml"/>
     <import resource="spring-converter.xml"/>
 
     <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>

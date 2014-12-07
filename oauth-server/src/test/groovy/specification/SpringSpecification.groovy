@@ -10,5 +10,8 @@ import spock.lang.Specification
 @ContextConfiguration( [ "classpath:spring-core.xml", "classpath:spring-mvc.xml" ] )
 public abstract class SpringSpecification extends Specification {
 
+    public Date timeNow() {
+        return new Date()
+    }
 
 }

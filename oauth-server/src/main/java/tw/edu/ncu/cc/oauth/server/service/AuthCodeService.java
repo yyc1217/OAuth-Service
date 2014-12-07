@@ -4,9 +4,9 @@ import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 
 public interface AuthCodeService {
 
-    public AuthCodeEntity getAuthCode( int id );
-    public AuthCodeEntity getAuthCode( String code );
-    public AuthCodeEntity generateAuthCode( AuthCodeEntity authCode );
-    public AuthCodeEntity deleteAuthCode  ( AuthCodeEntity authCode );
+    public AuthCodeEntity readAuthCode( int id );
+    public AuthCodeEntity readAuthCode( String code );
+    public AuthCodeEntity createAuthCode( AuthCodeEntity authCode );
+    public AuthCodeEntity revokeAuthCode( AuthCodeEntity authCode );
 
 }

@@ -1,16 +1,17 @@
 package tw.edu.ncu.cc.oauth.server.entity;
 
-import tw.edu.ncu.cc.oauth.server.entity.base.ScopeEntity;
+import tw.edu.ncu.cc.oauth.server.entity.base.TokenEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table( name = "access_token" )
-public class AccessTokenEntity extends ScopeEntity {
+public class AccessTokenEntity extends TokenEntity {
 
     private String token;
-    private UserEntity user;
-    private ClientEntity client;
 
     @Basic
     @Column( name = "token", unique = true )
@@ -20,26 +21,6 @@ public class AccessTokenEntity extends ScopeEntity {
 
     public void setToken( String token ) {
         this.token = token;
-    }
-
-    @ManyToOne( optional = false )
-    @JoinColumn( name = "user_id" )
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser( UserEntity user ) {
-        this.user = user;
-    }
-
-    @ManyToOne( optional = false )
-    @JoinColumn( name = "client_id" )
-    public ClientEntity getClient() {
-        return client;
-    }
-
-    public void setClient( ClientEntity client ) {
-        this.client = client;
     }
 
 }

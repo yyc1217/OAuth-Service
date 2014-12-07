@@ -41,8 +41,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public ClientEntity getClient( int clientID ) {
-        return clientRepository.getClient( clientID );
+    public ClientEntity readClient( int clientID ) {
+        return clientRepository.readClient( clientID );
     }
 
     @Override
@@ -77,16 +77,16 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public boolean isClientValid( int clientID, String clientSecret ) {
-        ClientEntity client = getClient( clientID );
+        ClientEntity client = readClient( clientID );
         return client != null && passwordEncoder.matches( clientSecret, client.getSecret() );
     }
 
     @Override
     @Transactional
-    public ClientEntity generateClient( ClientEntity client ) {
+    public ClientEntity createClient( ClientEntity client ) {
         String secret = stringGenerator.generateToken();
         client.setSecret( passwordEncoder.encode( secret ) );
-        ClientEntity clientEntity = clientRepository.generateClient( client );
+        ClientEntity clientEntity = clientRepository.createClient( client );
         client.setId( clientEntity.getId() );
         client.setSecret( secret );
         return client;

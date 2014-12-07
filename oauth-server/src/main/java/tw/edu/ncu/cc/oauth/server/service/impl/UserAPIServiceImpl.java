@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
+import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.entity.UserEntity;
 import tw.edu.ncu.cc.oauth.server.service.UserAPIService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
@@ -33,7 +34,7 @@ public class UserAPIServiceImpl implements UserAPIService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public UserEntity readUser( String name ) {
-        return userService.getUser( name );
+        return userService.readUser( name );
     }
 
     @Override
@@ -41,6 +42,13 @@ public class UserAPIServiceImpl implements UserAPIService {
     public Set< AccessTokenEntity > readUserTokens( String name ) {
         UserEntity user = readUser( name );
         return user == null ? null : new HashSet<>( user.getTokens() );
+    }
+
+    @Override
+    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
+    public Set< ClientEntity > readUserClients( String name ) {
+        UserEntity user = readUser( name );
+        return user == null ? null : new HashSet<>( user.getClients() );
     }
 
 }

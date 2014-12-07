@@ -42,15 +42,15 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public AuthCodeEntity getAuthCode( int id ) {
-        return authCodeRepository.getAuthCode( id );
+    public AuthCodeEntity readAuthCode( int id ) {
+        return authCodeRepository.readUnexpiredAuthCode( id );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public AuthCodeEntity getAuthCode( String code ) {
+    public AuthCodeEntity readAuthCode( String code ) {
         SerialSecret secret = secretCodec.decode( code );
-        AuthCodeEntity authCode = authCodeRepository.getAuthCode( secret.getId() );
+        AuthCodeEntity authCode = authCodeRepository.readUnexpiredAuthCode( secret.getId() );
         if( authCode != null && passwordEncoder.matches( secret.getSecret(), authCode.getCode() ) ) {
             return authCode;
         } else {
@@ -60,17 +60,16 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Transactional
-    public AuthCodeEntity deleteAuthCode( AuthCodeEntity authCode ) {
-        authCodeRepository.deleteAuthCode( authCode );
-        return authCode;
+    public AuthCodeEntity revokeAuthCode( AuthCodeEntity authCode ) {
+        return authCodeRepository.revokeAuthCode( authCode );
     }
 
     @Override
     @Transactional
-    public AuthCodeEntity generateAuthCode( AuthCodeEntity authCode ) {
+    public AuthCodeEntity createAuthCode( AuthCodeEntity authCode ) {
         String code = stringGenerator.generateToken();
         authCode.setCode( passwordEncoder.encode( code ) );
-        AuthCodeEntity newAuthCode = authCodeRepository.generateAuthCode( authCode );
+        AuthCodeEntity newAuthCode = authCodeRepository.createAuthCode( authCode );
         authCode.setCode( secretCodec.encode( new SerialSecret( newAuthCode.getId(), code ) ) );
         authCode.setId( newAuthCode.getId() );
         return authCode;

@@ -12,32 +12,34 @@ class AccessTokenAPIServiceImplTest extends SpringSpecification {
     private AccessTokenAPIService accessTokenAPIService
 
     @Autowired
-    private AuthCodeAPIService authCodeBuilder
+    private AuthCodeAPIService authCodeAPIService
 
     @Autowired
     private AuthCodeService authCodeService
 
     def "it can create AccessTokenEntity using permission of string set"() {
         given:
+            def expireDate = new Date()
             def clientID = 1
             def userID = "ADMIN1"
             def scope  = [ "READ" ] as Set< String >
         when:
-            def token = accessTokenAPIService.createAccessToken( clientID, userID, scope )
+            def token = accessTokenAPIService.createAccessToken( clientID, userID, scope, expireDate )
         then:
             token.getUser().getName() == "ADMIN1"
             token.getClient().getId() == 1
+            token.getDateExpired() == expireDate
     }
 
-    def "it can create AccessTokenEntity then delete correspond authCode using AuthCodeEntity"() {
+    def "it can create AccessTokenEntity then revoke correspond authCode using AuthCodeEntity"() {
         given:
-            def code = authCodeBuilder.createAuthCode( 1, "ADMIN1", [ "READ" ] as Set<String> )
+            def code = authCodeAPIService.createAuthCode( 1, "ADMIN1", [ "READ" ] as Set<String> )
         when:
-            def token = accessTokenAPIService.createAccessTokenByCode( code.getCode() )
+            def token = accessTokenAPIService.createAccessTokenByCode( code.getCode(), null )
         then:
             token.getUser().getId() == 1
             token.getClient().getId() == 1
-            authCodeService.getAuthCode( code.getId() ) == null
+            authCodeService.readAuthCode( code.getCode() ) == null
     }
 
     def "it can read AccessTokenEntity by id"() {
@@ -50,15 +52,25 @@ class AccessTokenAPIServiceImplTest extends SpringSpecification {
             accessTokenAPIService.readAccessTokenByToken( "Mzo6OlRPS0VO" ).getId() == 3
     }
 
-    def "it can delete AccessToken by id"() {
+    def "it can revoke AccessToken by id"() {
         given:
             def token = accessTokenAPIService.createAccessToken(
-                    1, "ADMIN1", [ "READ" ] as Set< String >
+                    1, "ADMIN1", [ "READ" ] as Set< String >, null
             )
+        and:
+            def tokenID = token.getId() as String
         when:
-            accessTokenAPIService.deleteAccessTokenByID( token.getId() as String )
+            accessTokenAPIService.revokeAccessTokenByID( tokenID )
         then:
-            accessTokenAPIService.readAccessTokenByID( token.getId() as String ) == null
+            accessTokenAPIService.readAccessTokenByID( tokenID ) == null
+    }
+
+    def "it can read AccessToken scope by token"() {
+        when:
+            def scope = accessTokenAPIService.readTokenScopeByToken( "Mzo6OlRPS0VO" )
+        then:
+            scope.contains( "ADMIN" )
+            scope.contains( "READ" )
     }
 
 }

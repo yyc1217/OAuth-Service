@@ -24,7 +24,7 @@ public class ScopeCodecServiceImpl implements ScopeCodecService {
     @Override
     public boolean exist( Set< String > scope ) {
         for ( String permission : scope ) {
-            if( permissionService.getPermission( permission ) == null ) {
+            if( permissionService.readPermission( permission ) == null ) {
                 return false;
             }
         }
@@ -35,7 +35,7 @@ public class ScopeCodecServiceImpl implements ScopeCodecService {
     public String encode( Set< String > scope ) {
         StringBuilder stringBuilder = new StringBuilder( 50 );
         for ( String permission : scope ) {
-            int position = permissionService.getPermission( permission ).getId();
+            int position = permissionService.readPermission( permission ).getId();
             while( position > stringBuilder.length() ) {
                 stringBuilder.append( NO );
             }
@@ -49,7 +49,7 @@ public class ScopeCodecServiceImpl implements ScopeCodecService {
         Set< String > scopes = new HashSet<>();
         for( int i = 0; i < scope.length(); i ++ ) {
             if( scope.charAt( i ) == YES ) {
-                scopes.add( permissionService.getPermission( i ).getName() );
+                scopes.add( permissionService.readPermission( i ).getName() );
             }
         }
         return scopes;
