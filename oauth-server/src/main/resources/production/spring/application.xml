@@ -24,6 +24,7 @@
     <util:properties id="openidResponseProperties" location="classpath:production/openid-check.properties"/>
 
     <import resource="cache.xml"/>
+    <import resource="security.xml"/>
     <import resource="database.xml"/>
 
 </beans>
