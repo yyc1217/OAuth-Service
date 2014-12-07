@@ -32,7 +32,7 @@ class UserControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/ADMIN1/client" )
+                            get( targetURL + "/ADMIN1/application" )
                     ).andExpect( status().isOk() ).andReturn()
             )
         then:

@@ -54,8 +54,8 @@ public class UserController extends APIExceptionHandler {
     }
 
     @SuppressWarnings( "unchecked" )
-    @RequestMapping( value = "{userName}/client", method = RequestMethod.GET )
-    public ResponseEntity getUserClients( @PathVariable( "userName" ) final String userName ) {
+    @RequestMapping( value = "{userName}/application", method = RequestMethod.GET )
+    public ResponseEntity getUserApplications( @PathVariable( "userName" ) final String userName ) {
         return ResponseBuilder
                 .noneValidation()
                 .resource( new ResponseBuilder.ResourceBuilder() {
