@@ -43,7 +43,7 @@
         <property name="authorizationCodeService">
             <bean class="tw.edu.ncu.cc.oauth.server.security.impl.AuthorizationCodeService">
                 <property name="codeExpireSeconds" value="600"/>
-                <property name="tokenExpireSeconds" value="28800"/>
+                <property name="tokenExpireSeconds" value="600"/>
             </bean>
         </property>
     </bean>

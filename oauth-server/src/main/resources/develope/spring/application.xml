@@ -11,6 +11,7 @@
     <util:properties id="openidSettingProperties"  location="classpath:develope/openid-setting.properties"/>
     <util:properties id="openidResponseProperties" location="classpath:develope/openid-check.properties"/>
 
+    <import resource="security.xml"/>
     <import resource="database.xml"/>
 
 </beans>
