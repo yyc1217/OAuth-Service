@@ -10,7 +10,7 @@ class UserControllerTest extends IntegrationSpecification {
 
     def targetURL = "/management/v1/user"
 
-    def "it can handle get of specified AccessToken 1"() {
+    def "it can handle get of specified user's tokens 1"() {
         when:
             def response = JSON(
                     server().perform(
@@ -21,11 +21,22 @@ class UserControllerTest extends IntegrationSpecification {
             response[0].user == "ADMIN1"
     }
 
-    def "it can handle get of specified AccessToken 2"() {
+    def "it can handle get of specified user's tokens 2"() {
         expect:
             server().perform(
                     get( targetURL + "/NOT_EXIST/token" )
             ).andExpect( status().isNotFound() )
+    }
+
+    def "it can handle get of specified user's clients 1"() {
+        when:
+            def response = JSON(
+                    server().perform(
+                            get( targetURL + "/ADMIN1/client" )
+                    ).andExpect( status().isOk() ).andReturn()
+            )
+        then:
+            response[0].owner == "ADMIN1"
     }
 
 }

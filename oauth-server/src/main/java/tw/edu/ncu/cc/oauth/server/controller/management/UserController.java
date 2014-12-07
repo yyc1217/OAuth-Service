@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import tw.edu.ncu.cc.oauth.data.v1.management.application.IdApplication;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
+import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
 import tw.edu.ncu.cc.oauth.server.service.UserAPIService;
@@ -45,6 +47,24 @@ public class UserController extends APIExceptionHandler {
                                 userAPIService.readUserTokens( userName ),
                                 TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( AccessTokenEntity.class ) ),
                                 TypeDescriptor.array( TypeDescriptor.valueOf( AccessToken.class ) )
+                        );
+                    }
+                } )
+                .build();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @RequestMapping( value = "{userName}/client", method = RequestMethod.GET )
+    public ResponseEntity getUserClients( @PathVariable( "userName" ) final String userName ) {
+        return ResponseBuilder
+                .noneValidation()
+                .resource( new ResponseBuilder.ResourceBuilder() {
+                    @Override
+                    public Object build() {
+                        return conversionService.convert(
+                                userAPIService.readUserClients( userName ),
+                                TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( ClientEntity.class ) ),
+                                TypeDescriptor.array( TypeDescriptor.valueOf( IdApplication.class ) )
                         );
                     }
                 } )

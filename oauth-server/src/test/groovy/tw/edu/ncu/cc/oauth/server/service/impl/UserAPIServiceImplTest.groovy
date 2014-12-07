@@ -29,4 +29,11 @@ class UserAPIServiceImplTest extends SpringSpecification {
             userAPIService.readUserTokens( "NOT EXIST" ) == null
     }
 
+    def "it can read user clients"() {
+        when:
+            def clients = userAPIService.readUserClients( "ADMIN1" )
+        then:
+            clients.size() != 0
+    }
+
 }
