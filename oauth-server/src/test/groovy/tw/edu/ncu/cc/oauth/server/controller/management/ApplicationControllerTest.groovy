@@ -39,7 +39,7 @@ class ApplicationControllerTest extends IntegrationSpecification {
                                       "owner" : "ADMIN1"
                                     }
                                     '''
-                    )
+                            )
             ).andExpect( status().isOk() )
         and:
             def getResponse = JSON(

@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import tw.edu.ncu.cc.oauth.data.v1.management.application.IdApplication;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
+import tw.edu.ncu.cc.oauth.data.v1.management.user.User;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
@@ -65,6 +65,22 @@ public class UserController extends APIExceptionHandler {
                                 userAPIService.readUserClients( userName ),
                                 TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( ClientEntity.class ) ),
                                 TypeDescriptor.array( TypeDescriptor.valueOf( IdApplication.class ) )
+                        );
+                    }
+                } )
+                .build();
+    }
+
+    @RequestMapping( method = RequestMethod.POST )
+    public ResponseEntity createUser( @Validated @RequestBody final User user, BindingResult result ) {
+        return ResponseBuilder
+                .validation()
+                .errors( result )
+                .resource( new ResponseBuilder.ResourceBuilder() {
+                    @Override
+                    public Object build() {
+                        return conversionService.convert(
+                                userAPIService.createUser( user.getName() ), User.class
                         );
                     }
                 } )
