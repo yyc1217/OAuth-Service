@@ -48,7 +48,16 @@ public class UserAPIServiceImpl implements UserAPIService {
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public Set< ClientEntity > readUserClients( String name ) {
         UserEntity user = readUser( name );
-        return user == null ? null : new HashSet<>( user.getClients() );
+        if( user == null ) {
+            return null;
+        } else {
+            Set< ClientEntity > clients = user.getClients();
+            if( clients == null ) {
+                return null;
+            } else {
+                return new HashSet<>( clients );
+            }
+        }
     }
 
 }

@@ -84,7 +84,8 @@ public class AccessTokenAPIServiceImpl implements AccessTokenAPIService {
     @Override
     @Transactional
     public AccessTokenEntity revokeAccessTokenByID( String id ) {
-        return accessTokenService.revokeAccessToken( readAccessTokenByID( id ) );
+        AccessTokenEntity accessToken = readAccessTokenByID( id );
+        return accessToken == null ? null : accessTokenService.revokeAccessToken( accessToken );
     }
 
     @Override

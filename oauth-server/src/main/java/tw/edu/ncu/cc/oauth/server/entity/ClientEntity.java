@@ -78,7 +78,7 @@ public class ClientEntity extends BasicEntity {
         this.owner = user;
     }
 
-    @OneToMany( cascade = CascadeType.REMOVE, mappedBy = "client" )
+    @OneToMany( mappedBy = "client" )
     public Set< AccessTokenEntity > getTokens() {
         return tokens;
     }

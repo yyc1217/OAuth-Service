@@ -41,26 +41,31 @@ public class ClientAPIServiceImpl implements ClientAPIService {
     @Override
     @Transactional
     public ClientEntity updateClient( String id, Application application ) {
-        ClientEntity newClient = buildClientEntity( application );
-        ClientEntity oldClient = readClient( id );
-        oldClient.setUrl( newClient.getUrl() );
-        oldClient.setName( newClient.getName() );
-        oldClient.setCallback( newClient.getCallback() );
-        oldClient.setDescription( newClient.getDescription() );
-        oldClient.setOwner( newClient.getOwner() );
-        return clientService.updateClient( oldClient );
+        ClientEntity targetClient = readClient( id );
+        if( targetClient == null ) {
+            return null;
+        } else {
+            targetClient.setUrl( application.getUrl() );
+            targetClient.setName( application.getName() );
+            targetClient.setCallback( application.getCallback() );
+            targetClient.setDescription( application.getDescription() );
+            targetClient.setOwner( userService.readUser( application.getOwner() ) );
+            return clientService.updateClient( targetClient );
+        }
     }
 
     @Override
     @Transactional
     public ClientEntity deleteClient( String id ) {
-        return clientService.deleteClient( readClient( id ) );
+        ClientEntity targetClient = readClient( id );
+        return targetClient == null ? null : clientService.deleteClient( targetClient );
     }
 
     @Override
     @Transactional
     public ClientEntity refreshClientSecret( String id ) {
-        return clientService.refreshClientSecret( readClient( id ) );
+        ClientEntity targetClient = readClient( id );
+        return  targetClient == null ? null : clientService.refreshClientSecret( targetClient );
     }
 
     private ClientEntity buildClientEntity( Application application ) {
