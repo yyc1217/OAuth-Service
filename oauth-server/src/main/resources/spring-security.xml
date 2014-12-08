@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <security:http pattern="/resource/**" security="none"/>
+
+    <security:http pattern="/oauth/token" create-session="never" entry-point-ref="stubEntry">
+        <security:custom-filter ref="oauthTokenExchangeFilter" after="LAST"/>
+    </security:http>
+
+    <security:http disable-url-rewriting="true" use-expressions="true" >
+
+        <security:intercept-url pattern="/oauth/authorize" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/**" access="isAuthenticated()"/>
+
+        <security:form-login login-page="/login"/>
+        <security:custom-filter ref="openidLoginFilter" after="FORM_LOGIN_FILTER"/>
+        <security:custom-filter ref="oauthAuthorizationFilter" after="LAST"/>
+        <security:csrf/>
+
+    </security:http>
+
+    <security:authentication-manager alias="authenticationManager"/>
+
+    <bean id="oauthAuthorizationFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthAuthorizationFilter">
+        <property name="filtPath" value="/oauth/authorize"/>
+    </bean>
+
+    <bean id="oauthTokenExchangeFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthTokenExchangeFilter">
+        <property name="filtPath" value="/oauth/token"/>
+        <property name="authorizationCodeService">
+            <bean class="tw.edu.ncu.cc.oauth.server.security.impl.AuthorizationCodeService">
+                <property name="codeExpireSeconds" value="600"/>
+                <property name="tokenExpireSeconds" value="28800"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="openidLoginFilter" class="tw.edu.ncu.cc.oauth.server.filter.OpenIDLoginFilter">
+        <property name="loginPath" value="/login"/>
+        <property name="loginConfirmPath" value="/login_confirm"/>
+    </bean>
+
+</beans>
