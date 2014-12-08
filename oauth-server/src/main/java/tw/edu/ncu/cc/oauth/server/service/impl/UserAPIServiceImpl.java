@@ -32,6 +32,13 @@ public class UserAPIServiceImpl implements UserAPIService {
     }
 
     @Override
+    @Transactional
+    public UserEntity createUserIfNotExist( String name ) {
+        UserEntity user = readUser( name );
+        return user == null ? createUser( name ) : user;
+    }
+
+    @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public UserEntity readUser( String name ) {
         return userService.readUser( name );
@@ -48,16 +55,7 @@ public class UserAPIServiceImpl implements UserAPIService {
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public Set< ClientEntity > readUserClients( String name ) {
         UserEntity user = readUser( name );
-        if( user == null ) {
-            return null;
-        } else {
-            Set< ClientEntity > clients = user.getClients();
-            if( clients == null ) {
-                return null;
-            } else {
-                return new HashSet<>( clients );
-            }
-        }
+        return user == null ? null : new HashSet<>( user.getClients() );
     }
 
 }
