@@ -5,6 +5,8 @@ import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
+import java.util.Date;
+
 @Repository
 public class ClientRepositoryImpl extends EntityManagerBean implements ClientRepository {
 
@@ -20,6 +22,25 @@ public class ClientRepositoryImpl extends EntityManagerBean implements ClientRep
 
     @Override
     public void deleteClient( ClientEntity client ) {
+        Date timeNow = new Date();
+        getEntityManager()
+                .createQuery(
+                        "UPDATE FROM AuthCodeEntity " +
+                                "SET dateExpired = :time " +
+                                "WHERE client = :client"
+                )
+                .setParameter( "time", timeNow )
+                .setParameter( "client", client )
+                .executeUpdate();
+        getEntityManager()
+                .createQuery(
+                        "UPDATE FROM AccessTokenEntity " +
+                        "SET dateExpired = :time " +
+                        "WHERE client = :client"
+                )
+                .setParameter( "time", timeNow )
+                .setParameter( "client", client )
+                .executeUpdate();
         getEntityManager().remove( client );
     }
 

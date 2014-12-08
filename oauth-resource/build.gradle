@@ -1,0 +1,17 @@
+
+description = "resource server tools for ncu oauth service"
+
+dependencies{
+
+    compile 'org.springframework:spring-test:4.1.1.RELEASE',
+            'org.springframework.security:spring-security-core:3.2.5.RELEASE'
+            'org.springframework.security:spring-security-test:3.2.5.RELEASE'
+
+    compile 'javax.servlet:javax.servlet-api:3.1.0'
+
+    runtime 'org.slf4j:slf4j-log4j12:1.7.7'
+
+    testCompile 'org.spockframework:spock-spring:1.0-groovy-2.3-SNAPSHOT',
+                'com.jayway.jsonpath:json-path-assert:0.9.1'
+
+}

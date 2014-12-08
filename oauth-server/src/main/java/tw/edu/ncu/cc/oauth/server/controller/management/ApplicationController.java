@@ -70,7 +70,7 @@ public class ApplicationController extends APIExceptionHandler {
 
     @RequestMapping( value = "{appID}", method = RequestMethod.PUT )
     public ResponseEntity updateApplication( @PathVariable( "appID" ) final String appID,
-                                             @RequestBody @Validated  final Application application, BindingResult result ) {
+                                             @RequestBody @Validated  final Application application, final BindingResult result ) {
         return ResponseBuilder
                 .validation()
                 .errors( result )

@@ -70,8 +70,17 @@ public class ClientServiceImpl implements ClientService {
         String secret = stringGenerator.generateToken();
         client.setSecret( passwordEncoder.encode( secret ) );
         updateClient( client );
-        client.setSecret( secret );
-        return client;
+        ClientEntity clientEntity = new ClientEntity();
+        clientEntity.setId( client.getId() );
+        clientEntity.setSecret( secret );
+        clientEntity.setUrl( client.getUrl() );
+        clientEntity.setName( client.getName() );
+        clientEntity.setOwner( client.getOwner() );
+        clientEntity.setCallback( client.getCallback() );
+        clientEntity.setDescription( client.getDescription() );
+        clientEntity.setDateCreated( client.getDateCreated() );
+        clientEntity.setDateUpdated( client.getDateUpdated() );
+        return clientEntity;
     }
 
     @Override
