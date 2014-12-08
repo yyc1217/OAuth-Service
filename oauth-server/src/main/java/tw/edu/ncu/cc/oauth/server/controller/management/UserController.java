@@ -72,7 +72,7 @@ public class UserController extends APIExceptionHandler {
     }
 
     @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity createUser( @Validated @RequestBody final User user, BindingResult result ) {
+    public ResponseEntity createUserIfNotExist( @Validated @RequestBody final User user, BindingResult result ) {
         return ResponseBuilder
                 .validation()
                 .errors( result )
@@ -80,7 +80,7 @@ public class UserController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                userAPIService.createUser( user.getName() ), User.class
+                                userAPIService.createUserIfNotExist( user.getName() ), User.class
                         );
                     }
                 } )

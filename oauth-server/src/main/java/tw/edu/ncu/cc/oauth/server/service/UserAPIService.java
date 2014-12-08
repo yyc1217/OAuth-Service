@@ -8,6 +8,7 @@ import java.util.Set;
 
 public interface UserAPIService {
 
+    public UserEntity createUserIfNotExist( String name );
     public UserEntity createUser( String name );
     public UserEntity readUser  ( String name );
     public Set< ClientEntity > readUserClients( String name );

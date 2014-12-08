@@ -1,5 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.entity;
 
+import org.hibernate.annotations.Where;
 import tw.edu.ncu.cc.oauth.server.entity.base.BasicEntity;
 
 import javax.persistence.*;
@@ -79,6 +80,7 @@ public class ClientEntity extends BasicEntity {
     }
 
     @OneToMany( mappedBy = "client" )
+    @Where( clause = "date_expired > CURRENT_TIMESTAMP() or date_expired IS NULL" )
     public Set< AccessTokenEntity > getTokens() {
         return tokens;
     }
