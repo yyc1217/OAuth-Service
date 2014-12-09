@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.server.component.StringGenerator;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
-import tw.edu.ncu.cc.oauth.server.repository.ClientTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 
 @Service
@@ -17,7 +16,6 @@ public class ClientServiceImpl implements ClientService {
     private PasswordEncoder passwordEncoder;
     private StringGenerator stringGenerator;
     private ClientRepository clientRepository;
-    private ClientTokenRepository clientTokenRepository;
 
     @Autowired
     public void setPasswordEncoder( PasswordEncoder passwordEncoder ) {
@@ -32,11 +30,6 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     public void setClientRepository( ClientRepository clientRepository ) {
         this.clientRepository = clientRepository;
-    }
-
-    @Autowired
-    public void setClientTokenRepository( ClientTokenRepository clientTokenRepository ) {
-        this.clientTokenRepository = clientTokenRepository;
     }
 
     @Override
@@ -61,7 +54,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public void revokeClientTokens( ClientEntity client ) {
-        clientTokenRepository.deleteAllAccessTokenOfClient( client );
+        clientRepository.revokeClientTokens( client );
     }
 
     @Override

@@ -56,4 +56,12 @@ class ClientRepositoryImplTest extends SpringSpecification {
             clientRepository.readClient( client.getId() ) == null
     }
 
+    @Transactional
+    def "it can revoke all tokens of the specified client"() {
+        when:
+            clientRepository.revokeClientTokens( clientRepository.readClient( 1 ) )
+        then:
+            clientRepository.readClient( 1 ).getTokens().size() == 0
+    }
+
 }

@@ -2,6 +2,7 @@ package tw.edu.ncu.cc.oauth.server.repository.impl;
 
 import org.springframework.stereotype.Repository;
 import tw.edu.ncu.cc.oauth.server.entity.PermissionEntity;
+import tw.edu.ncu.cc.oauth.server.helper.ResultBuilder;
 import tw.edu.ncu.cc.oauth.server.repository.PermissionRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
@@ -24,13 +25,14 @@ public class PermissionRepositoryImpl extends EntityManagerBean implements Permi
 
     @Override
     public PermissionEntity readPermission( String name ) {
-        List< PermissionEntity > list = getEntityManager()
-                .createQuery(
-                        "SELECT permission FROM PermissionEntity permission " +
-                                "WHERE permission.name = :name", PermissionEntity.class )
-                .setParameter( "name", name )
-                .getResultList();
-        return ( list.isEmpty() ? null : list.get( 0 ) );
+        return ResultBuilder.result(
+                getEntityManager()
+                        .createQuery(
+                                "SELECT permission FROM PermissionEntity permission " +
+                                "WHERE permission.name = :name" )
+                        .setParameter( "name", name )
+                        .getResultList()
+        ).singleResult( PermissionEntity.class );
     }
 
     @Override

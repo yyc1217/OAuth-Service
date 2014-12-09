@@ -2,10 +2,9 @@ package tw.edu.ncu.cc.oauth.server.repository.impl;
 
 import org.springframework.stereotype.Repository;
 import tw.edu.ncu.cc.oauth.server.entity.UserEntity;
+import tw.edu.ncu.cc.oauth.server.helper.ResultBuilder;
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
-
-import java.util.List;
 
 @Repository
 public class UserRepositoryImpl extends EntityManagerBean implements UserRepository {
@@ -22,13 +21,14 @@ public class UserRepositoryImpl extends EntityManagerBean implements UserReposit
 
     @Override
     public UserEntity readUser( String name ) {
-        List<UserEntity> list = getEntityManager()
-                .createQuery(
-                        "SELECT user FROM UserEntity user " +
-                        "WHERE user.name = :name", UserEntity.class )
-                .setParameter( "name", name )
-                .getResultList();
-        return ( list.isEmpty() ? null : list.get( 0 ) );
+        return ResultBuilder.result(
+                getEntityManager()
+                        .createQuery(
+                                "SELECT user FROM UserEntity user " +
+                                "WHERE user.name = :name" )
+                        .setParameter( "name", name )
+                        .getResultList()
+        ).singleResult( UserEntity.class );
     }
 
 }

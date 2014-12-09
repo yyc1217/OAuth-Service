@@ -13,3 +13,36 @@ OAuth Athorization Server writtern in Java
 - jettyStart : run embedded server
 - jettyStop  : stop embedded server above
 
+### Resources
+resources are divided into two environments for Spring
+
+- develope : include embedded database and mocked elements
+
+- production : put following files into **src/main/resources/production**
+    - cache-setting.xml ( standard ehcahe setting, must exist a cache 'permissionDictionary' )
+    - connection.properties
+    ```
+        min_size = 5
+        max_size = 75
+        ...or other c3p0 settings
+        user     = [ your database user name ]
+        password = [ your database user password ]
+    ```
+    - database.properties
+    ```
+        jdbc.driver = com.mysql.jdbc.Driver
+        jdbc.url = jdbc:mysql://localhost/dbname
+        init_database = true
+        init_database_file = classpath:develope/data.sql
+    ```
+    - hibernate.properties
+    ```
+        hibernate.dialect  = org.hibernate.dialect.MySQL5Dialect
+        hibernate.show_sql = true
+        ...or other hibernate setting
+    ```
+    - openid-setting.properties ( https://github.com/NCU-CC/OpenID-Consumer )
+    - security.properties
+    ```
+        api_management_access = hasIpAddress('127.0.0.1') or hasIpAddress('0:0:0:0:0:0:0:1') ...etc
+    ```
