@@ -16,7 +16,7 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
     }
 
     @Override
-    public AccessToken readScope( String accessToken ) {
+    public AccessToken readToken( String accessToken ) {
         String remoteAddr = config.getAddrPrefix() + accessToken + config.getAddrSuffix();
         try {
             return restTemplate.getForEntity( remoteAddr, AccessToken.class ).getBody();

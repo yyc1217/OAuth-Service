@@ -21,12 +21,21 @@ class TokenConfirmServiceImplTest extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/token/token1/scope" )
+                        .withPath( "/token/string/token1" )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 200 )
                         .withHeaders( new Header( "Content-Type", "application/json" ) )
-                        .withBody( '[ "READ", "WRITE" ]' )
+                        .withBody(
+                        '''
+                        {
+                            "id" : "1",
+                            "user" : "101502549",
+                            "scope" : [ "READ", "WRITE" ],
+                            "last_updated" : "2014-12-15"
+                        }
+                        '''
+                )
         )
         serverResource.mockServer().when(
                 HttpRequest.request()
@@ -41,19 +50,18 @@ class TokenConfirmServiceImplTest extends Specification {
     def setup() {
         tokenConfirmService = new TokenConfirmServiceImpl()
         tokenConfirmService.setConfig( new RemoteConfig(
-                addrPrefix: "http://localhost:${serverResource.port()}/token/",
-                addrSuffix: "/scope"
+                addrPrefix: "http://localhost:${serverResource.port()}/token/string/"
         ) )
     }
 
     def "it can check token scope from remote server 1"() {
         expect:
-            tokenConfirmService.readScope( "token1" ) == [ "READ", "WRITE" ]
+            tokenConfirmService.readToken( "token1" ).scope == [ "READ", "WRITE" ]
     }
 
     def "it can check token scope from remote server 2"() {
         expect:
-            tokenConfirmService.readScope( "token2" ) == null
+            tokenConfirmService.readToken( "token2" ) == null
     }
 
 }

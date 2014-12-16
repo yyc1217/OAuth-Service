@@ -29,7 +29,7 @@ public class TokenAccessDecisionFilter extends AbstractFilter {
 
     private void checkAuthentication( HttpServletRequest request ) {
         if ( isOAuthRequest( request ) ) {
-            AccessToken token = tokenConfirmService.readScope( readAccessToken( request ) );
+            AccessToken token = tokenConfirmService.readToken( readAccessToken( request ) );
             if ( token != null ) {
                 SecurityContextHolder.getContext().setAuthentication(
                         new UsernamePasswordAuthenticationToken(

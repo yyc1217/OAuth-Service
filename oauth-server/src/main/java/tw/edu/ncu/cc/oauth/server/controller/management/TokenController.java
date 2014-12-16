@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
+import tw.edu.ncu.cc.oauth.data.v1.management.token.AppAccessToken;
 import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
 import tw.edu.ncu.cc.oauth.server.service.AccessTokenAPIService;
@@ -38,7 +39,7 @@ public class TokenController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenAPIService.readAccessTokenByID( id ), AccessToken.class
+                                accessTokenAPIService.readAccessTokenByID( id ), AppAccessToken.class
                         );
                     }
                 } )
@@ -53,7 +54,7 @@ public class TokenController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenAPIService.revokeAccessTokenByID( id ), AccessToken.class
+                                accessTokenAPIService.revokeAccessTokenByID( id ), AppAccessToken.class
                         );
                     }
                 } )
@@ -61,7 +62,7 @@ public class TokenController extends APIExceptionHandler {
     }
 
     @RequestMapping( value = "string/{token}", method = RequestMethod.GET )
-    public ResponseEntity getTokenScope( @PathVariable( "token" ) final String token ) {
+    public ResponseEntity getTokenByString( @PathVariable( "token" ) final String token ) {
         return ResponseBuilder
                 .noneValidation()
                 .resource( new ResponseBuilder.ResourceBuilder() {

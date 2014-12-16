@@ -10,6 +10,7 @@
             <set>
                 <bean class="tw.edu.ncu.cc.oauth.server.converter.UserConverter"/>
                 <bean class="tw.edu.ncu.cc.oauth.server.converter.AccessTokenConverter"/>
+                <bean class="tw.edu.ncu.cc.oauth.server.converter.AppAccessTokenConverter"/>
                 <bean class="tw.edu.ncu.cc.oauth.server.converter.ApplicationConverter"/>
                 <bean class="tw.edu.ncu.cc.oauth.server.converter.IdApplicationConverter"/>
                 <bean class="tw.edu.ncu.cc.oauth.server.converter.SecretIdApplicationConverter"/>
