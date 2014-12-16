@@ -3,6 +3,7 @@ package tw.edu.ncu.cc.oauth.resource.filter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService;
 
 import javax.servlet.FilterChain;
@@ -28,11 +29,11 @@ public class TokenAccessDecisionFilter extends AbstractFilter {
 
     private void checkAuthentication( HttpServletRequest request ) {
         if ( isOAuthRequest( request ) ) {
-            String[] scope = tokenConfirmService.readScope( readAccessToken( request ) );
-            if ( scope != null ) {
+            AccessToken token = tokenConfirmService.readScope( readAccessToken( request ) );
+            if ( token != null ) {
                 SecurityContextHolder.getContext().setAuthentication(
                         new UsernamePasswordAuthenticationToken(
-                                "user", "", AuthorityUtils.createAuthorityList( scope )
+                                token.getUser(), "", AuthorityUtils.createAuthorityList( token.getScope() )
                         )
                 );
             }

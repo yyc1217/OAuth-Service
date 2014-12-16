@@ -9,6 +9,8 @@ repositories{
 
 dependencies{
 
+    compile project(':oauth-data')
+
     compile 'org.springframework:spring-test:4.1.1.RELEASE',
             'org.springframework:spring-web:4.1.1.RELEASE',
             'org.springframework.security:spring-security-core:4.0.0.M2',
