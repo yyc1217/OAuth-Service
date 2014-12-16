@@ -2,8 +2,8 @@ package tw.edu.ncu.cc.oauth.resource.config;
 
 public class RemoteConfig {
 
-    private String addrPrefix;
-    private String addrSuffix;
+    private String addrPrefix = "";
+    private String addrSuffix = "";
 
     public String getAddrSuffix() {
         return addrSuffix;
