@@ -71,7 +71,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     @Transactional
-    public AccessTokenEntity createAccessToken( int clientID, String userID, Set< String > scope, Date expireDate ) {
+    public AccessTokenEntity createAccessToken( String clientID, String userID, Set< String > scope, Date expireDate ) {
         AccessTokenEntity accessToken = new AccessTokenEntity();
         accessToken.setDateExpired( expireDate );
         accessToken.setUser( userService.readUser( userID ) );
@@ -89,7 +89,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         accessToken.setDateExpired( expireDate );
         accessToken.setScope( authCode.getScope() );
         accessToken.setUser( userService.readUser( authCode.getUser().getId() ) );
-        accessToken.setClient( clientService.readClient( authCode.getClient().getId() ) );
+        accessToken.setClient( clientService.readClient( authCode.getClient().getId() + "" ) );
         return createAccessToken( accessToken );
     }
 

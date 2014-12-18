@@ -33,7 +33,7 @@ public final class AccessConfirmController {
         String userID = confirmEntity.getUserID();
 
         if( isAgree ) {
-            AuthCodeEntity authCode = authCodeService.createAuthCode( client.getId(), userID, scope );
+            AuthCodeEntity authCode = authCodeService.createAuthCode( client.getId() + "", userID, scope );
             return "redirect:" + String.format(
                     "%s?code=%s&state=%s",
                     client.getCallback(),

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder;
-import tw.edu.ncu.cc.oauth.server.service.ClientAPIService;
+import tw.edu.ncu.cc.oauth.server.service.ClientService;
 import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
 
 import javax.servlet.FilterChain;
@@ -25,7 +25,7 @@ import java.util.Set;
 public class OauthAuthorizationFilter extends AbstractFilter {
 
     private String filtPath;
-    private ClientAPIService clientAPIService;
+    private ClientService clientService;
     private ScopeCodecService scopeCodecService;
 
     public void setFiltPath( String filtPath ) {
@@ -38,8 +38,8 @@ public class OauthAuthorizationFilter extends AbstractFilter {
     }
 
     @Autowired
-    public void setClientAPIService( ClientAPIService clientAPIService ) {
-        this.clientAPIService = clientAPIService;
+    public void setClientService( ClientService clientService ) {
+        this.clientService = clientService;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class OauthAuthorizationFilter extends AbstractFilter {
         String clientState = oauthRequest.getState();
         String clientID    = oauthRequest.getClientId();
 
-        ClientEntity client = clientAPIService.readClient( clientID );
+        ClientEntity client = clientService.readClient( clientID );
 
         if ( client == null ) {
             throw OAuthProblemBuilder

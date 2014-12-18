@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface AccessTokenService {
 
-    public AccessTokenEntity createAccessToken( int clientID, String userID, Set< String > scope, Date expireDate );
+    public AccessTokenEntity createAccessToken( String clientID, String userID, Set< String > scope, Date expireDate );
     public AccessTokenEntity createAccessTokenByCode( String authCode, Date expireDate );
     public AccessTokenEntity readAccessTokenByToken ( String token );
     public AccessTokenEntity readAccessTokenByID  ( String id );

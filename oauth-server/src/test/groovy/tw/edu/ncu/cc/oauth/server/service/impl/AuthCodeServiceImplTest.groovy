@@ -22,15 +22,14 @@ class AuthCodeServiceImplTest extends SpringSpecification {
     def "it can create an AuthCodeEntity"() {
         given:
             def scope = [ "READ" ] as Set
-            def clientID = 1
+            def clientID = "1"
             def userID = "ADMIN1"
         when:
             def code = authCodeService.createAuthCode(
                     clientID, userID, scope
             )
         then:
-            code.getUser().getId() == clientID
-            code.getClient().getId() == clientID
+            code.getClient().getId() == clientID as Integer
     }
 
     def "it can read AuthCodeEntity by code"() {
@@ -43,7 +42,7 @@ class AuthCodeServiceImplTest extends SpringSpecification {
     def "it can revoke AuthCodeEntity by id"() {
         given:
             def code = authCodeService.createAuthCode(
-                    1, "ADMIN1", [ "READ" ] as Set
+                    "1", "ADMIN1", [ "READ" ] as Set
             )
         and:
             def codeID = code.getId() as String

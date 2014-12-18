@@ -18,7 +18,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     def "it can create AccessTokenEntity using permission of string set"() {
         given:
             def expireDate = new Date()
-            def clientID = 1
+            def clientID = "1"
             def userID = "ADMIN1"
             def scope  = [ "READ" ] as Set< String >
         when:
@@ -31,7 +31,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
 
     def "it can create AccessTokenEntity then revoke correspond authCode using AuthCodeEntity"() {
         given:
-            def code = authCodeService.createAuthCode( 1, "ADMIN1", [ "READ" ] as Set<String> )
+            def code = authCodeService.createAuthCode( "1", "ADMIN1", [ "READ" ] as Set<String> )
         when:
             def token = accessTokenService.createAccessTokenByCode( code.getCode(), null )
         then:
@@ -56,7 +56,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     def "it can revoke AccessToken by id"() {
         given:
             def token = accessTokenService.createAccessToken(
-                    1, "ADMIN1", [ "READ" ] as Set< String >, null
+                    "1", "ADMIN1", [ "READ" ] as Set< String >, null
             )
         and:
             def tokenID = token.getId() as String

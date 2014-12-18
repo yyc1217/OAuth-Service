@@ -66,7 +66,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Transactional
-    public AuthCodeEntity createAuthCode( int clientID, String userID, Set< String > scope ) {
+    public AuthCodeEntity createAuthCode( String clientID, String userID, Set< String > scope ) {
         AuthCodeEntity authCode = new AuthCodeEntity();
         authCode.setUser( userService.readUser( userID ) );
         authCode.setClient( clientService.readClient( clientID ) );
