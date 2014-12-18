@@ -1,13 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService
 import tw.edu.ncu.cc.oauth.server.service.ClientService
 import tw.edu.ncu.cc.oauth.server.service.UserService
 
+import javax.persistence.NoResultException
 
 class AuthCodeServiceImplTest extends SpringSpecification {
 
@@ -20,39 +19,39 @@ class AuthCodeServiceImplTest extends SpringSpecification {
     @Autowired
     private UserService userService
 
-    @Transactional
-    def "it can generate AuthCodeEntity"() {
+    def "it can create an AuthCodeEntity"() {
+        given:
+            def scope = [ "READ" ] as Set
+            def clientID = 1
+            def userID = "ADMIN1"
         when:
             def code = authCodeService.createAuthCode(
-                new AuthCodeEntity(
-                        client: clientService.readClient( 1 ),
-                        user  : userService.readUser( 1 ),
-                        scope: "000"
-                )
+                    clientID, userID, scope
             )
         then:
-            authCodeService.readAuthCode( code.getCode() ).getUser().getId() == 1
+            code.getUser().getId() == clientID
+            code.getClient().getId() == clientID
     }
 
-    @Transactional
-    def "it can revoke AuthCodeEntity"() {
+    def "it can read AuthCodeEntity by code"() {
+        when:
+            authCodeService.readAuthCodeByCode( "Mzo6OkNPREU=" )
+        then:
+            notThrown( NoResultException )
+    }
+
+    def "it can revoke AuthCodeEntity by id"() {
         given:
             def code = authCodeService.createAuthCode(
-                new AuthCodeEntity(
-                        client: clientService.readClient( 1 ),
-                        user  : userService.readUser( 1 ),
-                        scope: "000"
-                )
+                    1, "ADMIN1", [ "READ" ] as Set
             )
+        and:
+            def codeID = code.getId() as String
         when:
-            authCodeService.revokeAuthCode( authCodeService.readAuthCode( code.getId() ) );
+            authCodeService.revokeAuthCodeByID( codeID )
+            authCodeService.readAuthCodeByID( codeID )
         then:
-            authCodeService.readAuthCode( code.getCode() ) == null
-    }
-
-    def "it can get AuthCodeEntity by id"() {
-        expect:
-            authCodeService.readAuthCode( 1 ).getCode() == "CODE1"
+            thrown( NoResultException )
     }
 
 }

@@ -59,7 +59,13 @@ public class ClientRepositoryImpl extends EntityManagerBean implements ClientRep
 
     @Override
     public ClientEntity readClient( int clientID ) {
-        return getEntityManager().find( ClientEntity.class, clientID );
+        return getEntityManager()
+                .createQuery(
+                        "SELECT client FROM ClientEntity client " +
+                        "WHERE client.id = :id ",
+                        ClientEntity.class )
+                .setParameter( "id", clientID )
+                .getSingleResult();
     }
 
 }

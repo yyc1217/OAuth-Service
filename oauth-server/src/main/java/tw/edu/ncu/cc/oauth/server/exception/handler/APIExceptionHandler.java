@@ -10,10 +10,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import tw.edu.ncu.cc.oauth.data.v1.message.ErrorCode;
 
+import javax.persistence.NoResultException;
+
 @RestController
 public class APIExceptionHandler {
 
     private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
+    @ExceptionHandler( { NoResultException.class } )
+    public ResponseEntity resourseNotFound() {
+        return new ResponseEntity<>(
+                new tw.edu.ncu.cc.oauth.data.v1.message.Error(
+                        ErrorCode.NOT_EXIST, "resourse not exist"
+                ), HttpStatus.NOT_FOUND
+        );
+    }
 
     @ExceptionHandler( { HttpMessageNotReadableException.class, HttpMediaTypeNotSupportedException.class } )
     public ResponseEntity invalidRequestBody() {

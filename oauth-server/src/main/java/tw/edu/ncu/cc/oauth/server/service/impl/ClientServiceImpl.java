@@ -79,8 +79,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public boolean isClientValid( int clientID, String clientSecret ) {
-        ClientEntity client = readClient( clientID );
-        return client != null && passwordEncoder.matches( clientSecret, client.getSecret() );
+        return passwordEncoder.matches( clientSecret, readClient( clientID ).getSecret() );
     }
 
     @Override

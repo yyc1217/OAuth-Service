@@ -8,6 +8,8 @@ import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository
 
+import javax.persistence.NoResultException
+
 class AccessTokenRepositoryImplTest extends SpringSpecification {
 
     @Autowired
@@ -31,7 +33,7 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
                 )
             )
         then:
-            accessTokenRepository.readUnexpiredAccessToken( "TEST01" ) != null
+            accessTokenRepository.readUnexpiredAccessToken( "TEST01" ).user.id == 1
     }
 
     @Transactional
@@ -47,13 +49,14 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
             )
         when:
             accessTokenRepository.revokeAccessToken( token )
+            accessTokenRepository.readUnexpiredAccessToken( "TEST02" )
         then:
-            accessTokenRepository.readUnexpiredAccessToken( "TEST02" ) == null
+             thrown( NoResultException )
     }
 
     def "it can read unexpired AccessTokenEntity by id"() {
         expect:
-            accessTokenRepository.readUnexpiredAccessToken( 1 ).getToken() == "TOKEN1"
+            accessTokenRepository.readUnexpiredAccessToken( 1 ).token == "TOKEN1"
     }
 
 }

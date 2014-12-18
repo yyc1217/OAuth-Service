@@ -9,7 +9,7 @@ import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.security.OauthTokenService;
-import tw.edu.ncu.cc.oauth.server.service.AccessTokenAPIService;
+import tw.edu.ncu.cc.oauth.server.service.AccessTokenService;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 
@@ -22,7 +22,7 @@ public class AuthorizationCodeService implements OauthTokenService {
     private int tokenExpireSeconds = 8*60*60;
     private ClientService clientService;
     private AuthCodeService authCodeService;
-    private AccessTokenAPIService accessTokenAPIService;
+    private AccessTokenService accessTokenService;
 
     public void setCodeExpireSeconds( int codeExpireSeconds ) {
         this.codeExpireSeconds = codeExpireSeconds;
@@ -43,8 +43,8 @@ public class AuthorizationCodeService implements OauthTokenService {
     }
 
     @Autowired
-    public void setAccessTokenAPIService( AccessTokenAPIService accessTokenAPIService ) {
-        this.accessTokenAPIService = accessTokenAPIService;
+    public void setAccessTokenService( AccessTokenService accessTokenService ) {
+        this.accessTokenService = accessTokenService;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class AuthorizationCodeService implements OauthTokenService {
     }
 
     private boolean isAuthCodeValid( String authCode, Integer clientID ) {
-        AuthCodeEntity code = authCodeService.readAuthCode( authCode );
+        AuthCodeEntity code = authCodeService.readAuthCodeByCode( authCode );
         if( code == null || ! code.getClient().getId().equals( clientID ) ) {
             return false;
         } else  if( codeExpireSeconds <= 0 ) {
@@ -92,7 +92,7 @@ public class AuthorizationCodeService implements OauthTokenService {
     }
 
     private String prepareAccessToken( OAuthTokenRequest request ) {
-        return accessTokenAPIService
+        return accessTokenService
                 .createAccessTokenByCode(
                         request.getCode(),
                         new Date( System.currentTimeMillis() + tokenExpireSeconds * 1000 )

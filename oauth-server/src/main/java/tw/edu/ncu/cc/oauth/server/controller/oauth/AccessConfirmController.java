@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.model.AccessConfirmModel;
-import tw.edu.ncu.cc.oauth.server.service.AuthCodeAPIService;
+import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 
 import java.net.URISyntaxException;
 import java.util.Set;
@@ -17,11 +17,11 @@ import java.util.Set;
 @SessionAttributes( "access_confirm" )
 public final class AccessConfirmController {
 
-    private AuthCodeAPIService authCodeAPIService;
+    private AuthCodeService authCodeService;
 
     @Autowired
-    public void setAuthCodeAPIService( AuthCodeAPIService authCodeAPIService ) {
-        this.authCodeAPIService = authCodeAPIService;
+    public void setAuthCodeService( AuthCodeService authCodeService ) {
+        this.authCodeService = authCodeService;
     }
 
     @RequestMapping( value = "oauth/confirm", method = RequestMethod.POST )
@@ -33,7 +33,7 @@ public final class AccessConfirmController {
         String userID = confirmEntity.getUserID();
 
         if( isAgree ) {
-            AuthCodeEntity authCode = authCodeAPIService.createAuthCode( client.getId(), userID, scope );
+            AuthCodeEntity authCode = authCodeService.createAuthCode( client.getId(), userID, scope );
             return "redirect:" + String.format(
                     "%s?code=%s&state=%s",
                     client.getCallback(),

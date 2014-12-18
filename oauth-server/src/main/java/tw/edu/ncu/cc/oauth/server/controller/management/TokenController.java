@@ -11,7 +11,7 @@ import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AppAccessToken;
 import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
-import tw.edu.ncu.cc.oauth.server.service.AccessTokenAPIService;
+import tw.edu.ncu.cc.oauth.server.service.AccessTokenService;
 
 
 @RestController
@@ -19,7 +19,7 @@ import tw.edu.ncu.cc.oauth.server.service.AccessTokenAPIService;
 public class TokenController extends APIExceptionHandler {
 
     private ConversionService conversionService;
-    private AccessTokenAPIService accessTokenAPIService;
+    private AccessTokenService accessTokenService;
 
     @Autowired
     public void setConversionService( ConversionService conversionService ) {
@@ -27,8 +27,8 @@ public class TokenController extends APIExceptionHandler {
     }
 
     @Autowired
-    public void setAccessTokenAPIService( AccessTokenAPIService accessTokenAPIService ) {
-        this.accessTokenAPIService = accessTokenAPIService;
+    public void setAccessTokenService( AccessTokenService accessTokenService ) {
+        this.accessTokenService = accessTokenService;
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.GET )
@@ -39,7 +39,7 @@ public class TokenController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenAPIService.readAccessTokenByID( id ), AppAccessToken.class
+                                accessTokenService.readAccessTokenByID( id ), AppAccessToken.class
                         );
                     }
                 } )
@@ -54,7 +54,7 @@ public class TokenController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenAPIService.revokeAccessTokenByID( id ), AppAccessToken.class
+                                accessTokenService.revokeAccessTokenByID( id ), AppAccessToken.class
                         );
                     }
                 } )
@@ -69,7 +69,7 @@ public class TokenController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenAPIService.readAccessTokenByToken( token ), AccessToken.class
+                                accessTokenService.readAccessTokenByToken( token ), AccessToken.class
                         );
                     }
                 } )
