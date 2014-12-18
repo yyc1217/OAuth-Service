@@ -52,7 +52,8 @@ public class OauthAuthorizationFilter extends AbstractFilter {
         if( filtPath == null ||  requestPath.startsWith( filtPath ) ) {
             try {
                 validate( httpRequest );
-            } catch ( OAuthSystemException ignore ) {
+            } catch ( OAuthSystemException e ) {
+                httpResponse.sendError( HttpServletResponse.SC_BAD_REQUEST, e.getMessage() );
                 return;
             } catch ( OAuthProblemException e ) {
                 if( e.getRedirectUri() == null ) {
