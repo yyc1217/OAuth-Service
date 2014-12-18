@@ -44,9 +44,7 @@ public class OpenIDLoginService implements LoginService {
 
         if( openIDHandler.isResponseMapValid( map ) ) {
             String userName = openIDHandler.getNCUConsumer( map ).getStudentID();
-            if( userService.readUser( userName ) == null ) {
-                userService.createUser( userName );
-            }
+            userService.createUserIfNotExist( userName );
             integrateWithSpringSecurity( request, userName );
         } else {
             throw new LoginException( "openid response is incorrect" );
