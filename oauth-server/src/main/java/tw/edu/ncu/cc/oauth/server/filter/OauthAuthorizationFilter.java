@@ -6,7 +6,6 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
@@ -95,14 +94,6 @@ public class OauthAuthorizationFilter extends AbstractFilter {
 
             String callback = clientService.readClient( clientID ).getCallback();
 
-            if ( StringUtils.isEmpty( clientState ) ) {
-                throw OAuthProblemBuilder
-                        .error( OAuthError.CodeResponse.INVALID_REQUEST )
-                        .description( "STATE NOT PROVIDED" )
-                        .redirectUri( callback )
-                        .state( clientState )
-                        .build();
-            }
             if ( ! scopeCodecService.exist( scope ) ) {
                 throw OAuthProblemBuilder
                         .error( OAuthError.CodeResponse.INVALID_SCOPE )
