@@ -13,6 +13,7 @@ import tw.edu.ncu.cc.oauth.server.service.AccessTokenService;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
@@ -50,7 +51,7 @@ public class AuthorizationCodeService implements OauthTokenService {
     @Override
     public void validate( OAuthTokenRequest request ) throws OAuthProblemException, OAuthSystemException {
 
-        Integer clientID    = Integer.valueOf( request.getClientId() );
+        String clientID    = request.getClientId();
         String clientSecret = request.getClientSecret();
         String authCode     = request.getCode();
 
@@ -67,16 +68,20 @@ public class AuthorizationCodeService implements OauthTokenService {
         }
     }
 
-    private boolean isAuthCodeValid( String authCode, Integer clientID ) {
-        AuthCodeEntity code = authCodeService.readAuthCodeByCode( authCode );
-        if( code == null || ! code.getClient().getId().equals( clientID ) ) {
+    private boolean isAuthCodeValid( String authCode, String clientID ) {
+        try {
+            AuthCodeEntity code = authCodeService.readAuthCodeByCode( authCode );
+            if( ! code.getClient().getId().toString().equals( clientID ) ) {
+                return false;
+            } else  if( codeExpireSeconds <= 0 ) {
+                return true;
+            } else {
+                return new Date().before( new Date(
+                        code.getDateCreated().getTime() + codeExpireSeconds * 1000
+                ));
+            }
+        } catch ( NoResultException ignore ) {
             return false;
-        } else  if( codeExpireSeconds <= 0 ) {
-            return true;
-        } else {
-            return new Date().before( new Date(
-                            code.getDateCreated().getTime() + codeExpireSeconds * 1000
-            ));
         }
     }
 

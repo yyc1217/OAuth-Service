@@ -6,7 +6,7 @@ import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 public interface ClientService {
 
     public void revokeClientTokens( String id );
-    public boolean isClientValid( int clientID, String clientSecret );
+    public boolean isClientValid( String clientID, String clientSecret );
 
     public ClientEntity readClient( String id );
     public ClientEntity deleteClient( String id );

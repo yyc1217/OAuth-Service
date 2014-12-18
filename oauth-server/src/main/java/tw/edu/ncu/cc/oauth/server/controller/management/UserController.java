@@ -14,7 +14,7 @@ import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
-import tw.edu.ncu.cc.oauth.server.service.UserAPIService;
+import tw.edu.ncu.cc.oauth.server.service.UserService;
 
 import java.util.Set;
 
@@ -22,12 +22,12 @@ import java.util.Set;
 @RequestMapping( value = "management/v1/user" )
 public class UserController extends APIExceptionHandler {
     
-    private UserAPIService userAPIService;
+    private UserService userService;
     private ConversionService conversionService;
 
     @Autowired
-    public void setUserAPIService( UserAPIService userAPIService ) {
-        this.userAPIService = userAPIService;
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
     }
 
     @Autowired
@@ -44,7 +44,7 @@ public class UserController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                userAPIService.readUserTokens( userName ),
+                                userService.readUserTokens( userName ),
                                 TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( AccessTokenEntity.class ) ),
                                 TypeDescriptor.array( TypeDescriptor.valueOf( AccessToken.class ) )
                         );
@@ -62,7 +62,7 @@ public class UserController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                userAPIService.readUserClients( userName ),
+                                userService.readUserClients( userName ),
                                 TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( ClientEntity.class ) ),
                                 TypeDescriptor.array( TypeDescriptor.valueOf( IdApplication.class ) )
                         );
@@ -80,7 +80,7 @@ public class UserController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                userAPIService.createUserIfNotExist( user.getName() ), User.class
+                                userService.createUserIfNotExist( user.getName() ), User.class
                         );
                     }
                 } )

@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import tw.edu.ncu.cc.oauth.server.security.LoginService;
-import tw.edu.ncu.cc.oauth.server.service.UserAPIService;
+import tw.edu.ncu.cc.oauth.server.service.UserService;
 import tw.edu.ncu.cc.openid.consumer.ncu.NCUOpenIDHandler;
 
 import javax.security.auth.login.LoginException;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Service
 public class OpenIDLoginService implements LoginService {
 
-    private UserAPIService userAPIService;
+    private UserService userService;
     private NCUOpenIDHandler openIDHandler;
 
     @Autowired
@@ -28,8 +28,8 @@ public class OpenIDLoginService implements LoginService {
     }
 
     @Autowired
-    public void setUserAPIService( UserAPIService userAPIService ) {
-        this.userAPIService = userAPIService;
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
     }
 
     @Override
@@ -44,8 +44,8 @@ public class OpenIDLoginService implements LoginService {
 
         if( openIDHandler.isResponseMapValid( map ) ) {
             String userName = openIDHandler.getNCUConsumer( map ).getStudentID();
-            if( userAPIService.readUser( userName ) == null ) {
-                userAPIService.createUser( userName );
+            if( userService.readUser( userName ) == null ) {
+                userService.createUser( userName );
             }
             integrateWithSpringSecurity( request, userName );
         } else {

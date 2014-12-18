@@ -42,16 +42,16 @@ class ClientServiceImplTest extends SpringSpecification {
                     )
             )
         then:
-            clientService.isClientValid( client.getId(), client.getSecret() )
+            clientService.isClientValid( client.getId() + "", client.getSecret() )
         and:
-            ! clientService.isClientValid( client.getId(), "secret" )
-            ! clientService.isClientValid( 50, "123" )
+            ! clientService.isClientValid( client.getId() + "", "secret" )
+            ! clientService.isClientValid( "50", "123" )
     }
 
     def "it can validate the client id and secret 2"() {
         expect:
-            clientService.isClientValid( 3, "SECRET" )
-            ! clientService.isClientValid( 3, "SECR" )
+            clientService.isClientValid( "3", "SECRET" )
+            ! clientService.isClientValid( "3", "SECR" )
     }
 
     def "it can create ClientEntity"() {

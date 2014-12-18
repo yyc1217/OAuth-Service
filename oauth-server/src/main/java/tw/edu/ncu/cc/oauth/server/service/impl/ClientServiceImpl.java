@@ -50,9 +50,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public boolean isClientValid( int clientID, String clientSecret ) {
+    public boolean isClientValid( String clientID, String clientSecret ) {
         try {
-            return passwordEncoder.matches( clientSecret, readClient( clientID + "" ).getSecret() );
+            return passwordEncoder.matches( clientSecret, readClient( clientID ).getSecret() );
         } catch ( NoResultException ignore ) {
             return false;
         }
