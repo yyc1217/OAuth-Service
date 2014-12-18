@@ -14,7 +14,7 @@
         <security:custom-filter ref="oauthTokenExchangeFilter" after="LAST"/>
     </security:http>
 
-    <security:http disable-url-rewriting="true" use-expressions="true" >
+    <security:http use-expressions="true" >
 
         <security:intercept-url pattern="/oauth/authorize" access="hasRole('ROLE_USER')"/>
         <security:intercept-url pattern="/**" access="isAuthenticated()"/>
