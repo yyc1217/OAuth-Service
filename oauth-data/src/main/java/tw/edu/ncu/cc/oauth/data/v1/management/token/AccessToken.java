@@ -1,14 +1,11 @@
 package tw.edu.ncu.cc.oauth.data.v1.management.token;
 
-import tw.edu.ncu.cc.oauth.data.v1.management.application.IdApplication;
-
 import java.util.Date;
 
 public class AccessToken {
 
     private String id;
     private String user;
-    private IdApplication application;
     private String[] scope;
     private Date last_updated;
 
@@ -26,14 +23,6 @@ public class AccessToken {
 
     public void setUser( String user ) {
         this.user = user;
-    }
-
-    public IdApplication getApplication() {
-        return application;
-    }
-
-    public void setApplication( IdApplication application ) {
-        this.application = application;
     }
 
     public String[] getScope() {

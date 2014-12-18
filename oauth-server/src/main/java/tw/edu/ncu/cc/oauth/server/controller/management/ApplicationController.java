@@ -12,19 +12,19 @@ import tw.edu.ncu.cc.oauth.data.v1.management.application.IdApplication;
 import tw.edu.ncu.cc.oauth.data.v1.management.application.SecretIdApplication;
 import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
-import tw.edu.ncu.cc.oauth.server.service.ClientAPIService;
+import tw.edu.ncu.cc.oauth.server.service.ClientService;
 import tw.edu.ncu.cc.oauth.server.validator.ApplicationValidator;
 
 @RestController
 @RequestMapping( value = "management/v1/application" )
 public class ApplicationController extends APIExceptionHandler {
 
-    private ClientAPIService clientAPIService;
+    private ClientService clientService;
     private ConversionService conversionService;
 
     @Autowired
-    public void setClientAPIService( ClientAPIService clientAPIService ) {
-        this.clientAPIService = clientAPIService;
+    public void setClientAPIService( ClientService clientService ) {
+        this.clientService = clientService;
     }
 
     @Autowired
@@ -46,7 +46,7 @@ public class ApplicationController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                clientAPIService.createClient( application ), SecretIdApplication.class
+                                clientService.createClient( application ), SecretIdApplication.class
                         );
                     }
                 } )
@@ -61,7 +61,7 @@ public class ApplicationController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                clientAPIService.readClient( appID ), IdApplication.class
+                                clientService.readClient( appID ), IdApplication.class
                         );
                     }
                 } )
@@ -78,7 +78,7 @@ public class ApplicationController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                clientAPIService.updateClient( appID, application ), IdApplication.class
+                                clientService.updateClient( appID, application ), IdApplication.class
                         );
                     }
                 } )
@@ -93,7 +93,7 @@ public class ApplicationController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                clientAPIService.deleteClient( appID ), IdApplication.class
+                                clientService.deleteClient( appID ), IdApplication.class
                         );
                     }
                 } )
@@ -108,7 +108,7 @@ public class ApplicationController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                clientAPIService.refreshClientSecret( appID ), SecretIdApplication.class
+                                clientService.refreshClientSecret( appID ), SecretIdApplication.class
                         );
                     }
                 } )

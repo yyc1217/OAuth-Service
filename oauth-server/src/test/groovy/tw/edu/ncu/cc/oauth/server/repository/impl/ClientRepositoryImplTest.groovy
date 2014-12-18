@@ -7,6 +7,8 @@ import tw.edu.ncu.cc.oauth.server.entity.ClientEntity
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository
 
+import javax.persistence.NoResultException
+
 
 class ClientRepositoryImplTest extends SpringSpecification {
 
@@ -26,7 +28,7 @@ class ClientRepositoryImplTest extends SpringSpecification {
                     )
             )
         then:
-            clientRepository.readClient( client.getId() ).getName() == "TEST APP"
+            clientRepository.readClient( client.getId() ).name == "TEST APP"
     }
 
     @Transactional
@@ -35,10 +37,8 @@ class ClientRepositoryImplTest extends SpringSpecification {
             def client = clientRepository.readClient( 1 )
         when:
             client.setDescription( "NEW" )
-        and:
-            clientRepository.updateClient( client )
         then:
-            clientRepository.readClient( client.getId() ).getDescription() == "NEW"
+            clientRepository.updateClient( client ).description == "NEW"
     }
 
     @Transactional
@@ -52,8 +52,17 @@ class ClientRepositoryImplTest extends SpringSpecification {
             )
         when:
             clientRepository.deleteClient( client )
+            clientRepository.readClient( client.getId() )
         then:
-            clientRepository.readClient( client.getId() ) == null
+            thrown( NoResultException )
+    }
+
+    @Transactional
+    def "it can revoke all tokens of the specified client"() {
+        when:
+            clientRepository.revokeClientTokens( clientRepository.readClient( 1 ) )
+        then:
+            clientRepository.readClient( 1 ).getTokens().size() == 0
     }
 
 }

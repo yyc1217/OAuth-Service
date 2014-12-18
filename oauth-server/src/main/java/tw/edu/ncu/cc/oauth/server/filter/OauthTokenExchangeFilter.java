@@ -41,7 +41,7 @@ public class OauthTokenExchangeFilter extends AbstractFilter {
 
         HttpServletRequest  httpRequest  = ( HttpServletRequest ) request;
         HttpServletResponse httpResponse = ( HttpServletResponse ) response;
-        HttpServletRequest stubHttpRequest = new EditableRequest( httpRequest ).setParameter( "redirect_uri", "stub" );
+        HttpServletRequest stubHttpRequest = new EditableRequest( httpRequest ).setParameter( "redirect_uri", "stub" ); //OLTU BUG
 
         String requestPath = httpRequest.getRequestURI().substring( httpRequest.getContextPath().length() );
 
@@ -50,10 +50,13 @@ public class OauthTokenExchangeFilter extends AbstractFilter {
                 responseInvalidMethod( httpResponse );
             } else {
                 try {
+
                     OAuthTokenRequest tokenRequest = new OAuthTokenRequest( stubHttpRequest );
                     OauthTokenService tokenService = decideTokenService( tokenRequest );
+
                     tokenService.validate( tokenRequest );
                     responseMessage( httpResponse, tokenService.createResponseString( tokenRequest ) );
+
                 } catch ( OAuthSystemException ignore ) {
                     responseRequestError( httpResponse, OAuthProblemException.error(
                             OAuthError.CodeResponse.SERVER_ERROR
@@ -68,7 +71,7 @@ public class OauthTokenExchangeFilter extends AbstractFilter {
     }
 
     private void responseInvalidMethod( HttpServletResponse httpResponse ) throws IOException {
-        httpResponse.sendError( HttpServletResponse.SC_METHOD_NOT_ALLOWED, "only accept POST" );
+        httpResponse.sendError( HttpServletResponse.SC_METHOD_NOT_ALLOWED, "only accept post" );
     }
 
     private OauthTokenService decideTokenService( OAuthTokenRequest tokenRequest ) throws OAuthProblemException {

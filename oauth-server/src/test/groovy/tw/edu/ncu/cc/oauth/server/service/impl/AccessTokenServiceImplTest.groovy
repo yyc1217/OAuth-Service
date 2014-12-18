@@ -1,13 +1,11 @@
 package tw.edu.ncu.cc.oauth.server.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity
 import tw.edu.ncu.cc.oauth.server.service.AccessTokenService
-import tw.edu.ncu.cc.oauth.server.service.ClientService
-import tw.edu.ncu.cc.oauth.server.service.UserService
+import tw.edu.ncu.cc.oauth.server.service.AuthCodeService
 
+import javax.persistence.NoResultException
 
 class AccessTokenServiceImplTest extends SpringSpecification {
 
@@ -15,46 +13,66 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     private AccessTokenService accessTokenService
 
     @Autowired
-    private ClientService clientService
+    private AuthCodeService authCodeService
 
-    @Autowired
-    private UserService userService
-
-    @Transactional
-    def "it can create AccessTokenEntity"() {
+    def "it can create AccessTokenEntity using permission of string set"() {
+        given:
+            def expireDate = new Date()
+            def clientID = "1"
+            def userID = "ADMIN1"
+            def scope  = [ "READ" ] as Set< String >
         when:
-            def token = accessTokenService.createAccessToken(
-                    new AccessTokenEntity(
-                            client: clientService.readClient( 1 ),
-                            user  : userService.readUser( 1 ),
-                            scope: "000"
-                    )
-            )
+            def token = accessTokenService.createAccessToken( clientID, userID, scope, expireDate )
         then:
-            accessTokenService.readAccessToken( token.getToken() ).getUser().getId() == 1
+            token.getUser().getName() == "ADMIN1"
+            token.getClient().getId() == 1
+            token.getDateExpired() == expireDate
     }
 
-    @Transactional
-    def "it can revoke AccessTokenEntity"() {
+    def "it can create AccessTokenEntity then revoke correspond authCode using AuthCodeEntity"() {
         given:
-            def token = accessTokenService.createAccessToken(
-                    new AccessTokenEntity(
-                            client: clientService.readClient( 1 ),
-                            user  : userService.readUser( 1 ),
-                            scope: "000"
-                    )
-            )
+            def code = authCodeService.createAuthCode( "1", "ADMIN1", [ "READ" ] as Set<String> )
         when:
-            accessTokenService.revokeAccessToken(
-                    accessTokenService.readAccessToken( token.getToken() )
-            );
+            def token = accessTokenService.createAccessTokenByCode( code.getCode(), null )
         then:
-            accessTokenService.readAccessToken( token.getToken() ) == null
+            token.getUser().getId() == 1
+            token.getClient().getId() == 1
+        when:
+            authCodeService.readAuthCodeByCode( code.getCode() )
+        then:
+            thrown( NoResultException )
     }
 
     def "it can read AccessTokenEntity by id"() {
         expect:
-            accessTokenService.readAccessToken( 1 ).getToken() == "TOKEN1"
+            accessTokenService.readAccessTokenByID( "1" ).getToken() == "TOKEN1"
+    }
+
+    def "it can read AccessTokenEntity by token"() {
+        expect:
+            accessTokenService.readAccessTokenByToken( "Mzo6OlRPS0VO" ).getId() == 3
+    }
+
+    def "it can revoke AccessToken by id"() {
+        given:
+            def token = accessTokenService.createAccessToken(
+                    "1", "ADMIN1", [ "READ" ] as Set< String >, null
+            )
+        and:
+            def tokenID = token.getId() as String
+        when:
+            accessTokenService.revokeAccessTokenByID( tokenID )
+            accessTokenService.readAccessTokenByID( tokenID )
+        then:
+            thrown( NoResultException )
+    }
+
+    def "it can read AccessToken scope by token"() {
+        when:
+            def scope = accessTokenService.readTokenScopeByToken( "Mzo6OlRPS0VO" )
+        then:
+            scope.contains( "ADMIN" )
+            scope.contains( "READ" )
     }
 
 }

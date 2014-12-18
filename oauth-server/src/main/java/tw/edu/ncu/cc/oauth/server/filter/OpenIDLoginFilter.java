@@ -1,6 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 import tw.edu.ncu.cc.oauth.server.security.LoginService;
 
@@ -44,14 +45,29 @@ public class OpenIDLoginFilter extends AbstractFilter {
             httpResponse.sendRedirect( loginService.getLoginPath() );
         } else if( requestPath.equals( loginConfirmPath ) ) {
             try {
+
                 loginService.authenticate( httpRequest );
-                httpResponse.sendRedirect( loginService.getPreviousPage( httpRequest ) );
+
+                if( getPreviousRequest( httpRequest ) != null ) {
+                    httpResponse.sendRedirect( getPreviousURL( httpRequest ) );
+                } else {
+                    throw new LoginException( "cannot redirect to previous page" );
+                }
+
             } catch ( LoginException e ) {
                 httpResponse.sendError( HttpServletResponse.SC_BAD_REQUEST, e.getMessage() );
             }
         } else {
             chain.doFilter( request, response );
         }
+    }
+
+    public String getPreviousURL( HttpServletRequest request ) {
+        return getPreviousRequest( request ).getRedirectUrl();
+    }
+
+    private SavedRequest getPreviousRequest( HttpServletRequest request ) {
+        return ( SavedRequest ) request.getSession().getAttribute( "SPRING_SECURITY_SAVED_REQUEST" );
     }
 
 }

@@ -24,13 +24,13 @@ public class PermissionRepositoryImpl extends EntityManagerBean implements Permi
 
     @Override
     public PermissionEntity readPermission( String name ) {
-        List< PermissionEntity > list = getEntityManager()
+        return getEntityManager()
                 .createQuery(
                         "SELECT permission FROM PermissionEntity permission " +
-                                "WHERE permission.name = :name", PermissionEntity.class )
+                        "WHERE permission.name = :name",
+                        PermissionEntity.class )
                 .setParameter( "name", name )
-                .getResultList();
-        return ( list.isEmpty() ? null : list.get( 0 ) );
+                .getSingleResult();
     }
 
     @Override

@@ -7,11 +7,11 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder;
-import tw.edu.ncu.cc.oauth.server.service.ClientAPIService;
+import tw.edu.ncu.cc.oauth.server.service.ClientService;
 import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
 
+import javax.persistence.NoResultException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -25,7 +25,7 @@ import java.util.Set;
 public class OauthAuthorizationFilter extends AbstractFilter {
 
     private String filtPath;
-    private ClientAPIService clientAPIService;
+    private ClientService clientService;
     private ScopeCodecService scopeCodecService;
 
     public void setFiltPath( String filtPath ) {
@@ -38,8 +38,8 @@ public class OauthAuthorizationFilter extends AbstractFilter {
     }
 
     @Autowired
-    public void setClientAPIService( ClientAPIService clientAPIService ) {
-        this.clientAPIService = clientAPIService;
+    public void setClientService( ClientService clientService ) {
+        this.clientService = clientService;
     }
 
     @Override
@@ -90,9 +90,27 @@ public class OauthAuthorizationFilter extends AbstractFilter {
         String clientState = oauthRequest.getState();
         String clientID    = oauthRequest.getClientId();
 
-        ClientEntity client = clientAPIService.readClient( clientID );
+        try {
 
-        if ( client == null ) {
+            String callback = clientService.readClient( clientID ).getCallback();
+
+            if ( StringUtils.isEmpty( clientState ) ) {
+                throw OAuthProblemBuilder
+                        .error( OAuthError.CodeResponse.INVALID_REQUEST )
+                        .description( "STATE NOT PROVIDED" )
+                        .redirectUri( callback )
+                        .state( clientState )
+                        .build();
+            }
+            if ( ! scopeCodecService.exist( scope ) ) {
+                throw OAuthProblemBuilder
+                        .error( OAuthError.CodeResponse.INVALID_SCOPE )
+                        .description( "PERMISSION NOT EXISTS" )
+                        .redirectUri( callback )
+                        .state( clientState )
+                        .build();
+            }
+        } catch ( NoResultException ignore ) {
             throw OAuthProblemBuilder
                     .error( OAuthError.CodeResponse.INVALID_REQUEST )
                     .description( "CLIENT NOT EXIST" )
@@ -100,24 +118,6 @@ public class OauthAuthorizationFilter extends AbstractFilter {
                     .build();
         }
 
-        String callback = client.getCallback();
-
-        if ( StringUtils.isEmpty( clientState ) ) {
-            throw OAuthProblemBuilder
-                    .error( OAuthError.CodeResponse.INVALID_REQUEST )
-                    .description( "STATE NOT PROVIDED" )
-                    .redirectUri( callback )
-                    .state( clientState )
-                    .build();
-        }
-        if ( ! scopeCodecService.exist( scope ) ) {
-            throw OAuthProblemBuilder
-                    .error( OAuthError.CodeResponse.INVALID_SCOPE )
-                    .description( "PERMISSION NOT EXISTS" )
-                    .redirectUri( callback )
-                    .state( clientState )
-                    .build();
-        }
     }
 
 

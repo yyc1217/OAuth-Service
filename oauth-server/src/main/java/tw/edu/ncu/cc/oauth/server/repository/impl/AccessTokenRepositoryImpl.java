@@ -6,7 +6,6 @@ import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
 import java.util.Date;
-import java.util.List;
 
 @Repository
 public class AccessTokenRepositoryImpl extends EntityManagerBean implements AccessTokenRepository {
@@ -24,28 +23,26 @@ public class AccessTokenRepositoryImpl extends EntityManagerBean implements Acce
 
     @Override
     public AccessTokenEntity readUnexpiredAccessToken( int id ) {
-        List<AccessTokenEntity> list = getEntityManager()
+        return getEntityManager()
                 .createQuery(
                         "SELECT token FROM AccessTokenEntity token " +
-                                "WHERE  token.id = :id " +
-                                "AND ( token.dateExpired = NULL OR token.dateExpired > CURRENT_TIMESTAMP )",
+                        "WHERE  token.id = :id " +
+                        "AND ( token.dateExpired = NULL OR token.dateExpired > CURRENT_TIMESTAMP )",
                         AccessTokenEntity.class )
                 .setParameter( "id", id )
-                .getResultList();
-        return ( list.isEmpty() ? null : list.get( 0 ) );
+                .getSingleResult();
     }
 
     @Override
     public AccessTokenEntity readUnexpiredAccessToken( String token ) {
-        List<AccessTokenEntity> list = getEntityManager()
+        return getEntityManager()
                 .createQuery(
                         "SELECT token FROM AccessTokenEntity token " +
-                                "WHERE  token.token = :token " +
-                                "AND ( token.dateExpired = NULL OR token.dateExpired > CURRENT_TIMESTAMP )",
+                        "WHERE  token.token = :token " +
+                        "AND ( token.dateExpired = NULL OR token.dateExpired > CURRENT_TIMESTAMP )",
                         AccessTokenEntity.class )
                 .setParameter( "token", token )
-                .getResultList();
-        return ( list.isEmpty() ? null : list.get( 0 ) );
+                .getSingleResult();
     }
 
 }

@@ -26,8 +26,8 @@ public class ClientRepositoryImpl extends EntityManagerBean implements ClientRep
         getEntityManager()
                 .createQuery(
                         "UPDATE FROM AuthCodeEntity " +
-                                "SET dateExpired = :time " +
-                                "WHERE client = :client"
+                        "SET dateExpired = :time " +
+                        "WHERE client = :client"
                 )
                 .setParameter( "time", timeNow )
                 .setParameter( "client", client )
@@ -45,8 +45,27 @@ public class ClientRepositoryImpl extends EntityManagerBean implements ClientRep
     }
 
     @Override
+    public void revokeClientTokens( ClientEntity client ) {
+        getEntityManager()
+                .createQuery(
+                        "UPDATE FROM AccessTokenEntity " +
+                        "SET dateExpired = :time " +
+                        "WHERE client = :client"
+                )
+                .setParameter( "time", new Date() )
+                .setParameter( "client", client )
+                .executeUpdate();
+    }
+
+    @Override
     public ClientEntity readClient( int clientID ) {
-        return getEntityManager().find( ClientEntity.class, clientID );
+        return getEntityManager()
+                .createQuery(
+                        "SELECT client FROM ClientEntity client " +
+                        "WHERE client.id = :id ",
+                        ClientEntity.class )
+                .setParameter( "id", clientID )
+                .getSingleResult();
     }
 
 }

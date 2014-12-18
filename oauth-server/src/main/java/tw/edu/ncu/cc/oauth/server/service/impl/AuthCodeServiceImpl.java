@@ -11,14 +11,38 @@ import tw.edu.ncu.cc.oauth.server.data.SerialSecret;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
+import tw.edu.ncu.cc.oauth.server.service.ClientService;
+import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
+import tw.edu.ncu.cc.oauth.server.service.UserService;
+
+import javax.persistence.NoResultException;
+import java.util.Set;
 
 @Service
 public class AuthCodeServiceImpl implements AuthCodeService {
 
     private SecretCodec secretCodec;
+    private UserService userService;
+    private ClientService clientService;
     private PasswordEncoder passwordEncoder;
     private StringGenerator stringGenerator;
+    private ScopeCodecService scopeCodecService;
     private AuthCodeRepository authCodeRepository;
+
+    @Autowired
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setClientService( ClientService clientService ) {
+        this.clientService = clientService;
+    }
+
+    @Autowired
+    public void setScopeCodecService( ScopeCodecService scopeCodecService ) {
+        this.scopeCodecService = scopeCodecService;
+    }
 
     @Autowired
     public void setSecretCodec( SecretCodec secretCodec ) {
@@ -41,38 +65,43 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     }
 
     @Override
-    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public AuthCodeEntity readAuthCode( int id ) {
-        return authCodeRepository.readUnexpiredAuthCode( id );
-    }
-
-    @Override
-    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public AuthCodeEntity readAuthCode( String code ) {
-        SerialSecret secret = secretCodec.decode( code );
-        AuthCodeEntity authCode = authCodeRepository.readUnexpiredAuthCode( secret.getId() );
-        if( authCode != null && passwordEncoder.matches( secret.getSecret(), authCode.getCode() ) ) {
-            return authCode;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     @Transactional
-    public AuthCodeEntity revokeAuthCode( AuthCodeEntity authCode ) {
-        return authCodeRepository.revokeAuthCode( authCode );
-    }
+    public AuthCodeEntity createAuthCode( String clientID, String userID, Set< String > scope ) {
+        AuthCodeEntity authCode = new AuthCodeEntity();
+        authCode.setUser( userService.readUser( userID ) );
+        authCode.setClient( clientService.readClient( clientID ) );
+        authCode.setScope( scopeCodecService.encode( scope ) );
 
-    @Override
-    @Transactional
-    public AuthCodeEntity createAuthCode( AuthCodeEntity authCode ) {
         String code = stringGenerator.generateToken();
         authCode.setCode( passwordEncoder.encode( code ) );
         AuthCodeEntity newAuthCode = authCodeRepository.createAuthCode( authCode );
         authCode.setCode( secretCodec.encode( new SerialSecret( newAuthCode.getId(), code ) ) );
         authCode.setId( newAuthCode.getId() );
         return authCode;
+    }
+
+    @Override
+    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
+    public AuthCodeEntity readAuthCodeByID( String id ) {
+        return authCodeRepository.readUnexpiredAuthCode( Integer.parseInt( id ) );
+    }
+
+    @Override
+    @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
+    public AuthCodeEntity readAuthCodeByCode( String code ) {
+        SerialSecret secret = secretCodec.decode( code );
+        AuthCodeEntity authCode = authCodeRepository.readUnexpiredAuthCode( secret.getId() );
+        if( passwordEncoder.matches( secret.getSecret(), authCode.getCode() ) ) {
+            return authCode;
+        } else {
+            throw new NoResultException();
+        }
+    }
+
+    @Override
+    @Transactional
+    public AuthCodeEntity revokeAuthCodeByID( String id ) {
+        return authCodeRepository.revokeAuthCode( readAuthCodeByID( id ) );
     }
 
 }

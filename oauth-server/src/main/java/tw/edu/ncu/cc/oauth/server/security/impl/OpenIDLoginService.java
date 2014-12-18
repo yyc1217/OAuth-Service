@@ -6,10 +6,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Service;
 import tw.edu.ncu.cc.oauth.server.security.LoginService;
-import tw.edu.ncu.cc.oauth.server.service.UserAPIService;
+import tw.edu.ncu.cc.oauth.server.service.UserService;
 import tw.edu.ncu.cc.openid.consumer.ncu.NCUOpenIDHandler;
 
 import javax.security.auth.login.LoginException;
@@ -18,9 +17,9 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class OpenIDLoginService implements LoginService {
 
-    private UserAPIService userAPIService;
+    private UserService userService;
     private NCUOpenIDHandler openIDHandler;
 
     @Autowired
@@ -29,8 +28,8 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Autowired
-    public void setUserAPIService( UserAPIService userAPIService ) {
-        this.userAPIService = userAPIService;
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
     }
 
     @Override
@@ -39,35 +38,17 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public String getPreviousPage( HttpServletRequest request ) {
-        HttpSession session = request.getSession();
-        SavedRequest savedRequest = getSavedRequest( session );
-        return savedRequest.getRedirectUrl();
-    }
-
-    @Override
     public void authenticate( HttpServletRequest request ) throws LoginException {
-        HttpSession session  = request.getSession();
+
         Map< String, ? > map = request.getParameterMap();
-        SavedRequest savedRequest = getSavedRequest( session );
 
-        if( savedRequest != null ) {
-            if( openIDHandler.isResponseMapValid( map ) ) {
-                String userName = openIDHandler.getNCUConsumer( map ).getStudentID();
-                if( userAPIService.readUser( userName ) == null ) {
-                    userAPIService.createUser( userName );
-                }
-                integrateWithSpringSecurity( request, userName );
-            } else {
-                throw new LoginException( "openid response is incorrect" );
-            }
+        if( openIDHandler.isResponseMapValid( map ) ) {
+            String userName = openIDHandler.getNCUConsumer( map ).getStudentID();
+            userService.createUserIfNotExist( userName );
+            integrateWithSpringSecurity( request, userName );
         } else {
-            throw new LoginException( "cannot redirect to previous page" );
+            throw new LoginException( "openid response is incorrect" );
         }
-    }
-
-    private SavedRequest getSavedRequest( HttpSession session ) {
-        return ( SavedRequest ) session.getAttribute( "SPRING_SECURITY_SAVED_REQUEST" );
     }
 
     private void integrateWithSpringSecurity( HttpServletRequest request, String userName ) {

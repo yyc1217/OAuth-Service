@@ -48,18 +48,9 @@ public class ResponseBuilder {
                         ), HttpStatus.BAD_REQUEST
                 );
             } else {
-                Object resource = resourceBuilder.build();
-                if( resource == null ) {
-                    return new ResponseEntity<>(
-                            new Error(
-                                    ErrorCode.NOT_EXIST, "resourse not exist"
-                            ), HttpStatus.NOT_FOUND
-                    );
-                } else {
-                    return new ResponseEntity<>(
-                            resource , HttpStatus.OK
-                    );
-                }
+                return new ResponseEntity<>(
+                        resourceBuilder.build() , HttpStatus.OK
+                );
             }
         }
     }
@@ -76,18 +67,9 @@ public class ResponseBuilder {
         }
 
         public ResponseEntity build() {
-            Object resource = resourceBuilder.build();
-            if( resource == null ) {
-                return new ResponseEntity<>(
-                        new Error(
-                                ErrorCode.NOT_EXIST, "resourse not exist"
-                        ), HttpStatus.NOT_FOUND
-                );
-            } else {
-                return new ResponseEntity<>(
-                        resource , HttpStatus.OK
-                );
-            }
+            return new ResponseEntity<>(
+                    resourceBuilder.build() , HttpStatus.OK
+            );
         }
     }
 

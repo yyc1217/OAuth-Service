@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
+import tw.edu.ncu.cc.oauth.data.v1.management.token.AppAccessToken;
 import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
-import tw.edu.ncu.cc.oauth.server.service.AccessTokenAPIService;
+import tw.edu.ncu.cc.oauth.server.service.AccessTokenService;
 
 
 @RestController
@@ -18,7 +19,7 @@ import tw.edu.ncu.cc.oauth.server.service.AccessTokenAPIService;
 public class TokenController extends APIExceptionHandler {
 
     private ConversionService conversionService;
-    private AccessTokenAPIService accessTokenAPIService;
+    private AccessTokenService accessTokenService;
 
     @Autowired
     public void setConversionService( ConversionService conversionService ) {
@@ -26,8 +27,8 @@ public class TokenController extends APIExceptionHandler {
     }
 
     @Autowired
-    public void setAccessTokenAPIService( AccessTokenAPIService accessTokenAPIService ) {
-        this.accessTokenAPIService = accessTokenAPIService;
+    public void setAccessTokenService( AccessTokenService accessTokenService ) {
+        this.accessTokenService = accessTokenService;
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.GET )
@@ -38,7 +39,7 @@ public class TokenController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenAPIService.readAccessTokenByID( id ), AccessToken.class
+                                accessTokenService.readAccessTokenByID( id ), AppAccessToken.class
                         );
                     }
                 } )
@@ -53,21 +54,23 @@ public class TokenController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenAPIService.revokeAccessTokenByID( id ), AccessToken.class
+                                accessTokenService.revokeAccessTokenByID( id ), AppAccessToken.class
                         );
                     }
                 } )
                 .build();
     }
 
-    @RequestMapping( value = "{token}/scope", method = RequestMethod.GET )
-    public ResponseEntity getTokenScope( @PathVariable( "token" ) final String token ) {
+    @RequestMapping( value = "string/{token}", method = RequestMethod.GET )
+    public ResponseEntity getTokenByString( @PathVariable( "token" ) final String token ) {
         return ResponseBuilder
                 .noneValidation()
                 .resource( new ResponseBuilder.ResourceBuilder() {
                     @Override
                     public Object build() {
-                        return accessTokenAPIService.readTokenScopeByToken( token );
+                        return conversionService.convert(
+                                accessTokenService.readAccessTokenByToken( token ), AccessToken.class
+                        );
                     }
                 } )
                 .build();

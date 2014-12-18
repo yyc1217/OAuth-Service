@@ -6,7 +6,6 @@ import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
 import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
 import java.util.Date;
-import java.util.List;
 
 @Repository
 public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCodeRepository {
@@ -24,26 +23,26 @@ public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCod
 
     @Override
     public AuthCodeEntity readUnexpiredAuthCode( int id ) {
-        List<AuthCodeEntity> list = getEntityManager()
+        return getEntityManager()
                 .createQuery(
                         "SELECT code FROM AuthCodeEntity code " +
-                                "WHERE code.id = :id " +
-                                "AND ( code.dateExpired = NULL OR code.dateExpired > CURRENT_TIMESTAMP )", AuthCodeEntity.class )
+                        "WHERE code.id = :id " +
+                        "AND ( code.dateExpired = NULL OR code.dateExpired > CURRENT_TIMESTAMP )",
+                        AuthCodeEntity.class )
                 .setParameter( "id", id )
-                .getResultList();
-        return ( list.isEmpty() ? null : list.get( 0 ) );
+                .getSingleResult();
     }
 
     @Override
     public AuthCodeEntity readUnexpiredAuthCode( String code ) {
-        List<AuthCodeEntity> list = getEntityManager()
+        return getEntityManager()
                 .createQuery(
                         "SELECT code FROM AuthCodeEntity code " +
                         "WHERE code.code = :code " +
-                        "AND ( code.dateExpired = NULL OR code.dateExpired > CURRENT_TIMESTAMP )", AuthCodeEntity.class )
+                        "AND ( code.dateExpired = NULL OR code.dateExpired > CURRENT_TIMESTAMP )",
+                        AuthCodeEntity.class )
                 .setParameter( "code", code )
-                .getResultList();
-        return ( list.isEmpty() ? null : list.get( 0 ) );
+                .getSingleResult();
     }
 
 }

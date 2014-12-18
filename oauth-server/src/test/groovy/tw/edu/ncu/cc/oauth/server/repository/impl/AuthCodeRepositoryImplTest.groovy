@@ -8,6 +8,8 @@ import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository
 
+import javax.persistence.NoResultException
+
 class AuthCodeRepositoryImplTest extends SpringSpecification {
 
     @Autowired
@@ -31,7 +33,7 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
                 )
             )
         then:
-            authCodeRepository.readUnexpiredAuthCode( "TEST01" ) != null
+            authCodeRepository.readUnexpiredAuthCode( "TEST01" ).user.id == 1
     }
 
     @Transactional
@@ -47,13 +49,14 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
             )
         when:
             authCodeRepository.revokeAuthCode( code )
+            authCodeRepository.readUnexpiredAuthCode( "TEST02" )
         then:
-            authCodeRepository.readUnexpiredAuthCode( "TEST02" ) == null
+            thrown( NoResultException )
     }
 
     def "it can read AuthCodeEntity by id"() {
         expect:
-            authCodeRepository.readUnexpiredAuthCode( 1 ).getCode() == "CODE1"
+            authCodeRepository.readUnexpiredAuthCode( 1 ).code == "CODE1"
     }
 
 }
