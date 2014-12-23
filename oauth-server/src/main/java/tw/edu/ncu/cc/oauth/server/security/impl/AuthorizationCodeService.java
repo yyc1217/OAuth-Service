@@ -100,7 +100,7 @@ public class AuthorizationCodeService implements OauthTokenService {
         return accessTokenService
                 .createAccessTokenByCode(
                         request.getCode(),
-                        new Date( System.currentTimeMillis() + tokenExpireSeconds * 1000 )
+                        ( tokenExpireSeconds <= 0 ? null : new Date( System.currentTimeMillis() + tokenExpireSeconds * 1000 ) )
                 ).getToken();
     }
 
