@@ -59,6 +59,7 @@ public class OpenIDLoginService implements LoginService {
 
         HttpSession newSession = request.getSession( true );
         newSession.setAttribute( "SPRING_SECURITY_CONTEXT", securityContext );
+        newSession.setMaxInactiveInterval( 5*60 );
     }
 
 
