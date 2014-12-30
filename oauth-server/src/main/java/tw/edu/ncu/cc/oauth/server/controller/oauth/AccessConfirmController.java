@@ -11,6 +11,7 @@ import tw.edu.ncu.cc.oauth.server.model.AccessConfirmModel;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.net.URISyntaxException;
 import java.util.Set;
 
@@ -55,9 +56,8 @@ public final class AccessConfirmController {
     }
 
     private void invalidateSession( HttpServletRequest request ) {
-        if( request.getSession() != null ) {
-            request.getSession().invalidate();
-        }
+        HttpSession session = request.getSession( true );
+        session.invalidate();
         request.getSession( true );
     }
 
