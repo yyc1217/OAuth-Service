@@ -10,6 +10,7 @@ import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.model.AccessConfirmModel;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 
+import javax.servlet.http.HttpSession;
 import java.net.URISyntaxException;
 import java.util.Set;
 
@@ -26,11 +27,14 @@ public final class AccessConfirmController {
 
     @RequestMapping( value = "oauth/confirm", method = RequestMethod.POST )
     public String confirm( @ModelAttribute( "access_confirm" ) AccessConfirmModel confirmEntity,
-                           @RequestParam( "approval" ) boolean isAgree ) throws URISyntaxException, OAuthSystemException {
+                           @RequestParam( "approval" ) boolean isAgree,
+                           HttpSession session ) throws URISyntaxException, OAuthSystemException {
 
         ClientEntity client = confirmEntity.getClient();
         Set< String > scope = confirmEntity.getScope();
         String userID = confirmEntity.getUserID();
+
+        session.invalidate();
 
         if( isAgree ) {
             AuthCodeEntity authCode = authCodeService.createAuthCode( client.getId() + "", userID, scope );
