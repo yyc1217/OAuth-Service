@@ -31,16 +31,16 @@ public class OAuthRedirectBuilder {
     }
 
     public String build() {
-        StringBuilder stringBuilder = new StringBuilder( callback );
+        StringBuilder stringBuilder = new StringBuilder( callback + "?" );
         if( state != null ) {
-            stringBuilder.append( "?" ).append( "state=" ).append( state );
+            stringBuilder.append( "state=" ).append( state ).append( "&" );
         }
         if( error == null ) {
-            stringBuilder.append( "&" ).append( "code=" ).append( code );
+            stringBuilder.append( "code=" ).append( code ).append( "&" );
         } else {
-            stringBuilder.append( "&" ).append( "error=" ).append( error );
+            stringBuilder.append( "error=" ).append( error ).append( "&" );
         }
-        return stringBuilder.toString();
+        return stringBuilder.deleteCharAt( stringBuilder.length()-1 ).toString();
     }
 
 }
