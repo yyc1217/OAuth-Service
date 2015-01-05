@@ -12,6 +12,12 @@
 
     <mvc:annotation-driven />
     <mvc:default-servlet-handler />
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="tw.edu.ncu.cc.oauth.server.filter.AccessLoggerInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/jsp/" />
