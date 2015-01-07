@@ -8,6 +8,7 @@ OAuth Athorization Server writtern in Java
 - oltu.oauth2 1.0.0
 - spring-webmvc 4.1.1
 - spring-security 4.0.0.M2
+- openid-consumer 0.0.1 ( https://github.com/NCU-CC/OpenID-Consumer )
 
 ### Gradle
 - jettyStart : run embedded server
