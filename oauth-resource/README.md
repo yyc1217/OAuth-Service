@@ -1,7 +1,7 @@
 ## OAuth-Resource 
 OAuth Resource Server Tool Sets writtern in Java
 
-## TokenAccessDecisionFilter
+### TokenAccessDecisionFilter
 verify oauth resource request using **Authorization** header and **Bearer** token.
 set **GrantedAuthority** in security context if authorized.
 
