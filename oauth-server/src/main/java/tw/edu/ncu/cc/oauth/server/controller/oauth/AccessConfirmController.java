@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import tw.edu.ncu.cc.oauth.server.data.OauthAccess;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.helper.OAuthRedirectBuilder;
-import tw.edu.ncu.cc.oauth.server.model.AccessConfirmModel;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ public final class AccessConfirmController {
     }
 
     @RequestMapping( value = "oauth/confirm", method = RequestMethod.POST )
-    public String confirm( @ModelAttribute( "access_confirm" ) AccessConfirmModel confirmEntity,
+    public String confirm( @ModelAttribute( "access_confirm" ) OauthAccess confirmEntity,
                            @RequestParam( "approval" ) boolean isAgree,
                            HttpServletRequest request ) throws URISyntaxException, OAuthSystemException {
 
