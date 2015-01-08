@@ -1,6 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.component.impl;
 
-import org.springframework.security.crypto.codec.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 import tw.edu.ncu.cc.oauth.server.component.SecretCodec;
 import tw.edu.ncu.cc.oauth.server.data.SerialSecret;
@@ -10,7 +10,7 @@ public class SecretCodecImpl implements SecretCodec {
 
     @Override
     public String encode( SerialSecret secret ) {
-        return new String( Base64.encode(
+        return new String( Base64.encodeBase64URLSafe(
                 ( secret.getId() + ":::" + secret.getSecret() ).getBytes()
         ) );
     }
@@ -18,7 +18,7 @@ public class SecretCodecImpl implements SecretCodec {
     @Override
     public SerialSecret decode( String data ) {
         if( Base64.isBase64( data.getBytes() ) ) {
-            String originCode = new String( Base64.decode( data.getBytes() ) );
+            String originCode = new String( Base64.decodeBase64( data.getBytes() ) );
             if( originCode.contains( ":::" ) ) {
                 String[] pair = originCode.split( ":::" );
                 if( isInteger( pair[0] ) ) {
