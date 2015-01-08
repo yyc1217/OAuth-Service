@@ -10,7 +10,7 @@
 
     <security:http pattern="/resource/**" security="none"/>
 
-    <security:http pattern="/oauth/token" create-session="never" entry-point-ref="stubEntry">
+    <security:http pattern="/oauth/token/**" create-session="never" entry-point-ref="stubEntry">
         <security:custom-filter ref="oauthTokenExchangeFilter" after="LAST"/>
     </security:http>
 
