@@ -6,6 +6,8 @@ import org.apache.oltu.oauth2.common.error.OAuthError;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.security.OauthTokenService;
@@ -24,6 +26,7 @@ public class AuthorizationCodeService implements OauthTokenService {
     private ClientService clientService;
     private AuthCodeService authCodeService;
     private AccessTokenService accessTokenService;
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     public void setCodeExpireSeconds( int codeExpireSeconds ) {
         this.codeExpireSeconds = codeExpireSeconds;
@@ -54,6 +57,13 @@ public class AuthorizationCodeService implements OauthTokenService {
         String clientID    = request.getClientId();
         String clientSecret = request.getClientSecret();
         String authCode     = request.getCode();
+
+        logger.info(
+                String.format(
+                        "EXCHANGE [clientID:%s] [clientSecret:%s] [authCode:%s]",
+                        clientID, clientSecret, authCode
+                )
+        );
 
         if ( ! clientService.isClientValid( clientID, clientSecret ) ) {
             throw OAuthProblemException.error(
