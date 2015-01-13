@@ -7,24 +7,27 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import tw.edu.ncu.cc.manage.openid.OpenIDException;
+import tw.edu.ncu.cc.manage.openid.OpenIDManager;
 import tw.edu.ncu.cc.oauth.server.security.LoginService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
-import tw.edu.ncu.cc.openid.consumer.ncu.NCUOpenIDHandler;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 @Service
 public class OpenIDLoginService implements LoginService {
 
     private UserService userService;
-    private NCUOpenIDHandler openIDHandler;
+    private OpenIDManager openIDManager;
 
-    @Autowired
-    public void setOpenIDHandler( NCUOpenIDHandler openIDHandler ) {
-        this.openIDHandler = openIDHandler;
+    public OpenIDLoginService() {
+        try {
+            openIDManager = new OpenIDManager();
+        } catch ( OpenIDException e ) {
+            throw new RuntimeException( "cannot init open id manager", e );
+        }
     }
 
     @Autowired
@@ -34,16 +37,14 @@ public class OpenIDLoginService implements LoginService {
 
     @Override
     public String getLoginPath() {
-        return openIDHandler.getAuthenticationURLString();
+        return openIDManager.getURLString();
     }
 
     @Override
     public void authenticate( HttpServletRequest request ) throws LoginException {
 
-        Map< String, ? > map = request.getParameterMap();
-
-        if( openIDHandler.isResponseMapValid( map ) ) {
-            String userName = openIDHandler.getNCUConsumer( map ).getStudentID();
+        if( openIDManager.isValid( request ) ) {
+            String userName = openIDManager.getIdentity( request );
             userService.createUserIfNotExist( userName );
             integrateWithSpringSecurity( request, userName );
         } else {

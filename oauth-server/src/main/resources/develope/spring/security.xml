@@ -14,4 +14,8 @@
 
     <bean id="stubEntry" class="tw.edu.ncu.cc.oauth.server.security.impl.StubAuthenticationEntry"/>
 
+    <bean id="openidConfigurationFileName" class="java.lang.String">
+        <constructor-arg value="develope/openid-setting.properties"/>
+    </bean>
+
 </beans>
