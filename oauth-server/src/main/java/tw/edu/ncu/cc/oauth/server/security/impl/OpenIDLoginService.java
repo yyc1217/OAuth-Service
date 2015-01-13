@@ -7,7 +7,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import tw.edu.ncu.cc.manage.openid.OpenIDException;
 import tw.edu.ncu.cc.manage.openid.OpenIDManager;
 import tw.edu.ncu.cc.oauth.server.security.LoginService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
@@ -22,17 +21,14 @@ public class OpenIDLoginService implements LoginService {
     private UserService userService;
     private OpenIDManager openIDManager;
 
-    public OpenIDLoginService() {
-        try {
-            openIDManager = new OpenIDManager();
-        } catch ( OpenIDException e ) {
-            throw new RuntimeException( "cannot init open id manager", e );
-        }
-    }
-
     @Autowired
     public void setUserService( UserService userService ) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setOpenIDManager( OpenIDManager openIDManager ) {
+        this.openIDManager = openIDManager;
     }
 
     @Override
