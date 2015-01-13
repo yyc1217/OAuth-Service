@@ -24,8 +24,7 @@ repositories{
 dependencies{
 
     compile project(':oauth-data')
-    compile name: 'openid-core-0.0.1-SNAPSHOT'
-    compile name: 'openid-ncu-0.0.1-SNAPSHOT'
+    compile name: 'manage-openid-0.1.0-SNAPSHOT'
 
     compile 'org.springframework:spring-orm:4.1.1.RELEASE',
             'org.springframework:spring-webmvc:4.1.1.RELEASE',

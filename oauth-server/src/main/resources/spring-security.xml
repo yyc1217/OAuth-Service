@@ -47,4 +47,8 @@
         <property name="loginConfirmPath" value="/login_confirm"/>
     </bean>
 
+    <bean class="tw.edu.ncu.cc.manage.openid.OpenIDManager">
+        <constructor-arg index="0" ref="openidConfigurationFileName"/>
+    </bean>
+
 </beans>

@@ -1,3 +1,4 @@
+include 'oauth-client-android'
 include 'oauth-resource'
 include 'oauth-server'
 include 'oauth-data'

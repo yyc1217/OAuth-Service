@@ -20,8 +20,6 @@
 
     <util:properties id="hibernteProperties" location="classpath:production/hibernate.properties"/>
     <util:properties id="connectionProperties" location="classpath:production/connection.properties"/>
-    <util:properties id="openidSettingProperties"  location="classpath:production/openid-setting.properties"/>
-    <util:properties id="openidResponseProperties" location="classpath:production/openid-check.properties"/>
 
     <import resource="cache.xml"/>
     <import resource="security.xml"/>

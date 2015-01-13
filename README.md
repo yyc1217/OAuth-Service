@@ -5,3 +5,4 @@ OAuth Athorization Service for NCU
 - oauth-server : oauth service provider
 - oauth-data   : oauth service data
 - oauth-resource : oauth guard for resource server
+- oauth-client-android : oauth consumer for android
