@@ -36,6 +36,7 @@ dependencies{
             'org.hibernate:hibernate-entitymanager:4.3.6.Final',
             'com.fasterxml.jackson.core:jackson-databind:2.4.3',
             'commons-codec:commons-codec:1.10',
+            'commons-io:commons-io:2.4',
             'org.aspectj:aspectjweaver:1.8.4',
             'net.sf.ehcache:ehcache:2.9.0',
             'c3p0:c3p0:0.9.1.2',
