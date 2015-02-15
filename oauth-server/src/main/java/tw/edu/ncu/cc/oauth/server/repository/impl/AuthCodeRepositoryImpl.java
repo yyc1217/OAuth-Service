@@ -3,12 +3,11 @@ package tw.edu.ncu.cc.oauth.server.repository.impl;
 import org.springframework.stereotype.Repository;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
-import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
 import java.util.Date;
 
 @Repository
-public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCodeRepository {
+public class AuthCodeRepositoryImpl extends ApplicationRepository implements AuthCodeRepository {
 
     @Override
     public AuthCodeEntity revokeAuthCode( AuthCodeEntity authCode ) {
@@ -22,7 +21,7 @@ public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCod
     }
 
     @Override
-    public AuthCodeEntity readUnexpiredAuthCode( int id ) {
+    public AuthCodeEntity readUnexpiredAuthCodeByID( int id ) {
         return getEntityManager()
                 .createQuery(
                         "SELECT code FROM AuthCodeEntity code " +
@@ -34,7 +33,7 @@ public class AuthCodeRepositoryImpl extends EntityManagerBean implements AuthCod
     }
 
     @Override
-    public AuthCodeEntity readUnexpiredAuthCode( String code ) {
+    public AuthCodeEntity readUnexpiredAuthCodeByCode( String code ) {
         return getEntityManager()
                 .createQuery(
                         "SELECT code FROM AuthCodeEntity code " +

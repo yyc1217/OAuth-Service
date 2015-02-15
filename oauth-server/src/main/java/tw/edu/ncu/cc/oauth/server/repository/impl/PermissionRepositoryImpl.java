@@ -3,12 +3,11 @@ package tw.edu.ncu.cc.oauth.server.repository.impl;
 import org.springframework.stereotype.Repository;
 import tw.edu.ncu.cc.oauth.server.entity.PermissionEntity;
 import tw.edu.ncu.cc.oauth.server.repository.PermissionRepository;
-import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
 import java.util.List;
 
 @Repository
-public class PermissionRepositoryImpl extends EntityManagerBean implements PermissionRepository {
+public class PermissionRepositoryImpl extends ApplicationRepository implements PermissionRepository {
 
     @Override
     public void deletePermission( PermissionEntity permission ) {
@@ -23,13 +22,24 @@ public class PermissionRepositoryImpl extends EntityManagerBean implements Permi
     }
 
     @Override
-    public PermissionEntity readPermission( String name ) {
+    public PermissionEntity readPermissionByName( String name ) {
         return getEntityManager()
                 .createQuery(
                         "SELECT permission FROM PermissionEntity permission " +
                         "WHERE permission.name = :name",
                         PermissionEntity.class )
                 .setParameter( "name", name )
+                .getSingleResult();
+    }
+
+    @Override
+    public PermissionEntity readPermissionByID( int id ) {
+        return getEntityManager()
+                .createQuery(
+                        "SELECT permission FROM PermissionEntity permission " +
+                        "WHERE permission.id = :id ",
+                        PermissionEntity.class )
+                .setParameter( "id", id )
                 .getSingleResult();
     }
 

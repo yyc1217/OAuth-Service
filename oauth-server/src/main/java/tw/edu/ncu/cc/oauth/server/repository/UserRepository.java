@@ -4,6 +4,6 @@ import tw.edu.ncu.cc.oauth.server.entity.UserEntity;
 
 public interface UserRepository {
     public UserEntity createUser( UserEntity user );
-    public UserEntity readUser( String name );
-    public UserEntity readUser( int id );
+    public UserEntity readUserByName( String name );
+    public UserEntity readUserByID( int id );
 }

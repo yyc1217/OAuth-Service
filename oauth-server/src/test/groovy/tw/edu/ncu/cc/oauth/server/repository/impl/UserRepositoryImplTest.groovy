@@ -21,11 +21,11 @@ class UserRepositoryImplTest extends SpringSpecification {
                     )
             )
         then:
-            userRepository.readUser( "TEST" ) != null
+            userRepository.readUserByName( "TEST" ) != null
     }
 
     def "it can get UserEntity by id"() {
-        userRepository.readUser( 1 ).name == "ADMIN1"
+        userRepository.readUserByID( 1 ).name == "ADMIN1"
     }
 
 }

@@ -24,17 +24,17 @@ class ClientRepositoryImplTest extends SpringSpecification {
             def client = clientRepository.createClient(
                     new ClientEntity(
                             name: "TEST APP",
-                            owner: userRepository.readUser( 1 )
+                            owner: userRepository.readUserByID( 1 )
                     )
             )
         then:
-            clientRepository.readClient( client.getId() ).name == "TEST APP"
+            clientRepository.readClientByID( client.getId() ).name == "TEST APP"
     }
 
     @Transactional
     def "it can update ClientEntity"() {
         given:
-            def client = clientRepository.readClient( 1 )
+            def client = clientRepository.readClientByID( 1 )
         when:
             client.setDescription( "NEW" )
         then:
@@ -47,12 +47,12 @@ class ClientRepositoryImplTest extends SpringSpecification {
             def client = clientRepository.createClient(
                 new ClientEntity(
                         name: "TEST APP",
-                        owner: userRepository.readUser( 1 )
+                        owner: userRepository.readUserByID( 1 )
                 )
             )
         when:
             clientRepository.deleteClient( client )
-            clientRepository.readClient( client.getId() )
+            clientRepository.readClientByID( client.getId() )
         then:
             thrown( NoResultException )
     }
@@ -60,9 +60,9 @@ class ClientRepositoryImplTest extends SpringSpecification {
     @Transactional
     def "it can revoke all tokens of the specified client"() {
         when:
-            clientRepository.revokeClientTokens( clientRepository.readClient( 1 ) )
+            clientRepository.revokeClientTokens( clientRepository.readClientByID( 1 ) )
         then:
-            clientRepository.readClient( 1 ).getTokens().size() == 0
+            clientRepository.readClientByID( 1 ).getTokens().size() == 0
     }
 
 }

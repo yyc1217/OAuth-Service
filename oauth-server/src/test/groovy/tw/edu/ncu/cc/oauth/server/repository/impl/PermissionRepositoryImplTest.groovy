@@ -23,7 +23,7 @@ class PermissionRepositoryImplTest extends SpringSpecification {
                 )
             )
         then:
-            permissionRepository.readPermission( "TEST" ) != null
+            permissionRepository.readPermissionByName( "TEST" ) != null
     }
 
     @Transactional
@@ -36,7 +36,7 @@ class PermissionRepositoryImplTest extends SpringSpecification {
             )
         when:
             permissionRepository.deletePermission( permission )
-            permissionRepository.readPermission( "TEST" )
+            permissionRepository.readPermissionByName( "TEST" )
         then:
             thrown( NoResultException )
     }

@@ -3,10 +3,9 @@ package tw.edu.ncu.cc.oauth.server.repository.impl;
 import org.springframework.stereotype.Repository;
 import tw.edu.ncu.cc.oauth.server.entity.UserEntity;
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository;
-import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
 @Repository
-public class UserRepositoryImpl extends EntityManagerBean implements UserRepository {
+public class UserRepositoryImpl extends ApplicationRepository implements UserRepository {
 
     @Override
     public UserEntity createUser( UserEntity user ) {
@@ -14,7 +13,7 @@ public class UserRepositoryImpl extends EntityManagerBean implements UserReposit
     }
 
     @Override
-    public UserEntity readUser( int id ) {
+    public UserEntity readUserByID( int id ) {
         return getEntityManager()
                 .createQuery(
                         "SELECT user FROM UserEntity user " +
@@ -25,7 +24,7 @@ public class UserRepositoryImpl extends EntityManagerBean implements UserReposit
     }
 
     @Override
-    public UserEntity readUser( String name ) {
+    public UserEntity readUserByName( String name ) {
         return getEntityManager()
                 .createQuery(
                         "SELECT user FROM UserEntity user " +

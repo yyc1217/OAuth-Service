@@ -28,12 +28,12 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
                 new AccessTokenEntity(
                         token : "TEST01",
                         scope: "000",
-                        user  : userRepository.readUser( 1 ),
-                        client: clientRepository.readClient( 1 )
+                        user  : userRepository.readUserByID( 1 ),
+                        client: clientRepository.readClientByID( 1 )
                 )
             )
         then:
-            accessTokenRepository.readUnexpiredAccessToken( "TEST01" ).user.id == 1
+            accessTokenRepository.readUnexpiredAccessTokenByToken( "TEST01" ).user.id == 1
     }
 
     @Transactional
@@ -43,20 +43,20 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
                 new AccessTokenEntity (
                         token : "TEST02",
                         scope: "000",
-                        user  : userRepository.readUser( 2 ),
-                        client: clientRepository.readClient( 2 )
+                        user  : userRepository.readUserByID( 2 ),
+                        client: clientRepository.readClientByID( 2 )
                 )
             )
         when:
             accessTokenRepository.revokeAccessToken( token )
-            accessTokenRepository.readUnexpiredAccessToken( "TEST02" )
+            accessTokenRepository.readUnexpiredAccessTokenByToken( "TEST02" )
         then:
              thrown( NoResultException )
     }
 
     def "it can read unexpired AccessTokenEntity by id"() {
         expect:
-            accessTokenRepository.readUnexpiredAccessToken( 1 ).token == "TOKEN1"
+            accessTokenRepository.readUnexpiredAccessTokenByID( 1 ).token == "TOKEN1"
     }
 
 }
