@@ -4,7 +4,7 @@ import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
 import org.apache.oltu.oauth2.common.error.OAuthError;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
-import tw.edu.ncu.cc.oauth.server.data.EditableRequest;
+import tw.edu.ncu.cc.oauth.server.helper.data.EditableRequest;
 import tw.edu.ncu.cc.oauth.server.security.OauthTokenService;
 
 import javax.servlet.FilterChain;

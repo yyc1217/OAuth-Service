@@ -5,11 +5,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import tw.edu.ncu.cc.oauth.server.component.SecretCodec;
-import tw.edu.ncu.cc.oauth.server.component.StringGenerator;
-import tw.edu.ncu.cc.oauth.server.data.SerialSecret;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
+import tw.edu.ncu.cc.oauth.server.helper.SecretCodec;
+import tw.edu.ncu.cc.oauth.server.helper.StringGenerator;
+import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.*;
 

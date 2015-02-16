@@ -1,11 +1,11 @@
-package tw.edu.ncu.cc.oauth.server.component.impl
+package tw.edu.ncu.cc.oauth.server.helper
 
 import spock.lang.Specification
-import tw.edu.ncu.cc.oauth.server.data.SerialSecret
+import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 
-class SecretCodecImplTest extends Specification {
+class SecretCodecTest extends Specification {
 
-    private SecretCodecImpl secretCodec = new SecretCodecImpl()
+    private SecretCodec secretCodec = new SecretCodec()
 
     def "it can encode and decode the Secret"() {
         given:

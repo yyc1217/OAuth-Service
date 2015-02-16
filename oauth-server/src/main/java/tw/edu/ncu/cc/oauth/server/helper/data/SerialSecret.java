@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.data;
+package tw.edu.ncu.cc.oauth.server.helper.data;
 
 public class SerialSecret {
 

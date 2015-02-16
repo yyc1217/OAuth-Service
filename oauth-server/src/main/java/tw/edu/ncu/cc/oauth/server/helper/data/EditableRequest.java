@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.data;
+package tw.edu.ncu.cc.oauth.server.helper.data;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;

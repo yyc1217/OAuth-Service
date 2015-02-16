@@ -1,11 +1,10 @@
-package tw.edu.ncu.cc.oauth.server.component.impl
+package tw.edu.ncu.cc.oauth.server.helper
 
 import spock.lang.Specification
 
+class StringGeneratorTest extends Specification {
 
-class StringGeneratorImplTest extends Specification {
-
-    private StringGeneratorImpl stringGenerator = new StringGeneratorImpl()
+    private StringGenerator stringGenerator = new StringGenerator()
 
     def "it can generate random string"() {
         expect:
