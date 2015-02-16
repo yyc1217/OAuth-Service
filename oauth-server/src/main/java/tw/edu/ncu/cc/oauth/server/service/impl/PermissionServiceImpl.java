@@ -1,12 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.server.entity.PermissionEntity;
 import tw.edu.ncu.cc.oauth.server.repository.PermissionRepository;
-import tw.edu.ncu.cc.oauth.server.service.PermissionDictionaryService;
 import tw.edu.ncu.cc.oauth.server.service.PermissionService;
 
 import java.util.List;
@@ -15,16 +15,10 @@ import java.util.List;
 public class PermissionServiceImpl implements PermissionService {
 
     private PermissionRepository permissionRepository;
-    private PermissionDictionaryService dictionaryService;
 
     @Autowired
     public void setPermissionRepository( PermissionRepository permissionRepository ) {
         this.permissionRepository = permissionRepository;
-    }
-
-    @Autowired
-    public void setDictionaryService( PermissionDictionaryService dictionaryService ) {
-        this.dictionaryService = dictionaryService;
     }
 
     @Override
@@ -40,13 +34,15 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    @Cacheable( value="apiService", key="'PermissionID:' + #id" )
     public PermissionEntity readPermission( int id ) {
-        return dictionaryService.createDictionary().getPermission( id );
+        return permissionRepository.readPermissionByID( id );
     }
 
     @Override
+    @Cacheable( value="apiService", key="'PermissionName:' + #name" )
     public PermissionEntity readPermission( String name ) {
-        return dictionaryService.createDictionary().getPermission( name );
+        return permissionRepository.readPermissionByName( name );
     }
 
     @Override

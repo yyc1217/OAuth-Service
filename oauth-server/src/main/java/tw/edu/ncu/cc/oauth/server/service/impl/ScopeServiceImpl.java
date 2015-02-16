@@ -3,13 +3,14 @@ package tw.edu.ncu.cc.oauth.server.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tw.edu.ncu.cc.oauth.server.service.PermissionService;
-import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
+import tw.edu.ncu.cc.oauth.server.service.ScopeService;
 
+import javax.persistence.NoResultException;
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class ScopeCodecServiceImpl implements ScopeCodecService {
+public class ScopeServiceImpl implements ScopeService {
 
     public static final char YES  = '1';
     public static final String NO = "00000";
@@ -23,12 +24,14 @@ public class ScopeCodecServiceImpl implements ScopeCodecService {
 
     @Override
     public boolean exist( Set< String > scope ) {
-        for ( String permission : scope ) {
-            if( permissionService.readPermission( permission ) == null ) {
-                return false;
+        try {
+            for ( String permission : scope ) {
+                permissionService.readPermission( permission );
             }
+            return true;
+        } catch ( NoResultException ignore ) {
+            return false;
         }
-        return true;
     }
 
     @Override

@@ -2,13 +2,13 @@ package tw.edu.ncu.cc.oauth.server.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService
+import tw.edu.ncu.cc.oauth.server.service.ScopeService
 
 
-class ScopeCodecServiceImplTest extends SpringSpecification {
+class ScopeServiceImplTest extends SpringSpecification {
 
     @Autowired
-    private ScopeCodecService scopeCodecService
+    private ScopeService scopeCodecService
 
     def "it can encode and decode the scope"() {
         given:

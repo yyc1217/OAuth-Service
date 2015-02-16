@@ -12,7 +12,7 @@ import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret;
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository;
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
-import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
+import tw.edu.ncu.cc.oauth.server.service.ScopeService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
 
 import javax.persistence.NoResultException;
@@ -21,12 +21,10 @@ import java.util.Set;
 @Service
 public class AuthCodeServiceImpl implements AuthCodeService {
 
-    private SecretCodec secretCodec;
     private UserService userService;
     private ClientService clientService;
     private PasswordEncoder passwordEncoder;
-    private StringGenerator stringGenerator;
-    private ScopeCodecService scopeCodecService;
+    private ScopeService scopeService;
     private AuthCodeRepository authCodeRepository;
 
     @Autowired
@@ -40,23 +38,13 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     }
 
     @Autowired
-    public void setScopeCodecService( ScopeCodecService scopeCodecService ) {
-        this.scopeCodecService = scopeCodecService;
-    }
-
-    @Autowired
-    public void setSecretCodec( SecretCodec secretCodec ) {
-        this.secretCodec = secretCodec;
+    public void setScopeService( ScopeService scopeService ) {
+        this.scopeService = scopeService;
     }
 
     @Autowired
     public void setPasswordEncoder( PasswordEncoder passwordEncoder ) {
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @Autowired
-    public void setStringGenerator( StringGenerator stringGenerator ) {
-        this.stringGenerator = stringGenerator;
     }
 
     @Autowired
@@ -69,13 +57,12 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     public AuthCodeEntity createAuthCode( String clientID, String userID, Set< String > scope ) {
         AuthCodeEntity authCode = new AuthCodeEntity();
         authCode.setUser( userService.readUser( userID ) );
-        authCode.setClient( clientService.readClient( clientID ) );
-        authCode.setScope( scopeCodecService.encode( scope ) );
-
-        String code = stringGenerator.generateToken();
+        authCode.setClient( clientService.readClientByID( clientID ) );
+        authCode.setScope( scopeService.encode( scope ) );
+        String code = StringGenerator.generateToken();
         authCode.setCode( passwordEncoder.encode( code ) );
         AuthCodeEntity newAuthCode = authCodeRepository.createAuthCode( authCode );
-        authCode.setCode( secretCodec.encode( new SerialSecret( newAuthCode.getId(), code ) ) );
+        authCode.setCode( SecretCodec.encode( new SerialSecret( newAuthCode.getId(), code ) ) );
         authCode.setId( newAuthCode.getId() );
         return authCode;
     }
@@ -83,14 +70,14 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AuthCodeEntity readAuthCodeByID( String id ) {
-        return authCodeRepository.readUnexpiredAuthCode( Integer.parseInt( id ) );
+        return authCodeRepository.readUnexpiredAuthCodeByID( Integer.parseInt( id ) );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AuthCodeEntity readAuthCodeByCode( String code ) {
-        SerialSecret secret = secretCodec.decode( code );
-        AuthCodeEntity authCode = authCodeRepository.readUnexpiredAuthCode( secret.getId() );
+        SerialSecret secret = SecretCodec.decode( code );
+        AuthCodeEntity authCode = authCodeRepository.readUnexpiredAuthCodeByID( secret.getId() );
         if( passwordEncoder.matches( secret.getSecret(), authCode.getCode() ) ) {
             return authCode;
         } else {

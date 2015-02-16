@@ -6,6 +6,8 @@ import specification.SpringSpecification
 import tw.edu.ncu.cc.oauth.server.entity.PermissionEntity
 import tw.edu.ncu.cc.oauth.server.service.PermissionService
 
+import javax.persistence.NoResultException
+
 
 class PermissionServiceImplTest extends SpringSpecification {
 
@@ -34,9 +36,10 @@ class PermissionServiceImplTest extends SpringSpecification {
             )
         when:
             permissionService.deletePermission( permission )
+        and:
+            permissionService.readPermission( permission.getName() )
         then:
-            permissionService.readPermission( permission.getName() ) == null
-
+            thrown( NoResultException )
     }
 
     def "it can get all PermissionEntity"() {

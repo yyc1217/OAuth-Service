@@ -61,7 +61,7 @@ public class ApplicationController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                clientService.readClient( appID ), IdApplication.class
+                                clientService.readClientByID( appID ), IdApplication.class
                         );
                     }
                 } )
@@ -93,7 +93,7 @@ public class ApplicationController extends APIExceptionHandler {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                clientService.deleteClient( appID ), IdApplication.class
+                                clientService.deleteClientByID( appID ), IdApplication.class
                         );
                     }
                 } )
