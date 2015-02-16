@@ -1,14 +1,16 @@
 package tw.edu.ncu.cc.oauth.server.converter;
 
 import org.springframework.core.convert.converter.Converter;
-import tw.edu.ncu.cc.oauth.data.v1.management.application.Application;
+import tw.edu.ncu.cc.oauth.data.v1.management.application.SecretIdApplication;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 
-public class ApplicationConverter implements Converter< ClientEntity, Application > {
+public class ClientEntity_SecretIdApplicationConverter implements Converter< ClientEntity, SecretIdApplication > {
 
     @Override
-    public Application convert( ClientEntity source ) {
-        Application application = new Application();
+    public SecretIdApplication convert( ClientEntity source ) {
+        SecretIdApplication application = new SecretIdApplication();
+        application.setId( source.getId() + "" );
+        application.setSecret( source.getSecret() );
         application.setName( source.getName() );
         application.setDescription( source.getDescription() );
         application.setOwner( source.getOwner().getName() );

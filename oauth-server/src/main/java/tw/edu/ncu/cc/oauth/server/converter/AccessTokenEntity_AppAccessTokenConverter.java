@@ -7,18 +7,18 @@ import tw.edu.ncu.cc.oauth.data.v1.management.application.IdApplication;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AppAccessToken;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
-import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
+import tw.edu.ncu.cc.oauth.server.service.ScopeService;
 
 import java.util.Set;
 
 @Component
-public class AppAccessTokenConverter implements Converter< AccessTokenEntity, AppAccessToken > {
+public class AccessTokenEntity_AppAccessTokenConverter implements Converter< AccessTokenEntity, AppAccessToken > {
 
-    private ScopeCodecService scopeCodecService;
+    private ScopeService scopeService;
 
     @Autowired
-    public void setScopeCodecService( ScopeCodecService scopeCodecService ) {
-        this.scopeCodecService = scopeCodecService;
+    public void setScopeService( ScopeService scopeService ) {
+        this.scopeService = scopeService;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class AppAccessTokenConverter implements Converter< AccessTokenEntity, Ap
         accessToken.setUser( source.getUser().getName() );
         accessToken.setApplication( application );
 
-        Set< String > scope = scopeCodecService.decode( source.getScope() );
+        Set< String > scope = scopeService.decode( source.getScope() );
         accessToken.setScope( scope.toArray( new String[ scope.size() ] ) );
         accessToken.setLast_updated( source.getDateUpdated() );
 

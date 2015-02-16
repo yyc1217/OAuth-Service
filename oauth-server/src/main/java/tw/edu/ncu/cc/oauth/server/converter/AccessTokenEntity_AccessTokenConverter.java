@@ -5,18 +5,18 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
-import tw.edu.ncu.cc.oauth.server.service.ScopeCodecService;
+import tw.edu.ncu.cc.oauth.server.service.ScopeService;
 
 import java.util.Set;
 
 @Component
-public class AccessTokenConverter implements Converter< AccessTokenEntity, AccessToken > {
+public class AccessTokenEntity_AccessTokenConverter implements Converter< AccessTokenEntity, AccessToken > {
 
-    private ScopeCodecService scopeCodecService;
+    private ScopeService scopeService;
 
     @Autowired
-    public void setScopeCodecService( ScopeCodecService scopeCodecService ) {
-        this.scopeCodecService = scopeCodecService;
+    public void setScopeService( ScopeService scopeService ) {
+        this.scopeService = scopeService;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class AccessTokenConverter implements Converter< AccessTokenEntity, Acces
         accessToken.setId( source.getId() + "" );
         accessToken.setUser( source.getUser().getName() );
 
-        Set< String > scope = scopeCodecService.decode( source.getScope() );
+        Set< String > scope = scopeService.decode( source.getScope() );
         accessToken.setScope( scope.toArray( new String[ scope.size() ] ) );
         accessToken.setLast_updated( source.getDateUpdated() );
 
