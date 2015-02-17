@@ -21,16 +21,11 @@
 
         <security:form-login login-page="/login"/>
         <security:custom-filter ref="openidLoginFilter" after="FORM_LOGIN_FILTER"/>
-        <security:custom-filter ref="oauthAuthorizationFilter" after="LAST"/>
         <security:csrf/>
 
     </security:http>
 
     <security:authentication-manager alias="authenticationManager"/>
-
-    <bean id="oauthAuthorizationFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthAuthorizationFilter">
-        <property name="filtPath" value="/oauth/authorize"/>
-    </bean>
 
     <bean id="oauthTokenExchangeFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthTokenExchangeFilter">
         <property name="filtPath" value="/oauth/token"/>

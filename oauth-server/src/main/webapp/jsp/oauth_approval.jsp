@@ -23,12 +23,12 @@
     <div id="login">
 
         <h3>Permission Request</h3>
-        <h5>USER: ${access_confirm.userID}</h5>
-        <h5>CLIENT: <a href="${access_confirm.client.url}">${access_confirm.client.name}</a></h5>
+        <h5>USER: ${user_id}</h5>
+        <h5>CLIENT: <a href="${client.url}">${client.name}</a></h5>
         <div class="form-group">
             For following permissions
             <div class="permission-group">
-                <c:forEach items="${access_confirm.scope}" var="permission">
+                <c:forEach items="${scope}" var="permission">
                     <div class="permission-item">${permission}</div>
                 </c:forEach>
             </div>
