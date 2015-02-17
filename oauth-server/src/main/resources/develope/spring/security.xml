@@ -12,7 +12,7 @@
         <security:intercept-url pattern="/management/v1/**" access="hasIpAddress('127.0.0.1') or hasIpAddress('0:0:0:0:0:0:0:1')"/>
     </security:http>
 
-    <bean id="stubEntry" class="tw.edu.ncu.cc.oauth.server.security.impl.StubAuthenticationEntry"/>
+    <bean id="stubEntry" class="tw.edu.ncu.cc.oauth.server.security.impl.ApplicationEntryPoint"/>
 
     <bean id="openidConfigurationFileName" class="java.lang.String">
         <constructor-arg value="develope/openid-setting.properties"/>
