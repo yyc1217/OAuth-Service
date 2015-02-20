@@ -31,7 +31,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
 
     def "it can create AccessTokenEntity then revoke correspond authCode using AuthCodeEntity"() {
         given:
-            def code = authCodeService.createAuthCode( "1", "ADMIN1", [ "READ" ] as Set<String> )
+            def code = authCodeService.createAuthCode( "1", "ADMIN1", [ "READ" ] as Set<String>, null )
         when:
             def token = accessTokenService.createAccessTokenByCode( code.getCode(), null )
         then:

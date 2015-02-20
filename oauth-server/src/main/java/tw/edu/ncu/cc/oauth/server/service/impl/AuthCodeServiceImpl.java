@@ -16,6 +16,7 @@ import tw.edu.ncu.cc.oauth.server.service.ScopeService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
 
 import javax.persistence.NoResultException;
+import java.util.Date;
 import java.util.Set;
 
 @Service
@@ -54,11 +55,12 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Transactional
-    public AuthCodeEntity createAuthCode( String clientID, String userID, Set< String > scope ) {
+    public AuthCodeEntity createAuthCode( String clientID, String userID, Set< String > scope, Date expireDate ) {
         AuthCodeEntity authCode = new AuthCodeEntity();
         authCode.setUser( userService.readUser( userID ) );
         authCode.setClient( clientService.readClientByID( clientID ) );
         authCode.setScope( scopeService.encode( scope ) );
+        authCode.setDateExpired( expireDate );
         String code = StringGenerator.generateToken();
         authCode.setCode( passwordEncoder.encode( code ) );
         AuthCodeEntity newAuthCode = authCodeRepository.createAuthCode( authCode );
@@ -89,6 +91,22 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     @Transactional
     public AuthCodeEntity revokeAuthCodeByID( String id ) {
         return authCodeRepository.revokeAuthCode( readAuthCodeByID( id ) );
+    }
+
+    @Override
+    public boolean isAuthCodeValid( String authCode, String clientID ) {
+        try {
+            AuthCodeEntity code = readAuthCodeByCode( authCode );
+            if( ! code.getClient().getId().toString().equals( clientID ) ) {
+                return false;
+            } else  if( code.getDateExpired() == null ) {
+                return true;
+            } else {
+                return new Date().before( code.getDateExpired() );
+            }
+        } catch ( NoResultException ignore ) {
+            return false;
+        }
     }
 
 }
