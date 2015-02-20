@@ -11,7 +11,7 @@
     <cache:annotation-driven cache-manager="cacheManager"/>
 
     <bean id="cacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:production/cache-setting.xml"/>
+        <property name="configLocation" value="classpath:production/ehcache.xml"/>
         <property name="shared" value="false"/>
     </bean>
 
