@@ -10,9 +10,7 @@
 
     <security:http pattern="/resource/**" security="none"/>
 
-    <security:http pattern="/oauth/token/**" create-session="never" entry-point-ref="stubEntry">
-        <security:custom-filter ref="oauthTokenExchangeFilter" after="LAST"/>
-    </security:http>
+    <security:http pattern="/oauth/token/**" create-session="never" entry-point-ref="stubEntry"/>
 
     <security:http use-expressions="true" >
 
@@ -26,16 +24,6 @@
     </security:http>
 
     <security:authentication-manager alias="authenticationManager"/>
-
-    <bean id="oauthTokenExchangeFilter" class="tw.edu.ncu.cc.oauth.server.filter.OauthTokenExchangeFilter">
-        <property name="filtPath" value="/oauth/token"/>
-        <property name="authorizationCodeService">
-            <bean class="tw.edu.ncu.cc.oauth.server.security.impl.AuthorizationCodeService">
-                <property name="codeExpireSeconds" value="600"/>
-                <property name="tokenExpireSeconds" value="0"/>
-            </bean>
-        </property>
-    </bean>
 
     <bean id="openidLoginFilter" class="tw.edu.ncu.cc.oauth.server.filter.OpenIDLoginFilter">
         <property name="loginPath" value="/login"/>

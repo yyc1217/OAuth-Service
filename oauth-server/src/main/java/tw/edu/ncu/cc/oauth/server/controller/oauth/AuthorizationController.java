@@ -45,29 +45,22 @@ public final class AuthorizationController {
                              HttpServletResponse response,
                              Authentication authentication, ModelMap model ) throws OAuthProblemException, OAuthSystemException, IOException {
 
-        if( isRequestInvalid( request, response ) ) {
-            return null;
-        }
-
-        OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest( request );
-
-        model.addAttribute( "state", oauthRequest.getState() );
-        model.addAttribute( "scope", oauthRequest.getScopes() );
-        model.addAttribute( "client", clientService.readClientByID( oauthRequest.getClientId() ) );
-        model.addAttribute( "user_id", authentication.getName() );
-        model.addAttribute( "confirm_page", request.getContextPath() + "/oauth/confirm" );
-
-        return "oauth_approval";
-
-    }
-
-    private boolean isRequestInvalid( HttpServletRequest request, HttpServletResponse response ) throws IOException {
         try {
-            validateRequest( request );
-            return false;
+
+            OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest( request );
+
+            validateOauthRequest( oauthRequest );
+
+            model.addAttribute( "state", oauthRequest.getState() );
+            model.addAttribute( "scope", oauthRequest.getScopes() );
+            model.addAttribute( "client", clientService.readClientByID( oauthRequest.getClientId() ) );
+            model.addAttribute( "user_id", authentication.getName() );
+            model.addAttribute( "confirm_page", request.getContextPath() + "/oauth/confirm" );
+
+            return "oauth_approval";
+
         } catch ( OAuthSystemException e ) {
             response.sendError( HttpServletResponse.SC_BAD_REQUEST, e.getMessage() );
-            return true;
         } catch ( OAuthProblemException e ) {
             if( e.getRedirectUri() == null ) {
                 response.sendError( HttpServletResponse.SC_BAD_REQUEST, e.getMessage() );
@@ -81,13 +74,13 @@ public final class AuthorizationController {
                                 .build()
                 );
             }
-            return true;
         }
+
+        return null;
     }
 
-    public void validateRequest( HttpServletRequest httpServletRequest ) throws OAuthSystemException, OAuthProblemException {
+    public void validateOauthRequest( OAuthAuthzRequest oauthRequest ) throws OAuthSystemException, OAuthProblemException {
 
-        OAuthAuthzRequest oauthRequest =  new OAuthAuthzRequest( httpServletRequest );
         Set<String> scope  = oauthRequest.getScopes();
         String clientState = oauthRequest.getState();
         String clientID    = oauthRequest.getClientId();

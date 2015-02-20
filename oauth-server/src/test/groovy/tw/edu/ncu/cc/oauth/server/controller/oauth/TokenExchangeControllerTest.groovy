@@ -7,7 +7,7 @@ import specification.IntegrationSpecification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class TokenExchangeWebServiceTest extends IntegrationSpecification {
+class TokenExchangeControllerTest extends IntegrationSpecification {
 
     def targetURL = "/oauth/token"
 
