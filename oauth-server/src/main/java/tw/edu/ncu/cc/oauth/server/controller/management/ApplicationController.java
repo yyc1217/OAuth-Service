@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import tw.edu.ncu.cc.oauth.data.v1.management.application.Application;
 import tw.edu.ncu.cc.oauth.data.v1.management.application.IdApplication;
 import tw.edu.ncu.cc.oauth.data.v1.management.application.SecretIdApplication;
-import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 import tw.edu.ncu.cc.oauth.server.validator.ApplicationValidator;
 
 @RestController
 @RequestMapping( value = "management/v1/application" )
-public class ApplicationController extends APIExceptionHandler {
+public class ApplicationController {
 
     private ClientService clientService;
     private ConversionService conversionService;

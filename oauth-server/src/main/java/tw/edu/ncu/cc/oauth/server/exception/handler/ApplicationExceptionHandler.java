@@ -6,14 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import tw.edu.ncu.cc.oauth.data.v1.message.ErrorCode;
 
 import javax.persistence.NoResultException;
 
-@RestController
-public class APIExceptionHandler {
+@ControllerAdvice
+public class ApplicationExceptionHandler {
 
     private Logger logger = LoggerFactory.getLogger( this.getClass() );
 
@@ -37,7 +37,7 @@ public class APIExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity exceptionHandler( Exception exception ) {
-        logger.error( "SEVERE-INTERNAL-ERROR", exception );
+        logger.error( "INTERNAL SERVER", exception );
         return new ResponseEntity<>(
                 new tw.edu.ncu.cc.oauth.data.v1.message.Error(
                         ErrorCode.SERVER_ERROR, exception.getMessage()
