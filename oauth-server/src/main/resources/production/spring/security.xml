@@ -15,7 +15,7 @@
     <bean id="stubEntry" class="tw.edu.ncu.cc.oauth.server.security.impl.ApplicationEntryPoint"/>
 
     <bean id="openidConfigurationFileName" class="java.lang.String">
-        <constructor-arg value="production/openid-setting.properties"/>
+        <constructor-arg value="production/openid.properties"/>
     </bean>
 
 </beans>
