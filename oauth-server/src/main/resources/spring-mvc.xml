@@ -11,6 +11,11 @@
     <context:component-scan base-package="tw.edu.ncu.cc.oauth.server.controller"/>
 
     <mvc:annotation-driven ignore-default-model-on-redirect="true"/>
+
+    <mvc:interceptors>
+        <bean class="tw.edu.ncu.cc.oauth.server.interceptor.ApplicationInterceptor"/>
+    </mvc:interceptors>
+
     <mvc:default-servlet-handler />
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
