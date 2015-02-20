@@ -8,4 +8,9 @@
     <import resource="security.xml"/>
     <import resource="database.xml"/>
 
+    <bean class="tw.edu.ncu.cc.oauth.server.config.OauthConfig">
+        <property name="authCodeExpireSeconds" value="600"/>
+        <property name="accessTokenExpireSeconds" value="600"/>
+    </bean>
+
 </beans>
