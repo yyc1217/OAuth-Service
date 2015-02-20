@@ -3,7 +3,7 @@ package tw.edu.ncu.cc.oauth.server.filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
-import tw.edu.ncu.cc.oauth.server.security.LoginService;
+import tw.edu.ncu.cc.oauth.server.service.LoginService;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.FilterChain;

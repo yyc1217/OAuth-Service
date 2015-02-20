@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.security.impl;
+package tw.edu.ncu.cc.oauth.server.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import tw.edu.ncu.cc.manage.openid.OpenIDManager;
-import tw.edu.ncu.cc.oauth.server.security.LoginService;
+import tw.edu.ncu.cc.oauth.server.service.LoginService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
 
 import javax.security.auth.login.LoginException;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Service
-public class OpenIDLoginService implements LoginService {
+public class LoginServiceImpl implements LoginService {
 
     private UserService userService;
     private OpenIDManager openIDManager;
