@@ -8,10 +8,12 @@
        http://www.springframework.org/schema/jdbc
        http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
 
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${jdbc.driver}" />
-        <property name="jdbcUrl"     value="${jdbc.url}" />
-        <property name="properties"  ref="connectionProperties"/>
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <constructor-arg>
+            <bean class="com.zaxxer.hikari.HikariConfig">
+                <constructor-arg ref="connectionProperties"/>
+            </bean>
+        </constructor-arg>
     </bean>
 
     <jdbc:initialize-database data-source="dataSource" enabled="${init_database}">
