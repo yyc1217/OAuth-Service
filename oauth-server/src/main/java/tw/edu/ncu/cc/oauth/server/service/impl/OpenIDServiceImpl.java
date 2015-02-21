@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import tw.edu.ncu.cc.manage.openid.OpenIDManager;
-import tw.edu.ncu.cc.oauth.server.service.LoginService;
+import tw.edu.ncu.cc.oauth.server.service.OpenIDService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
 
 import javax.security.auth.login.LoginException;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class OpenIDServiceImpl implements OpenIDService {
 
     private UserService userService;
     private OpenIDManager openIDManager;
@@ -37,7 +37,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void authenticate( HttpServletRequest request ) throws LoginException {
+    public void login( HttpServletRequest request ) throws LoginException {
 
         if( openIDManager.isValid( request ) ) {
             String userName = openIDManager.getIdentity( request );

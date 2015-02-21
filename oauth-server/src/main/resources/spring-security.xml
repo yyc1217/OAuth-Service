@@ -15,20 +15,16 @@
     <security:http use-expressions="true" >
 
         <security:intercept-url pattern="/oauth/authorize" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/login" access="permitAll"/>
+        <security:intercept-url pattern="/login_confirm" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isAuthenticated()"/>
 
         <security:form-login login-page="/login"/>
-        <security:custom-filter ref="openidLoginFilter" after="FORM_LOGIN_FILTER"/>
         <security:csrf/>
 
     </security:http>
 
     <security:authentication-manager alias="authenticationManager"/>
-
-    <bean id="openidLoginFilter" class="tw.edu.ncu.cc.oauth.server.filter.OpenIDLoginFilter">
-        <property name="loginPath" value="/login"/>
-        <property name="loginConfirmPath" value="/login_confirm"/>
-    </bean>
 
     <bean class="tw.edu.ncu.cc.manage.openid.OpenIDManager">
         <constructor-arg index="0" ref="openidConfigurationFileName"/>

@@ -3,10 +3,10 @@ package tw.edu.ncu.cc.oauth.server.service;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 
-public interface LoginService {
+public interface OpenIDService {
 
     public String getLoginPath();
 
-    public void authenticate( HttpServletRequest request ) throws LoginException;
+    public void login( HttpServletRequest request ) throws LoginException;
 
 }
