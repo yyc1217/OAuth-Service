@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tw.edu.ncu.cc.oauth.data.v1.management.application.Application;
-import tw.edu.ncu.cc.oauth.server.component.StringGenerator;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
+import tw.edu.ncu.cc.oauth.server.helper.StringGenerator;
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
 import tw.edu.ncu.cc.oauth.server.service.ClientService;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
@@ -18,14 +18,8 @@ import javax.persistence.NoResultException;
 public class ClientServiceImpl implements ClientService {
 
     private PasswordEncoder passwordEncoder;
-    private StringGenerator stringGenerator;
     private ClientRepository clientRepository;
     private UserService userService;
-
-    @Autowired
-    public void setUserService( UserService userService ) {
-        this.userService = userService;
-    }
 
     @Autowired
     public void setPasswordEncoder( PasswordEncoder passwordEncoder ) {
@@ -33,8 +27,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Autowired
-    public void setStringGenerator( StringGenerator stringGenerator ) {
-        this.stringGenerator = stringGenerator;
+    public void setUserService( UserService userService ) {
+        this.userService = userService;
     }
 
     @Autowired
@@ -44,15 +38,17 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public void revokeClientTokens( String id ) {
-        clientRepository.revokeClientTokens( readClient( id ) );
+    public void revokeClientTokensByID( String id ) {
+        clientRepository.revokeClientTokens( readClientByID( id ) );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public boolean isClientValid( String clientID, String clientSecret ) {
         try {
-            return passwordEncoder.matches( clientSecret, readClient( clientID ).getSecret() );
+            return passwordEncoder.matches(
+                    clientSecret, readClientByID( clientID ).getSecret()
+            );
         } catch ( NoResultException ignore ) {
             return false;
         }
@@ -61,9 +57,9 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public ClientEntity createClient( Application application ) {
-        ClientEntity client = buildClientEntity( application );
+        ClientEntity client = overrideClientByApplication( new ClientEntity(), application );
 
-        String secret = stringGenerator.generateToken();
+        String secret = StringGenerator.generateToken();
         client.setSecret( passwordEncoder.encode( secret ) );
         ClientEntity clientEntity = clientRepository.createClient( client );
         client.setId( clientEntity.getId() );
@@ -73,26 +69,22 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
-    public ClientEntity readClient( String id ) {
-        return clientRepository.readClient( Integer.parseInt( id ) );
+    public ClientEntity readClientByID( String id ) {
+        return clientRepository.readClientByID( Integer.parseInt( id ) );
     }
 
     @Override
     @Transactional
     public ClientEntity updateClient( String id, Application application ) {
-        ClientEntity targetClient = readClient( id );
-        targetClient.setUrl( application.getUrl() );
-        targetClient.setName( application.getName() );
-        targetClient.setCallback( application.getCallback() );
-        targetClient.setDescription( application.getDescription() );
-        targetClient.setOwner( userService.readUser( application.getOwner() ) );
-        return clientRepository.updateClient( targetClient );
+        return clientRepository.updateClient(
+                overrideClientByApplication( readClientByID( id ), application )
+        );
     }
 
     @Override
     @Transactional
-    public ClientEntity deleteClient( String id ) {
-        ClientEntity targetClient = readClient( id );
+    public ClientEntity deleteClientByID( String id ) {
+        ClientEntity targetClient = readClientByID( id );
         clientRepository.deleteClient( targetClient );
         return targetClient;
     }
@@ -100,32 +92,37 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public ClientEntity refreshClientSecret( String id ) {
-        ClientEntity client = readClient( id );
+        ClientEntity client = readClientByID( id );
 
-        String secret = stringGenerator.generateToken();
+        String secret = StringGenerator.generateToken();
         client.setSecret( passwordEncoder.encode( secret ) );
         clientRepository.updateClient( client );
-        ClientEntity clientEntity = new ClientEntity();
-        clientEntity.setId( client.getId() );
+
+        ClientEntity clientEntity = overrideClientByClient( new ClientEntity(), client );
         clientEntity.setSecret( secret );
-        clientEntity.setUrl( client.getUrl() );
-        clientEntity.setName( client.getName() );
-        clientEntity.setOwner( client.getOwner() );
-        clientEntity.setCallback( client.getCallback() );
-        clientEntity.setDescription( client.getDescription() );
-        clientEntity.setDateCreated( client.getDateCreated() );
-        clientEntity.setDateUpdated( client.getDateUpdated() );
         return clientEntity;
     }
 
-    private ClientEntity buildClientEntity( Application application ) {
-        ClientEntity clientEntity = new ClientEntity();
-        clientEntity.setUrl( application.getUrl() );
-        clientEntity.setName( application.getName() );
-        clientEntity.setCallback( application.getCallback() );
-        clientEntity.setDescription( application.getDescription() );
-        clientEntity.setOwner( userService.readUser( application.getOwner() ) );
-        return clientEntity;
+    private ClientEntity overrideClientByClient( ClientEntity target, ClientEntity source ) {
+        target.setId( source.getId() );
+        target.setSecret( source.getSecret() );
+        target.setUrl( source.getUrl() );
+        target.setName( source.getName() );
+        target.setOwner( source.getOwner() );
+        target.setCallback( source.getCallback() );
+        target.setDescription( source.getDescription() );
+        target.setDateCreated( source.getDateCreated() );
+        target.setDateUpdated( source.getDateUpdated() );
+        return target;
+    }
+
+    private ClientEntity overrideClientByApplication( ClientEntity client, Application application ) {
+        client.setUrl( application.getUrl() );
+        client.setName( application.getName() );
+        client.setCallback( application.getCallback() );
+        client.setDescription( application.getDescription() );
+        client.setOwner( userService.readUser( application.getOwner() ) );
+        return client;
     }
 
 }

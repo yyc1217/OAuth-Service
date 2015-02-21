@@ -24,12 +24,14 @@ class AuthCodeServiceImplTest extends SpringSpecification {
             def scope = [ "READ" ] as Set
             def clientID = "1"
             def userID = "ADMIN1"
+            def expireDate = timeNow();
         when:
             def code = authCodeService.createAuthCode(
-                    clientID, userID, scope
+                    clientID, userID, scope, expireDate
             )
         then:
             code.getClient().getId() == clientID as Integer
+            code.getDateExpired() == expireDate
     }
 
     def "it can read AuthCodeEntity by code"() {
@@ -42,7 +44,7 @@ class AuthCodeServiceImplTest extends SpringSpecification {
     def "it can revoke AuthCodeEntity by id"() {
         given:
             def code = authCodeService.createAuthCode(
-                    "1", "ADMIN1", [ "READ" ] as Set
+                    "1", "ADMIN1", [ "READ" ] as Set, null
             )
         and:
             def codeID = code.getId() as String

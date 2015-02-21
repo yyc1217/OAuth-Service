@@ -28,12 +28,12 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
                 new AuthCodeEntity(
                         code : "TEST01",
                         scope: "000",
-                        user  : userRepository.readUser( 1 ),
-                        client: clientRepository.readClient( 1 )
+                        user  : userRepository.readUserByID( 1 ),
+                        client: clientRepository.readClientByID( 1 )
                 )
             )
         then:
-            authCodeRepository.readUnexpiredAuthCode( "TEST01" ).user.id == 1
+            authCodeRepository.readUnexpiredAuthCodeByCode( "TEST01" ).user.id == 1
     }
 
     @Transactional
@@ -43,20 +43,20 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
                 new AuthCodeEntity (
                         code : "TEST02",
                         scope: "000",
-                        user  : userRepository.readUser( 2 ),
-                        client: clientRepository.readClient( 2 )
+                        user  : userRepository.readUserByID( 2 ),
+                        client: clientRepository.readClientByID( 2 )
                 )
             )
         when:
             authCodeRepository.revokeAuthCode( code )
-            authCodeRepository.readUnexpiredAuthCode( "TEST02" )
+            authCodeRepository.readUnexpiredAuthCodeByCode( "TEST02" )
         then:
             thrown( NoResultException )
     }
 
     def "it can read AuthCodeEntity by id"() {
         expect:
-            authCodeRepository.readUnexpiredAuthCode( 1 ).code == "CODE1"
+            authCodeRepository.readUnexpiredAuthCodeByID( 1 ).code == "CODE1"
     }
 
 }

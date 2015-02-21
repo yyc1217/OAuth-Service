@@ -14,6 +14,7 @@
             <list>
                 <value>classpath:production/database.properties</value>
                 <value>classpath:production/security.properties</value>
+                <value>classpath:production/oauth.properties</value>
             </list>
         </property>
     </bean>
@@ -24,5 +25,10 @@
     <import resource="cache.xml"/>
     <import resource="security.xml"/>
     <import resource="database.xml"/>
+
+    <bean class="tw.edu.ncu.cc.oauth.server.config.OauthConfig">
+        <property name="authCodeExpireSeconds" value="${oauth.auth_code.expire_second}"/>
+        <property name="accessTokenExpireSeconds" value="${oauth.access_token.expire_second}"/>
+    </bean>
 
 </beans>

@@ -3,12 +3,11 @@ package tw.edu.ncu.cc.oauth.server.repository.impl;
 import org.springframework.stereotype.Repository;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository;
-import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
 import java.util.Date;
 
 @Repository
-public class ClientRepositoryImpl extends EntityManagerBean implements ClientRepository {
+public class ClientRepositoryImpl extends ApplicationRepository implements ClientRepository {
 
     @Override
     public ClientEntity createClient( ClientEntity client ) {
@@ -22,26 +21,22 @@ public class ClientRepositoryImpl extends EntityManagerBean implements ClientRep
 
     @Override
     public void deleteClient( ClientEntity client ) {
-        Date timeNow = new Date();
+        revokeClientCodes( client );
+        revokeClientTokens( client );
+        getEntityManager().remove( client );
+    }
+
+    @Override
+    public void revokeClientCodes( ClientEntity client ) {
         getEntityManager()
                 .createQuery(
                         "UPDATE FROM AuthCodeEntity " +
                         "SET dateExpired = :time " +
                         "WHERE client = :client"
                 )
-                .setParameter( "time", timeNow )
+                .setParameter( "time", new Date() )
                 .setParameter( "client", client )
                 .executeUpdate();
-        getEntityManager()
-                .createQuery(
-                        "UPDATE FROM AccessTokenEntity " +
-                        "SET dateExpired = :time " +
-                        "WHERE client = :client"
-                )
-                .setParameter( "time", timeNow )
-                .setParameter( "client", client )
-                .executeUpdate();
-        getEntityManager().remove( client );
     }
 
     @Override
@@ -58,7 +53,7 @@ public class ClientRepositoryImpl extends EntityManagerBean implements ClientRep
     }
 
     @Override
-    public ClientEntity readClient( int clientID ) {
+    public ClientEntity readClientByID( int clientID ) {
         return getEntityManager()
                 .createQuery(
                         "SELECT client FROM ClientEntity client " +

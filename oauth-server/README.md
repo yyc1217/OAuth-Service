@@ -2,7 +2,7 @@
 OAuth Athorization Server writtern in Java
 
 ### Dependencies
-- c3p0 0.9.1.2
+- hikariCP 2.3.1
 - ehcache 2.9.0
 - hibernate 4.3.6
 - oltu.oauth2 1.0.0
@@ -20,20 +20,18 @@ resources are divided into two environments for Spring
 - develope : include embedded database and mocked elements
 
 - production : put following files into **src/main/resources/production**
-    - cache-setting.xml ( standard ehcahe setting, must exist a cache 'permissionDictionary' )
+    - ehcache.xml ( standard ehcahe setting, must exist a cache 'permissionDictionary' )
     - connection.properties
     ```
-        min_size = 5
-        max_size = 75
-        ...or other c3p0 settings
-        user     = [ your database user name ]
-        password = [ your database user password ]
+        dataSourceClassName = [ your datasource class ] ( ex: com.mysql.jdbc.jdbc2.optional.MysqlDataSource )
+        dataSource.url = [ your jdbc url ] ( ex: jdbc:mysql://localhost/dbname )
+        dataSource.user = [ your user name ]
+        dataSource.password = [ your password ]
+        ... or other hikariCP settings
     ```
     - database.properties
     ```
-        jdbc.driver = com.mysql.jdbc.Driver
-        jdbc.url = jdbc:mysql://localhost/dbname
-        init_database = true
+        init_database = [ true / false ]
         init_database_file = classpath:develope/data.sql
     ```
     - hibernate.properties
@@ -42,8 +40,13 @@ resources are divided into two environments for Spring
         hibernate.show_sql = true
         ...or other hibernate setting
     ```
-    - openid-setting.properties ( https://github.com/NCU-CC/OpenID-Consumer )
+    - openid.properties ( https://github.com/NCU-CC/OpenID-Consumer )
     - security.properties
     ```
         api_management_access = hasIpAddress('127.0.0.1') or hasIpAddress('0:0:0:0:0:0:0:1') ...etc
+    ```
+    - oauth.properties
+    ```
+        oauth.access_token.expire_second = [ number ]
+        oauth.auth_code.expire_second = [ number ]
     ```

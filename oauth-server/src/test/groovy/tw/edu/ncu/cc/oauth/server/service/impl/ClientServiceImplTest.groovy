@@ -20,9 +20,9 @@ class ClientServiceImplTest extends SpringSpecification {
     @Transactional
     def "it can revoke ClientEntity all Tokens"() {
         given:
-            def client = clientService.readClient( "1" )
+            def client = clientService.readClientByID( "1" )
         when:
-            clientService.revokeClientTokens( "1" )
+            clientService.revokeClientTokensByID( "1" )
         then:
             client.getTokens().size() == 0
     }
@@ -82,8 +82,8 @@ class ClientServiceImplTest extends SpringSpecification {
                     )
             )
         when:
-            clientService.deleteClient( client.getId() as String )
-            clientService.readClient( client.getId() as String )
+            clientService.deleteClientByID( client.getId() as String )
+            clientService.readClientByID( client.getId() as String )
         then:
             thrown( NoResultException )
     }
@@ -123,11 +123,11 @@ class ClientServiceImplTest extends SpringSpecification {
                     )
             )
         and:
-            def originSecret = clientService.readClient( client.getId() as String ).getSecret()
+            def originSecret = clientService.readClientByID( client.getId() as String ).getSecret()
         when:
             clientService.refreshClientSecret( client.getId() as String )
         then:
-            clientService.readClient( client.getId() as String ).getSecret() != originSecret
+            clientService.readClientByID( client.getId() as String ).getSecret() != originSecret
     }
 
 }

@@ -5,11 +5,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import tw.edu.ncu.cc.oauth.server.component.SecretCodec;
-import tw.edu.ncu.cc.oauth.server.component.StringGenerator;
-import tw.edu.ncu.cc.oauth.server.data.SerialSecret;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity;
+import tw.edu.ncu.cc.oauth.server.helper.SecretCodec;
+import tw.edu.ncu.cc.oauth.server.helper.StringGenerator;
+import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
 import tw.edu.ncu.cc.oauth.server.service.*;
 
@@ -20,13 +20,11 @@ import java.util.Set;
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
 
-    private SecretCodec secretCodec;
     private UserService userService;
     private ClientService clientService;
     private PasswordEncoder passwordEncoder;
-    private StringGenerator stringGenerator;
     private AuthCodeService authCodeService;
-    private ScopeCodecService scopeCodecService;
+    private ScopeService scopeService;
     private AccessTokenRepository accessTokenRepository;
 
     @Autowired
@@ -40,8 +38,8 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Autowired
-    public void setScopeCodecService( ScopeCodecService scopeCodecService ) {
-        this.scopeCodecService = scopeCodecService;
+    public void setScopeService( ScopeService scopeService ) {
+        this.scopeService = scopeService;
     }
 
     @Autowired
@@ -55,16 +53,6 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Autowired
-    public void setSecretCodec( SecretCodec secretCodec ) {
-        this.secretCodec = secretCodec;
-    }
-
-    @Autowired
-    public void setStringGenerator( StringGenerator stringGenerator ) {
-        this.stringGenerator = stringGenerator;
-    }
-
-    @Autowired
     public void setAccessTokenRepository( AccessTokenRepository accessTokenRepository ) {
         this.accessTokenRepository = accessTokenRepository;
     }
@@ -75,8 +63,8 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         AccessTokenEntity accessToken = new AccessTokenEntity();
         accessToken.setDateExpired( expireDate );
         accessToken.setUser( userService.readUser( userID ) );
-        accessToken.setScope( scopeCodecService.encode( scope ) );
-        accessToken.setClient( clientService.readClient( clientID ) );
+        accessToken.setScope( scopeService.encode( scope ) );
+        accessToken.setClient( clientService.readClientByID( clientID ) );
         return createAccessToken( accessToken );
     }
 
@@ -89,15 +77,15 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         accessToken.setDateExpired( expireDate );
         accessToken.setScope( authCode.getScope() );
         accessToken.setUser( userService.readUser( authCode.getUser().getId() ) );
-        accessToken.setClient( clientService.readClient( authCode.getClient().getId() + "" ) );
+        accessToken.setClient( clientService.readClientByID( authCode.getClient().getId() + "" ) );
         return createAccessToken( accessToken );
     }
 
     private AccessTokenEntity createAccessToken( AccessTokenEntity accessToken ) {
-        String token = stringGenerator.generateToken();
+        String token = StringGenerator.generateToken();
         accessToken.setToken( passwordEncoder.encode( token ) );
         AccessTokenEntity newAccessToken = accessTokenRepository.createAccessToken( accessToken );
-        accessToken.setToken( secretCodec.encode( new SerialSecret( newAccessToken.getId(), token ) ) );
+        accessToken.setToken( SecretCodec.encode( new SerialSecret( newAccessToken.getId(), token ) ) );
         accessToken.setId( newAccessToken.getId() );
         return accessToken;
     }
@@ -105,8 +93,8 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AccessTokenEntity readAccessTokenByToken( String token ) {
-        SerialSecret secret = secretCodec.decode( token );
-        AccessTokenEntity accessToken = accessTokenRepository.readUnexpiredAccessToken( secret.getId() );
+        SerialSecret secret = SecretCodec.decode( token );
+        AccessTokenEntity accessToken = accessTokenRepository.readUnexpiredAccessTokenByID( secret.getId() );
         if( passwordEncoder.matches( secret.getSecret(), accessToken.getToken() ) ) {
             return accessToken;
         } else {
@@ -117,7 +105,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public AccessTokenEntity readAccessTokenByID( String id ) {
-        return accessTokenRepository.readUnexpiredAccessToken( Integer.parseInt( id ) );
+        return accessTokenRepository.readUnexpiredAccessTokenByID( Integer.parseInt( id ) );
     }
 
     @Override
@@ -129,7 +117,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public Set< String > readTokenScopeByToken( String token ) {
-        return scopeCodecService.decode( readAccessTokenByToken( token ).getScope() );
+        return scopeService.decode( readAccessTokenByToken( token ).getScope() );
     }
 
 }

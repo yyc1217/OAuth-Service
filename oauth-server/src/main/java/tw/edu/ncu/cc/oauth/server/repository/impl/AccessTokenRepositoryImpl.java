@@ -3,12 +3,11 @@ package tw.edu.ncu.cc.oauth.server.repository.impl;
 import org.springframework.stereotype.Repository;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository;
-import tw.edu.ncu.cc.oauth.server.repository.impl.base.EntityManagerBean;
 
 import java.util.Date;
 
 @Repository
-public class AccessTokenRepositoryImpl extends EntityManagerBean implements AccessTokenRepository {
+public class AccessTokenRepositoryImpl extends ApplicationRepository implements AccessTokenRepository {
 
     @Override
     public AccessTokenEntity revokeAccessToken( AccessTokenEntity accessToken ) {
@@ -22,7 +21,7 @@ public class AccessTokenRepositoryImpl extends EntityManagerBean implements Acce
     }
 
     @Override
-    public AccessTokenEntity readUnexpiredAccessToken( int id ) {
+    public AccessTokenEntity readUnexpiredAccessTokenByID( int id ) {
         return getEntityManager()
                 .createQuery(
                         "SELECT token FROM AccessTokenEntity token " +
@@ -34,7 +33,7 @@ public class AccessTokenRepositoryImpl extends EntityManagerBean implements Acce
     }
 
     @Override
-    public AccessTokenEntity readUnexpiredAccessToken( String token ) {
+    public AccessTokenEntity readUnexpiredAccessTokenByToken( String token ) {
         return getEntityManager()
                 .createQuery(
                         "SELECT token FROM AccessTokenEntity token " +

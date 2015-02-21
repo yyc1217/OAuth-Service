@@ -27,13 +27,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public UserEntity readUser( String name ) {
-        return userRepository.readUser( name );
+        return userRepository.readUserByName( name );
     }
 
     @Override
     @Transactional( propagation = Propagation.SUPPORTS, readOnly = true )
     public UserEntity readUser( int id ) {
-        return userRepository.readUser( id );
+        return userRepository.readUserByID( id );
     }
 
     @Override

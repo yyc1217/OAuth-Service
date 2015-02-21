@@ -12,7 +12,6 @@ import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
 import tw.edu.ncu.cc.oauth.data.v1.management.user.User;
 import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity;
 import tw.edu.ncu.cc.oauth.server.entity.ClientEntity;
-import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
 import tw.edu.ncu.cc.oauth.server.service.UserService;
 
@@ -20,7 +19,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping( value = "management/v1/user" )
-public class UserController extends APIExceptionHandler {
+public class UserController {
     
     private UserService userService;
     private ConversionService conversionService;

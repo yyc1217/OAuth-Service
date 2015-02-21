@@ -9,14 +9,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AppAccessToken;
-import tw.edu.ncu.cc.oauth.server.exception.handler.APIExceptionHandler;
 import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder;
 import tw.edu.ncu.cc.oauth.server.service.AccessTokenService;
 
 
 @RestController
 @RequestMapping( value = "management/v1/token" )
-public class TokenController extends APIExceptionHandler {
+public class TokenController {
 
     private ConversionService conversionService;
     private AccessTokenService accessTokenService;

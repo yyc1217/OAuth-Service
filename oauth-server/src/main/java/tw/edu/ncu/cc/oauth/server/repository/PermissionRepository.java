@@ -8,6 +8,7 @@ public interface PermissionRepository {
 
     public void deletePermission( PermissionEntity permission );
     public PermissionEntity createPermission( PermissionEntity permission );
-    public PermissionEntity readPermission( String name );
+    public PermissionEntity readPermissionByName( String name );
+    public PermissionEntity readPermissionByID( int id );
     public List< PermissionEntity > readAllPermissions();
 }

@@ -8,12 +8,12 @@
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <bean class="tw.edu.ncu.cc.oauth.server.converter.UserConverter"/>
-                <bean class="tw.edu.ncu.cc.oauth.server.converter.AccessTokenConverter"/>
-                <bean class="tw.edu.ncu.cc.oauth.server.converter.AppAccessTokenConverter"/>
-                <bean class="tw.edu.ncu.cc.oauth.server.converter.ApplicationConverter"/>
-                <bean class="tw.edu.ncu.cc.oauth.server.converter.IdApplicationConverter"/>
-                <bean class="tw.edu.ncu.cc.oauth.server.converter.SecretIdApplicationConverter"/>
+                <bean class="tw.edu.ncu.cc.oauth.server.converter.UserEntity_UserConverter"/>
+                <bean class="tw.edu.ncu.cc.oauth.server.converter.AccessTokenEntity_AccessTokenConverter"/>
+                <bean class="tw.edu.ncu.cc.oauth.server.converter.AccessTokenEntity_AppAccessTokenConverter"/>
+                <bean class="tw.edu.ncu.cc.oauth.server.converter.ClientEntity_ApplicationConverter"/>
+                <bean class="tw.edu.ncu.cc.oauth.server.converter.ClientEntity_IdApplicationConverter"/>
+                <bean class="tw.edu.ncu.cc.oauth.server.converter.ClientEntity_SecretIdApplicationConverter"/>
             </set>
         </property>
     </bean>
