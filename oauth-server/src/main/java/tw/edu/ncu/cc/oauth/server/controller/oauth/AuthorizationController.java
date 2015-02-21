@@ -51,7 +51,7 @@ public final class AuthorizationController {
 
             validateOauthRequest( oauthRequest );
 
-            model.addAttribute( "state", oauthRequest.getState() );
+            model.addAttribute( "state", oauthRequest.getState() == null ? "" : oauthRequest.getState() );
             model.addAttribute( "scope", oauthRequest.getScopes() );
             model.addAttribute( "client", clientService.readClientByID( oauthRequest.getClientId() ) );
             model.addAttribute( "user_id", authentication.getName() );
