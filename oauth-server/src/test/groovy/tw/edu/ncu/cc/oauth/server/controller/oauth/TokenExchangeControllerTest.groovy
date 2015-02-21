@@ -19,7 +19,9 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
                             .param( "client_id", "3" )
                             .param( "client_secret", "SECRET" )
                             .param( "code", "CODE" )
-            ).andExpect( status().isBadRequest() )
+            ).andExpect(
+                    status().isBadRequest()
+            )
     }
 
     def "it should restrict the request of invalid client"() {
@@ -30,7 +32,9 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
                             .param( "client_id", "4" )
                             .param( "client_secret", "SECRET" )
                             .param( "code", "CODE" )
-            ).andExpect( status().isBadRequest() )
+            ).andExpect(
+                    status().isBadRequest()
+            )
     }
 
     def "it should restrict the request of invalid auth code"() {
@@ -42,7 +46,9 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
                             .param( "client_id", "3" )
                             .param( "client_secret", "SECRET" )
                             .param( "code", "INVALID" )
-            ).andExpect( status().isBadRequest() )
+            ).andExpect(
+                    status().isBadRequest()
+            )
     }
 
     @Transactional
@@ -56,7 +62,9 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
                                     .param( "client_id", "3" )
                                     .param( "client_secret", "SECRET" )
                                     .param( "code", "Mzo6OkNPREU=" )
-                    ).andExpect( status().isOk() ).andReturn()
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
             )
         then:
             response.access_token != null
