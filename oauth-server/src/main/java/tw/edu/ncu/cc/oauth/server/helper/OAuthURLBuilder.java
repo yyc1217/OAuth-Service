@@ -38,20 +38,24 @@ public class OAuthURLBuilder {
 
     public String build() {
         StringBuilder stringBuilder = new StringBuilder( callback + "?" );
-        if( state != null ) {
+        if( isNotEmpty( state ) ) {
             stringBuilder.append( "state=" ).append( state ).append( "&" );
         }
-        if( error != null ) {
+        if( isNotEmpty( error ) ) {
             stringBuilder.append( "error=" ).append( error ).append( "&" );
-            if( errorDescription != null ) {
+            if( isNotEmpty( errorDescription ) ) {
                 stringBuilder.append( "error_description=" ).append( errorDescription ).append( "&" );
             }
         } else {
-            if( code != null ) {
+            if( isNotEmpty( code ) ) {
                 stringBuilder.append( "code=" ).append( code ).append( "&" );
             }
         }
         return stringBuilder.deleteCharAt( stringBuilder.length()-1 ).toString();
+    }
+
+    private boolean isNotEmpty( String string ) {
+        return string != null && !string.equals( "" );
     }
 
 }
