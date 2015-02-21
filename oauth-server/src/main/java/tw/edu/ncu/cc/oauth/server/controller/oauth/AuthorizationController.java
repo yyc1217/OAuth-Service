@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.Set;
 
 @Controller
-@SessionAttributes( { "state", "scope", "client", "user_id" } )
+@SessionAttributes( { "state", "scope", "client" } )
 public final class AuthorizationController {
 
     private ScopeService scopeService;

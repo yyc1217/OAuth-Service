@@ -3,6 +3,7 @@ package tw.edu.ncu.cc.oauth.server.controller.oauth;
 import org.apache.oltu.oauth2.common.error.OAuthError;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Controller
-@SessionAttributes( { "state", "scope", "client", "user_id" } )
+@SessionAttributes( { "state", "scope", "client" } )
 public final class AccessConfirmController {
 
     private OauthConfig oauthConfig;
@@ -42,9 +43,8 @@ public final class AccessConfirmController {
     public String confirm( @ModelAttribute( "state" )  String state,
                            @ModelAttribute( "scope" )  Set<String> scope,
                            @ModelAttribute( "client" ) ClientEntity client,
-                           @ModelAttribute( "user_id" ) String userID,
                            @RequestParam( "approval" ) boolean isAgree,
-                           HttpServletRequest request ) throws URISyntaxException, OAuthSystemException {
+                           HttpServletRequest request, Authentication authentication ) throws URISyntaxException, OAuthSystemException {
 
         logoutHandler.logout( request, null, null );
 
@@ -53,7 +53,7 @@ public final class AccessConfirmController {
                     .now()
                     .after( oauthConfig.getAuthCodeExpireSeconds(), TimeUnit.SECOND )
                     .buildDate();
-            AuthCodeEntity authCode = authCodeService.createAuthCode( client.getId() + "", userID, scope, expireDate );
+            AuthCodeEntity authCode = authCodeService.createAuthCode( client.getId() + "", authentication.getName(), scope, expireDate );
             return "redirect:" + OAuthURLBuilder
                     .url( client.getCallback() )
                     .code( authCode.getCode() )
