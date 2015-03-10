@@ -1,6 +1,6 @@
-package tw.edu.ncu.cc.oauth.data.v1.management.application;
+package tw.edu.ncu.cc.oauth.data.v1.management.client;
 
-public class SecretIdApplication extends IdApplication {
+public class SecretIdClient extends IdClient {
 
     private String secret;
 
