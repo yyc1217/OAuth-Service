@@ -36,7 +36,7 @@ dependencies{
             'org.springframework.boot:spring-boot-starter-security:1.2.2.RELEASE',
             'org.springframework.boot:spring-boot-starter-data-jpa:1.2.2.RELEASE',
             'org.springframework.boot:spring-boot-starter-web:1.2.2.RELEASE',
-            'org.hibernate:hibernate-entitymanager:4.3.6.Final',
+            'org.grails:gorm-hibernate4-spring-boot:1.1.0.RELEASE',
             'org.liquibase:liquibase-core:3.3.2',
             'net.sf.ehcache:ehcache:2.9.0',
             'com.zaxxer:HikariCP-java6:2.3.1',
@@ -64,6 +64,7 @@ gretty {
     springBoot = true
     springBootVersion = '1.2.2.RELEASE'
     springBootMainClass = 'tw.edu.ncu.cc.oauth.server.Application'
+    jvmArgs = ["-Dspring.profiles.active=production"]
     httpsEnabled = true
     httpsPort = 5278
 }
