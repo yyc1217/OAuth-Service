@@ -13,7 +13,7 @@ import tw.edu.ncu.cc.oauth.server.config.SecurityConfig
 
 @SpringBootApplication( exclude = [ ErrorMvcAutoConfiguration ] )
 @Import( [ SecurityConfig, BeanConfig, CacheConfig, MvcConfig ] )
-class Application extends SpringBootServletInitializer {
+public class Application extends SpringBootServletInitializer {
 
     public static void main( String[] args ) {
         SpringApplication.run( Application.class, args )
