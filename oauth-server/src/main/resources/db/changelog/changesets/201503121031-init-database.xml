@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1" author="unknown">
+
+        <createTable tableName="access_token">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="date_expired" type="datetime"/>
+            <column name="token" type="varchar(255)"/>
+            <column name="client_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="refresh_token">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="date_expired" type="datetime"/>
+            <column name="token" type="varchar(255)"/>
+            <column name="client_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="access_token_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="authorization_code">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="date_expired" type="datetime"/>
+            <column name="code" type="varchar(255)"/>
+            <column name="client_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="client">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="callback" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="secret" type="varchar(255)"/>
+            <column name="url" type="varchar(255)"/>
+            <column name="owner_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="permission">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="access_token_scope">
+            <column name="permission_id" type="int"/>
+            <column name="access_token_id" type="int"/>
+        </createTable>
+
+        <createTable tableName="authorization_code_scope">
+            <column name="permission_id" type="int"/>
+            <column name="authorization_code_id" type="int"/>
+        </createTable>
+
+        <createTable tableName="refresh_token_scope">
+            <column name="permission_id" type="int"/>
+            <column name="refresh_token_id" type="int"/>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

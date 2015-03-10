@@ -1,3 +1,5 @@
+server:
+  port: 8181
 spring:
   main:
     show_banner: false
@@ -13,9 +15,3 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
-  jpa:
-    hibernate:
-      ddl-auto: none
-
-security:
-  require-ssl: true
