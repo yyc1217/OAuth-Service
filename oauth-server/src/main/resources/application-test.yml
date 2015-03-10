@@ -1,0 +1,21 @@
+logging:
+  level: DEBUG
+
+spring:
+  datasource:
+    initialize: true
+    schema: test/schema.sql
+    data: test/data.sql
+    sql-script-encoding: UTF-8
+
+liquibase:
+  enabled: false
+
+custom:
+  oauth:
+    authCode:
+      expire-seconds: 600
+    accessToken:
+      expire-seconds: 600
+  openid:
+    config-path: test/openid.properties
