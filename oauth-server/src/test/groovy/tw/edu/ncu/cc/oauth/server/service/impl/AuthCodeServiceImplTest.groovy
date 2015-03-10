@@ -1,12 +1,11 @@
 package tw.edu.ncu.cc.oauth.server.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import specification.SpringSpecification
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService
 import tw.edu.ncu.cc.oauth.server.service.ClientService
 import tw.edu.ncu.cc.oauth.server.service.UserService
-
-import javax.persistence.NoResultException
 
 class AuthCodeServiceImplTest extends SpringSpecification {
 
@@ -38,7 +37,7 @@ class AuthCodeServiceImplTest extends SpringSpecification {
         when:
             authCodeService.readAuthCodeByCode( "Mzo6OkNPREU=" )
         then:
-            notThrown( NoResultException )
+            notThrown( EmptyResultDataAccessException )
     }
 
     def "it can revoke AuthCodeEntity by id"() {
@@ -52,7 +51,7 @@ class AuthCodeServiceImplTest extends SpringSpecification {
             authCodeService.revokeAuthCodeByID( codeID )
             authCodeService.readAuthCodeByID( codeID )
         then:
-            thrown( NoResultException )
+            thrown( EmptyResultDataAccessException )
     }
 
 }

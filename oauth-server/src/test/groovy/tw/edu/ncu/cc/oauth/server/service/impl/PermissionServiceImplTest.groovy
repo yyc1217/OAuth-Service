@@ -1,13 +1,11 @@
 package tw.edu.ncu.cc.oauth.server.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.entity.PermissionEntity
+import tw.edu.ncu.cc.oauth.server.domain.PermissionEntity
 import tw.edu.ncu.cc.oauth.server.service.PermissionService
-
-import javax.persistence.NoResultException
-
 
 class PermissionServiceImplTest extends SpringSpecification {
 
@@ -39,7 +37,7 @@ class PermissionServiceImplTest extends SpringSpecification {
         and:
             permissionService.readPermission( permission.getName() )
         then:
-            thrown( NoResultException )
+            thrown( EmptyResultDataAccessException )
     }
 
     def "it can get all PermissionEntity"() {

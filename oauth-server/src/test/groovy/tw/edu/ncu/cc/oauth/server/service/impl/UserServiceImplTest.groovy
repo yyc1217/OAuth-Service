@@ -1,10 +1,9 @@
 package tw.edu.ncu.cc.oauth.server.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import specification.SpringSpecification
 import tw.edu.ncu.cc.oauth.server.service.UserService
-
-import javax.persistence.NoResultException
 
 class UserServiceImplTest extends SpringSpecification {
 
@@ -15,7 +14,7 @@ class UserServiceImplTest extends SpringSpecification {
         when:
             userService.readUser( "USER_NOT_EXIST" )
         then:
-            thrown( NoResultException )
+            thrown( EmptyResultDataAccessException )
     }
 
     def "it can create UserEntity"() {
@@ -23,7 +22,7 @@ class UserServiceImplTest extends SpringSpecification {
             userService.createUser( "NEW_USER" )
             userService.readUser( "NEW_USER" )
         then:
-            notThrown( NoResultException )
+            notThrown( EmptyResultDataAccessException )
     }
 
     def "it can read user tokens 1"() {
@@ -37,7 +36,7 @@ class UserServiceImplTest extends SpringSpecification {
         when:
             userService.readUserTokens( "NOT EXIST" )
         then:
-            thrown( NoResultException )
+            thrown( EmptyResultDataAccessException )
     }
 
     def "it can read user clients"() {
@@ -48,13 +47,13 @@ class UserServiceImplTest extends SpringSpecification {
     }
 
     def "it can create user if not exist"() {
+        given:
+            userService.createUserIfNotExist( "SAMEUSER" )
+            userService.createUserIfNotExist( "SAMEUSER" )
         when:
-            userService.createUserIfNotExist( "SAMEUSER" )
-            userService.createUserIfNotExist( "SAMEUSER" )
-        and:
-            userService.readUser( "SAMEUSER" ) != null
+            userService.readUser( "SAMEUSER" )
         then:
-            notThrown( NoResultException )
+            notThrown( EmptyResultDataAccessException )
     }
 
 }
