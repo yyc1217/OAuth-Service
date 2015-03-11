@@ -1,11 +1,10 @@
 package tw.edu.ncu.cc.oauth.server.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import specification.SpringSpecification
 import tw.edu.ncu.cc.oauth.server.service.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.service.AuthCodeService
-
-import javax.persistence.NoResultException
 
 class AccessTokenServiceImplTest extends SpringSpecification {
 
@@ -40,7 +39,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
         when:
             authCodeService.readAuthCodeByCode( code.getCode() )
         then:
-            thrown( NoResultException )
+            thrown( EmptyResultDataAccessException )
     }
 
     def "it can read AccessTokenEntity by id"() {
@@ -64,7 +63,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
             accessTokenService.revokeAccessTokenByID( tokenID )
             accessTokenService.readAccessTokenByID( tokenID )
         then:
-            thrown( NoResultException )
+            thrown( EmptyResultDataAccessException )
     }
 
     def "it can read AccessToken scope by token"() {

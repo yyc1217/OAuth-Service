@@ -1,14 +1,13 @@
 package tw.edu.ncu.cc.oauth.server.repository.impl
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.entity.AuthCodeEntity
+import tw.edu.ncu.cc.oauth.server.domain.AuthCodeEntity
 import tw.edu.ncu.cc.oauth.server.repository.AuthCodeRepository
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository
-
-import javax.persistence.NoResultException
 
 class AuthCodeRepositoryImplTest extends SpringSpecification {
 
@@ -51,7 +50,7 @@ class AuthCodeRepositoryImplTest extends SpringSpecification {
             authCodeRepository.revokeAuthCode( code )
             authCodeRepository.readUnexpiredAuthCodeByCode( "TEST02" )
         then:
-            thrown( NoResultException )
+            thrown( EmptyResultDataAccessException )
     }
 
     def "it can read AuthCodeEntity by id"() {

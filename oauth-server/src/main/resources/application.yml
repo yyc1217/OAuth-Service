@@ -1,0 +1,21 @@
+spring:
+  main:
+    show_banner: false
+  profiles:
+    active: production
+  mvc:
+    ignore-default-model-on-redirect: true
+  view:
+    prefix: '/jsp/'
+    suffix: '.jsp'
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+security:
+  require-ssl: true

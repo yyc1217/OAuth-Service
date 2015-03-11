@@ -3,7 +3,7 @@ package tw.edu.ncu.cc.oauth.server.repository.impl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.entity.UserEntity
+import tw.edu.ncu.cc.oauth.server.domain.UserEntity
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository
 
 

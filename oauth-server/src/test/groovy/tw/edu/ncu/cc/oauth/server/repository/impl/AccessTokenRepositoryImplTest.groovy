@@ -1,14 +1,13 @@
 package tw.edu.ncu.cc.oauth.server.repository.impl
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.entity.AccessTokenEntity
+import tw.edu.ncu.cc.oauth.server.domain.AccessTokenEntity
 import tw.edu.ncu.cc.oauth.server.repository.AccessTokenRepository
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository
-
-import javax.persistence.NoResultException
 
 class AccessTokenRepositoryImplTest extends SpringSpecification {
 
@@ -51,7 +50,7 @@ class AccessTokenRepositoryImplTest extends SpringSpecification {
             accessTokenRepository.revokeAccessToken( token )
             accessTokenRepository.readUnexpiredAccessTokenByToken( "TEST02" )
         then:
-             thrown( NoResultException )
+             thrown( EmptyResultDataAccessException )
     }
 
     def "it can read unexpired AccessTokenEntity by id"() {

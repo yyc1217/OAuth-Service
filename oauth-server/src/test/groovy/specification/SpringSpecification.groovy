@@ -1,13 +1,16 @@
 package specification
 
+import org.springframework.boot.test.SpringApplicationContextLoader
+import org.springframework.boot.test.WebIntegrationTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.web.WebAppConfiguration
 import spock.lang.Specification
+import tw.edu.ncu.cc.oauth.server.Application
 
-@WebAppConfiguration
-@ActiveProfiles( "dev" )
-@ContextConfiguration( [ "classpath:spring-core.xml", "classpath:spring-mvc.xml" ] )
+
+@ActiveProfiles( "test" )
+@WebIntegrationTest
+@ContextConfiguration ( loader = SpringApplicationContextLoader.class, classes = Application.class )
 public abstract class SpringSpecification extends Specification {
 
     public Date timeNow() {

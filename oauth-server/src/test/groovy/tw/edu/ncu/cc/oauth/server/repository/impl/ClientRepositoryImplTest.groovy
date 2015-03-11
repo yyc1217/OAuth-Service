@@ -1,14 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.repository.impl
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.entity.ClientEntity
+import tw.edu.ncu.cc.oauth.server.domain.ClientEntity
 import tw.edu.ncu.cc.oauth.server.repository.ClientRepository
 import tw.edu.ncu.cc.oauth.server.repository.UserRepository
-
-import javax.persistence.NoResultException
-
 
 class ClientRepositoryImplTest extends SpringSpecification {
 
@@ -54,7 +52,7 @@ class ClientRepositoryImplTest extends SpringSpecification {
             clientRepository.deleteClient( client )
             clientRepository.readClientByID( client.getId() )
         then:
-            thrown( NoResultException )
+            thrown( EmptyResultDataAccessException )
     }
 
     @Transactional

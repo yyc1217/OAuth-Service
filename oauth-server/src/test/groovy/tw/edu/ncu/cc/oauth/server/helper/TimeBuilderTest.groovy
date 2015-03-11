@@ -1,14 +1,13 @@
 package tw.edu.ncu.cc.oauth.server.helper
 
-import specification.SpringSpecification
+import spock.lang.Specification
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
 
-
-class TimeBuilderTest extends SpringSpecification {
+class TimeBuilderTest extends Specification {
 
     def "it can build date from specified date"() {
         given:
-            def sourceDate = timeNow();
+            def sourceDate =new Date()
         when:
             def targetDate = TimeBuilder
                     .of( sourceDate )
@@ -19,7 +18,7 @@ class TimeBuilderTest extends SpringSpecification {
 
     def "it can build date after specified time"() {
         given:
-            def sourceDate = timeNow();
+            def sourceDate = new Date()
         when:
             def targetDate = TimeBuilder
                     .of( sourceDate )
@@ -31,7 +30,7 @@ class TimeBuilderTest extends SpringSpecification {
 
     def "it can build date before specified time"() {
         given:
-            def sourceDate = timeNow();
+            def sourceDate = new Date()
         when:
             def targetDate = TimeBuilder
                     .of( sourceDate )

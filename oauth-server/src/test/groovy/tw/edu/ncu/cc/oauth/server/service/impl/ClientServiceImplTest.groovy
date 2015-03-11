@@ -1,13 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.data.v1.management.application.Application
+import tw.edu.ncu.cc.oauth.data.v1.management.client.Client
 import tw.edu.ncu.cc.oauth.server.service.ClientService
 import tw.edu.ncu.cc.oauth.server.service.UserService
-
-import javax.persistence.NoResultException
 
 class ClientServiceImplTest extends SpringSpecification {
 
@@ -36,7 +35,7 @@ class ClientServiceImplTest extends SpringSpecification {
     def "it can validate the client id and secret"() {
         when:
             def client = clientService.createClient(
-                    new Application(
+                    new Client(
                             name: "TESTSERVICE",
                             owner: "ADMIN1"
                     )
@@ -57,7 +56,7 @@ class ClientServiceImplTest extends SpringSpecification {
     def "it can create ClientEntity"() {
         when:
             def client = clientService.createClient(
-                    new Application(
+                    new Client(
                             name: "HelloWorld",
                             description: "description",
                             callback: "abc://123",
@@ -73,7 +72,7 @@ class ClientServiceImplTest extends SpringSpecification {
     def "it can delete ClientEntity"() {
         given:
             def client = clientService.createClient(
-                    new Application(
+                    new Client(
                             name: "HelloWorld",
                             description: "description",
                             callback: "abc://123",
@@ -85,13 +84,13 @@ class ClientServiceImplTest extends SpringSpecification {
             clientService.deleteClientByID( client.getId() as String )
             clientService.readClientByID( client.getId() as String )
         then:
-            thrown( NoResultException )
+            thrown( EmptyResultDataAccessException )
     }
 
     def "it can update ClientEntity"() {
         given:
             def client = clientService.createClient(
-                    new Application(
+                    new Client(
                             name: "OriginName",
                             description: "description",
                             callback: "abc://123",
@@ -100,7 +99,7 @@ class ClientServiceImplTest extends SpringSpecification {
                     )
             )
         when:
-            def newClient = clientService.updateClient( client.getId() as String, new Application(
+            def newClient = clientService.updateClient( client.getId() as String, new Client(
                     name: "OtherName",
                     description: "description",
                     callback: "abc://123",
@@ -114,7 +113,7 @@ class ClientServiceImplTest extends SpringSpecification {
     def "it can refresh client secret"() {
         given:
             def client = clientService.createClient(
-                    new Application(
+                    new Client(
                             name: "HelloWorld",
                             description: "description",
                             callback: "abc://123",

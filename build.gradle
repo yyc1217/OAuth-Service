@@ -16,13 +16,12 @@ subprojects{
 
     repositories {
         mavenCentral()
-        maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
     }
 
     dependencies {
 
-        testCompile 'org.codehaus.groovy:groovy-all:2.3.6'
-        testCompile 'org.spockframework:spock-core:1.0-groovy-2.3-SNAPSHOT'
+        compile 'org.codehaus.groovy:groovy-all:2.3.10'
+        testCompile 'org.spockframework:spock-core:1.0-groovy-2.3'
 
     }
 
