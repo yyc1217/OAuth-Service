@@ -2,15 +2,15 @@ package tw.edu.ncu.cc.oauth.server.helper.data;
 
 public class SerialSecret {
 
-    private int id;
+    private long id;
     private String secret;
 
-    public SerialSecret( int id, String secret ) {
+    public SerialSecret( long id, String secret ) {
         this.id = id;
         this.secret = secret;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
