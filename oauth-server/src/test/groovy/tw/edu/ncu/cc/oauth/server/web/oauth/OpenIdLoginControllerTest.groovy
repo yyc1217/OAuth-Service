@@ -5,8 +5,7 @@ import specification.IntegrationSpecification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-
-class OpenIDLoginControllerTest extends IntegrationSpecification {
+class OpenIdLoginControllerTest extends IntegrationSpecification {
 
     def "it should redirect login path to remote address"() {
         expect:
