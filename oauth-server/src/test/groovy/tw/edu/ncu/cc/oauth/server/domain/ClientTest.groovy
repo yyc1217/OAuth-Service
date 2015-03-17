@@ -19,26 +19,6 @@ class ClientTest extends SpringSpecification {
     }
 
     @Transactional
-    def "it's codes can be revoked"() {
-        given:
-            def client = Client.get( 1 )
-        when:
-            client.revokeCodes()
-        then:
-            client.unexpiredCodes().size() == 0
-    }
-
-    @Transactional
-    def "it's tokens can be revoked"() {
-        given:
-            def client = Client.get( 1 )
-        when:
-            client.revokeTokens()
-        then:
-            client.unexpiredTokens().size() == 0
-    }
-
-    @Transactional
     def "it's description and url can be null"() {
         given:
             def client = Client.get( 1 )

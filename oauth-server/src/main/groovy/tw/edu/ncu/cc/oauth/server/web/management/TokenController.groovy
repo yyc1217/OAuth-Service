@@ -31,7 +31,7 @@ public class TokenController {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenService.readUnexpiredById( id, [ client: 'join', user: 'join', scope: 'eager' ] ), ClientAccessTokenObject.class
+                                accessTokenService.readUnexpiredById( id, [ 'client', 'user', 'scope' ] ), ClientAccessTokenObject.class
                         );
                     }
                 } )
@@ -45,7 +45,7 @@ public class TokenController {
                 .resource( new ResponseBuilder.ResourceBuilder() {
                     @Override
                     public Object build() {
-                        AccessToken accessToken = accessTokenService.readUnexpiredById( id, [ client: 'join', user: 'join', scope: 'eager' ] )
+                        AccessToken accessToken = accessTokenService.readUnexpiredById( id, [ 'client', 'user', 'scope' ] )
                         if( accessToken == null ) {
                             return null
                         } else {
@@ -66,7 +66,7 @@ public class TokenController {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                accessTokenService.readUnexpiredByRealToken( token, [ scope: 'eager', user: 'join' ] ), AccessTokenObject.class
+                                accessTokenService.readUnexpiredByRealToken( token, [ 'user', 'scope' ] ), AccessTokenObject.class
                         );
                     }
                 } )

@@ -18,4 +18,10 @@ class Permission implements Auditable {
         AccessToken, AuthorizationCode, RefreshToken
     ]
 
+    static lazyAttrModes =  [
+        'accessTokens'       : 'eager',
+        'authorizationCodes' : 'eager',
+        'refreshTokens'      : 'eager'
+    ]
+
 }

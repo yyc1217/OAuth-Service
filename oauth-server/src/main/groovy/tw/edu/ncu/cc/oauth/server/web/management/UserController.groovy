@@ -42,7 +42,7 @@ public class UserController {
                             return null
                         }  else {
                             return conversionService.convert(
-                                    accessTokenService.readAllUnexpiredByUserName( userName, [ user: 'join', scope: 'eager' ] ),
+                                    accessTokenService.readAllUnexpiredByUserName( userName, [ 'user', 'scope' ] ),
                                     TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( AccessToken.class ) ),
                                     TypeDescriptor.array( TypeDescriptor.valueOf( AccessTokenObject.class ) )
                             );
@@ -60,7 +60,7 @@ public class UserController {
                 .resource( new ResponseBuilder.ResourceBuilder() {
                     @Override
                     public Object build() {
-                        User user = userService.readByName( userName, [ clients: 'eager' ] )
+                        User user = userService.readByName( userName, [ 'clients' ] )
                         if( user == null ) {
                             return null
                         } else {

@@ -24,36 +24,10 @@ class Client implements Auditable {
         url nullable: true, blank: true
     }
 
-    def unexpiredCodes() {
-        def q = AuthorizationCode.where {
-            client == this && dateExpired > new Date()
-        }
-        return q.list()
-    }
-
-    def unexpiredTokens() {
-        def q = AccessToken.where {
-            client == this && dateExpired > new Date()
-        }
-        return q.list()
-    }
-
-    def revokeCodes() {
-        executeUpdate(
-                "UPDATE FROM AuthorizationCode SET dateExpired = :time WHERE client = :client", [
-                        time: new Date(),
-                        client: this
-                ]
-        )
-    }
-
-    def revokeTokens() {
-        executeUpdate(
-                "UPDATE FROM AccessToken SET dateExpired = :time WHERE client = :client",[
-                        time: new Date(),
-                        client: this
-                ]
-        )
-    }
+    static lazyAttrModes = [
+        'owner'  : 'join',
+        'codes'  : 'eager',
+        'tokens' : 'eager'
+    ]
 
 }

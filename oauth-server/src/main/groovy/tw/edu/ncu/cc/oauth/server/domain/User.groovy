@@ -14,4 +14,10 @@ class User implements Auditable {
         clients: Client
     ]
 
+    static lazyAttrModes = [
+        'tokens'  : 'eager',
+        'codes'   : 'eager',
+        'clients' : 'eager'
+    ]
+
 }

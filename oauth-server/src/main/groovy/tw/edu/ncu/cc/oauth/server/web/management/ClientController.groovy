@@ -61,7 +61,7 @@ public class ClientController {
                     @Override
                     public Object build() {
                         return conversionService.convert(
-                                clientService.readByID( appID, [ owner: 'join' ] ), IdClientObject.class
+                                clientService.readByID( appID, [ 'owner' ] ), IdClientObject.class
                         );
                     }
                 } )
@@ -77,7 +77,7 @@ public class ClientController {
                 .resource( new ResponseBuilder.ResourceBuilder() {
                     @Override
                     public Object build() {
-                        Client client = clientService.readByID( appID, [ owner: 'join' ] )
+                        Client client = clientService.readByID( appID, [ 'owner' ] )
                         if( client == null ) {
                             return null
                         } else {
@@ -102,7 +102,7 @@ public class ClientController {
                 .resource( new ResponseBuilder.ResourceBuilder() {
                     @Override
                     public Object build() {
-                        Client client =  clientService.readByID( appID, [ owner: 'join' ] )
+                        Client client =  clientService.readByID( appID, [ 'owner' ] )
                         if( client == null ) {
                             return null
                         } else {
@@ -122,7 +122,7 @@ public class ClientController {
                 .resource( new ResponseBuilder.ResourceBuilder() {
                     @Override
                     public Object build() {
-                        Client client =  clientService.readByID( appID, [ owner: 'join' ] )
+                        Client client =  clientService.readByID( appID, [ 'owner' ] )
                         if( client == null ) {
                             return null
                         } else {
