@@ -64,7 +64,6 @@ gretty {
     springBoot = true
     springBootVersion = '1.2.2.RELEASE'
     springBootMainClass = 'tw.edu.ncu.cc.oauth.server.Application'
-    jvmArgs = ["-Dspring.profiles.active=production"]
     httpsEnabled = true
     httpsPort = 5278
 }

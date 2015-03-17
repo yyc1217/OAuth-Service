@@ -17,13 +17,9 @@ class UserControllerTest extends IntegrationSpecification {
             def response = JSON(
                     server().perform(
                             get( targetURL + "/ADMIN1/token" )
-<<<<<<< HEAD
-                    ).andExpect( status().isOk() ).andReturn()
-=======
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
->>>>>>> 84be543... add management controllers
             )
         then:
             response[0].user == "ADMIN1"
@@ -33,13 +29,9 @@ class UserControllerTest extends IntegrationSpecification {
         expect:
             server().perform(
                     get( targetURL + "/NOT_EXIST/token" )
-<<<<<<< HEAD
-            ).andExpect( status().isNotFound() )
-=======
             ).andExpect(
                     status().isNotFound()
             )
->>>>>>> 84be543... add management controllers
     }
 
     def "it can handle get of specified user's clients 1"() {
@@ -47,13 +39,9 @@ class UserControllerTest extends IntegrationSpecification {
             def response = JSON(
                     server().perform(
                             get( targetURL + "/ADMIN1/application" )
-<<<<<<< HEAD
-                    ).andExpect( status().isOk() ).andReturn()
-=======
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
->>>>>>> 84be543... add management controllers
             )
         then:
             response[0].owner == "ADMIN1"
@@ -72,20 +60,12 @@ class UserControllerTest extends IntegrationSpecification {
                                     }
                                     '''
                             )
-<<<<<<< HEAD
-                    ).andExpect( status().isOk() ).andReturn()
-=======
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
->>>>>>> 84be543... add management controllers
             )
         then:
             response.name == "jason"
     }
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 84be543... add management controllers

@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS access_token
 (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  version INT DEFAULT 0,
   date_created DATETIME,
-  date_updated DATETIME,
+  last_updated DATETIME,
   date_expired DATETIME,
-  scope VARCHAR(255) NOT NULL,
   token VARCHAR(255),
   client_id INT NOT NULL,
   user_id INT NOT NULL
@@ -13,23 +13,23 @@ CREATE TABLE IF NOT EXISTS access_token
 CREATE TABLE IF NOT EXISTS refresh_token
 (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  version INT DEFAULT 0,
   date_created DATETIME,
-  date_updated DATETIME,
+  last_updated DATETIME,
   date_expired DATETIME,
-  scope VARCHAR(255) NOT NULL,
   token VARCHAR(255),
   client_id INT NOT NULL,
   user_id INT NOT NULL,
   access_token_id INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS auth_code
+CREATE TABLE IF NOT EXISTS authorization_code
 (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  version INT DEFAULT 0,
   date_created DATETIME,
-  date_updated DATETIME,
+  last_updated DATETIME,
   date_expired DATETIME,
-  scope VARCHAR(255) NOT NULL,
   code VARCHAR(255) ,
   client_id INT NOT NULL,
   user_id INT NOT NULL
@@ -38,8 +38,9 @@ CREATE TABLE IF NOT EXISTS auth_code
 CREATE TABLE IF NOT EXISTS client
 (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  version INT DEFAULT 0,
   date_created DATETIME,
-  date_updated DATETIME,
+  last_updated DATETIME,
   callback VARCHAR(255),
   description VARCHAR(255),
   name VARCHAR(255),
@@ -51,15 +52,35 @@ CREATE TABLE IF NOT EXISTS client
 CREATE TABLE IF NOT EXISTS user
 (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  version INT DEFAULT 0,
   date_created DATETIME,
-  date_updated DATETIME,
+  last_updated DATETIME,
   name VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS permission
 (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  version INT DEFAULT 0,
   date_created DATETIME,
-  date_updated DATETIME,
+  last_updated DATETIME,
   name VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS access_token_scope
+(
+  permission_id INT NOT NULL,
+  access_token_id INT NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS authorization_code_scope
+(
+  permission_id INT NOT NULL,
+  authorization_code_id INT NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS refresh_token_scope
+(
+  permission_id INT NOT NULL,
+  refresh_token_id INT NOT NULL,
 );

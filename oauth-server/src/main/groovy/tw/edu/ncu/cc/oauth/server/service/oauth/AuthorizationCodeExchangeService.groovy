@@ -7,6 +7,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 import tw.edu.ncu.cc.oauth.server.domain.AccessToken
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
@@ -14,7 +15,7 @@ import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.service.domain.AuthorizationCodeService
 import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
 
-
+@Service( "AuthCodeExchangeService" )
 class AuthorizationCodeExchangeService implements TokenExchangeService {
 
     @Autowired

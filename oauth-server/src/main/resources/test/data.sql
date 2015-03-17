@@ -1,4 +1,3 @@
-
 INSERT INTO user ( id, name ) VALUES
   ( 1, 'ADMIN1' ),
   ( 2, 'ADMIN2' ),
