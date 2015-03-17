@@ -47,9 +47,16 @@ public class ResponseBuilder {
                         ), HttpStatus.BAD_REQUEST
                 );
             } else {
-                return new ResponseEntity<>(
-                        resourceBuilder.build() , HttpStatus.OK
-                );
+                Object resource = resourceBuilder.build()
+                if( resource == null ) {
+                    return new ResponseEntity<>(
+                            "resource not found" , HttpStatus.NOT_FOUND
+                    );
+                } else {
+                    return new ResponseEntity<>(
+                            resource , HttpStatus.OK
+                    );
+                }
             }
         }
     }
@@ -66,9 +73,16 @@ public class ResponseBuilder {
         }
 
         public ResponseEntity build() {
-            return new ResponseEntity<>(
-                    resourceBuilder.build() , HttpStatus.OK
-            );
+            Object resource = resourceBuilder.build()
+            if( resource == null ) {
+                return new ResponseEntity<>(
+                        "resource not found" , HttpStatus.NOT_FOUND
+                );
+            } else {
+                return new ResponseEntity<>(
+                        resource , HttpStatus.OK
+                );
+            }
         }
     }
 

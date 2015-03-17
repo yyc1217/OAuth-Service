@@ -1,8 +1,8 @@
 package tw.edu.ncu.cc.oauth.resource.service;
 
 
-import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessToken;
+import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject;
 
 public interface TokenConfirmService {
-    public AccessToken readToken( String accessToken );
+    public AccessTokenObject readToken( String accessToken );
 }

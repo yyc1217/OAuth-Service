@@ -6,6 +6,7 @@ import specification.IntegrationSpecification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
+
 class ClientControllerTest extends IntegrationSpecification {
 
     def targetURL = "/management/v1/application"
@@ -25,27 +26,33 @@ class ClientControllerTest extends IntegrationSpecification {
                                     }
                                     '''
                             )
-                    ).andExpect( status().isOk() ).andReturn()
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
             )
         when:
             server().perform(
                     put( targetURL + "/${createResponse.id}" )
                             .contentType( MediaType.APPLICATION_JSON )
                             .content(
-                                    '''
+                            '''
                                     {
                                       "name" : "NEWNAME",
                                       "callback" : "http://example.com",
                                       "owner" : "ADMIN1"
                                     }
                                     '''
-                            )
-            ).andExpect( status().isOk() )
+                    )
+            ).andExpect(
+                    status().isOk()
+            )
         and:
             def getResponse = JSON(
                     server().perform(
                             get( targetURL + "/${createResponse.id}" )
-                    ).andExpect( status().isOk() ).andReturn()
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
             )
         then:
             getResponse.name == "NEWNAME"
@@ -66,19 +73,25 @@ class ClientControllerTest extends IntegrationSpecification {
                                     }
                                     '''
                             )
-                    ).andExpect( status().isOk() ).andReturn()
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
             )
         when:
             server().perform(
                     delete( targetURL + "/${createResponse.id}" )
-            ).andExpect( status().isOk() )
+            ).andExpect(
+                    status().isOk()
+            )
         then:
             server().perform(
                     get( targetURL + "/${createResponse.id}" )
-            ).andExpect( status().isNotFound() )
+            ).andExpect(
+                    status().isNotFound()
+            )
     }
 
-    def "it can handle secret refresh of Client"() {
+    def "it can handle secret refresh of Client 1"() {
         given:
             def createResponse = JSON(
                     server().perform(
@@ -93,16 +106,29 @@ class ClientControllerTest extends IntegrationSpecification {
                                     }
                                     '''
                             )
-                    ).andExpect( status().isOk() ).andReturn()
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
             )
         when:
             def getResponse = JSON(
                     server().perform(
                             post( targetURL + "/${createResponse.id}/secret" )
-                    ).andExpect( status().isOk() ).andReturn()
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
             )
         then:
             getResponse.secret != createResponse.secret
+    }
+
+    def "it can handle secret refresh of Client 2"() {
+        expect:
+            server().perform(
+                    post( targetURL + "/123/secret" )
+            ).andExpect(
+                    status().isNotFound()
+            )
     }
 
 }

@@ -1,7 +1,9 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
 import specification.IntegrationSpecification
-import tw.edu.ncu.cc.oauth.server.domain.ClientEntity
+
+import tw.edu.ncu.cc.oauth.server.domain.Client
+import tw.edu.ncu.cc.oauth.server.domain.Permission
 
 import static helper.CustomMockMvcResponseMatchers.url
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -18,8 +20,8 @@ class AccessConfirmControllerTest extends IntegrationSpecification {
 
         given:
             def state = "abc123"
-            def scope = [ "READ" ] as Set< String >
-            def client = new ClientEntity( id: 3, callback: "example.com" )
+            def scope = [ Permission.get( 1 ) ]
+            def client = new Client( id: 3, callback: "example.com" )
         expect:
             server().perform(
                     post( targetURL )
@@ -33,8 +35,8 @@ class AccessConfirmControllerTest extends IntegrationSpecification {
                     status().isFound()
             ).andExpect(
                     url()
-                        .param( "error", "access_denied" )
-                        .param( "state", state )
+                            .param( "error", "access_denied" )
+                            .param( "state", state )
             )
     }
 
@@ -56,6 +58,5 @@ class AccessConfirmControllerTest extends IntegrationSpecification {
                     status().isForbidden()
             )
     }
-
 
 }

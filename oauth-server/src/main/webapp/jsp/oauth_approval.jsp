@@ -29,7 +29,7 @@
             For following permissions
             <div class="permission-group">
                 <c:forEach items="${scope}" var="permission">
-                    <div class="permission-item">${permission}</div>
+                    <div class="permission-item">${permission.name}</div>
                 </c:forEach>
             </div>
             <form:form action="${confirm_page}" method="POST">

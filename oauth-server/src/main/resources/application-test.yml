@@ -4,9 +4,13 @@ logging:
 spring:
   datasource:
     initialize: true
-    schema: test/schema.sql
-    data: test/data.sql
+    schema: classpath:test/schema.sql
+    data: classpath:test/data.sql
     sql-script-encoding: UTF-8
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
 
 liquibase:
   enabled: false

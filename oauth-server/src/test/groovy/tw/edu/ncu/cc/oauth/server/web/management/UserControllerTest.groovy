@@ -17,7 +17,9 @@ class UserControllerTest extends IntegrationSpecification {
             def response = JSON(
                     server().perform(
                             get( targetURL + "/ADMIN1/token" )
-                    ).andExpect( status().isOk() ).andReturn()
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
             )
         then:
             response[0].user == "ADMIN1"
@@ -27,7 +29,9 @@ class UserControllerTest extends IntegrationSpecification {
         expect:
             server().perform(
                     get( targetURL + "/NOT_EXIST/token" )
-            ).andExpect( status().isNotFound() )
+            ).andExpect(
+                    status().isNotFound()
+            )
     }
 
     def "it can handle get of specified user's clients 1"() {
@@ -35,7 +39,9 @@ class UserControllerTest extends IntegrationSpecification {
             def response = JSON(
                     server().perform(
                             get( targetURL + "/ADMIN1/application" )
-                    ).andExpect( status().isOk() ).andReturn()
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
             )
         then:
             response[0].owner == "ADMIN1"
@@ -54,7 +60,9 @@ class UserControllerTest extends IntegrationSpecification {
                                     }
                                     '''
                             )
-                    ).andExpect( status().isOk() ).andReturn()
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
             )
         then:
             response.name == "jason"

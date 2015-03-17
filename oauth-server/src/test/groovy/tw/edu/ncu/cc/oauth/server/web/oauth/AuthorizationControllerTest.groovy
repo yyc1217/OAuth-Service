@@ -85,8 +85,8 @@ class AuthorizationControllerTest extends IntegrationSpecification {
                     status().isFound()
             ).andExpect(
                     url()
-                        .param( "error", "invalid_scope" )
-                        .param( "state", "abc123" )
+                            .param( "error", "invalid_scope" )
+                            .param( "state", "abc123" )
             )
     }
 
