@@ -8,6 +8,105 @@
 
     <changeSet id="1" author="unknown">
 
+        <createTable tableName="user">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="2" author="unknown">
+
+        <createTable tableName="client">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="callback" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="secret" type="varchar(255)"/>
+            <column name="url" type="varchar(255)"/>
+            <column name="owner_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="client" baseColumnNames="owner_id"
+                                 referencedTableName="user" referencedColumnNames="id"
+                                 constraintName="fk_lb_Ic9TrT2d5d" />
+
+    </changeSet>
+
+    <changeSet id="3" author="unknown">
+
+        <createTable tableName="permission">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="4" author="unknown">
+
+        <createTable tableName="authorization_code">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="date_expired" type="datetime"/>
+            <column name="code" type="varchar(255)"/>
+            <column name="client_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="authorization_code_scope">
+            <column name="permission_id" type="int"/>
+            <column name="authorization_code_id" type="int"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="authorization_code" baseColumnNames="client_id"
+                                 referencedTableName="client" referencedColumnNames="id"
+                                 constraintName="fk_lb_NeoAlaZyLM" />
+
+        <addForeignKeyConstraint baseTableName="authorization_code" baseColumnNames="user_id"
+                                 referencedTableName="user" referencedColumnNames="id"
+                                 constraintName="fk_lb_mbifLvTQUd" />
+
+        <addForeignKeyConstraint baseTableName="authorization_code_scope" baseColumnNames="permission_id"
+                                 referencedTableName="permission" referencedColumnNames="id"
+                                 constraintName="fk_lb_UECoJvDTkP" />
+
+        <addForeignKeyConstraint baseTableName="authorization_code_scope" baseColumnNames="authorization_code_id"
+                                 referencedTableName="authorization_code" referencedColumnNames="id"
+                                 constraintName="fk_lb_QCWTI9UJxW" />
+
+    </changeSet>
+
+    <changeSet id="5" author="unknown">
+
         <createTable tableName="access_token">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -24,6 +123,32 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <createTable tableName="access_token_scope">
+            <column name="permission_id" type="int"/>
+            <column name="access_token_id" type="int"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="access_token" baseColumnNames="client_id"
+                                 referencedTableName="client" referencedColumnNames="id"
+                                 constraintName="fk_lb_L1J9SpjuDV" />
+
+        <addForeignKeyConstraint baseTableName="access_token" baseColumnNames="user_id"
+                                 referencedTableName="user" referencedColumnNames="id"
+                                 constraintName="fk_lb_NjdzW4kHDR" />
+
+        <addForeignKeyConstraint baseTableName="access_token_scope" baseColumnNames="permission_id"
+                                 referencedTableName="permission" referencedColumnNames="id"
+                                 constraintName="fk_lb_ofbIY5n8gb" />
+
+        <addForeignKeyConstraint baseTableName="access_token_scope" baseColumnNames="access_token_id"
+                                 referencedTableName="access_token" referencedColumnNames="id"
+                                 constraintName="fk_lb_IoEUPlrBNZ" />
+
+    </changeSet>
+
+    <changeSet id="6" author="unknown">
+
 
         <createTable tableName="refresh_token">
             <column name="id" type="int" autoIncrement="true">
@@ -45,74 +170,30 @@
             </column>
         </createTable>
 
-        <createTable tableName="authorization_code">
-            <column name="id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="version" type="int"/>
-            <column name="date_created" type="datetime"/>
-            <column name="last_updated" type="datetime"/>
-            <column name="date_expired" type="datetime"/>
-            <column name="code" type="varchar(255)"/>
-            <column name="client_id" type="int">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user_id" type="int">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="client">
-            <column name="id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="version" type="int"/>
-            <column name="date_created" type="datetime"/>
-            <column name="last_updated" type="datetime"/>
-            <column name="callback" type="varchar(255)"/>
-            <column name="description" type="varchar(255)"/>
-            <column name="name" type="varchar(255)"/>
-            <column name="secret" type="varchar(255)"/>
-            <column name="url" type="varchar(255)"/>
-            <column name="owner_id" type="int">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="user">
-            <column name="id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="version" type="int"/>
-            <column name="date_created" type="datetime"/>
-            <column name="last_updated" type="datetime"/>
-            <column name="name" type="varchar(255)"/>
-        </createTable>
-
-        <createTable tableName="permission">
-            <column name="id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="version" type="int"/>
-            <column name="date_created" type="datetime"/>
-            <column name="last_updated" type="datetime"/>
-            <column name="name" type="varchar(255)"/>
-        </createTable>
-
-        <createTable tableName="access_token_scope">
-            <column name="permission_id" type="int"/>
-            <column name="access_token_id" type="int"/>
-        </createTable>
-
-        <createTable tableName="authorization_code_scope">
-            <column name="permission_id" type="int"/>
-            <column name="authorization_code_id" type="int"/>
-        </createTable>
-
         <createTable tableName="refresh_token_scope">
             <column name="permission_id" type="int"/>
             <column name="refresh_token_id" type="int"/>
         </createTable>
+
+        <addForeignKeyConstraint baseTableName="refresh_token" baseColumnNames="client_id"
+                                 referencedTableName="client" referencedColumnNames="id"
+                                 constraintName="fk_lb_WPqH74W0j9" />
+
+        <addForeignKeyConstraint baseTableName="refresh_token" baseColumnNames="user_id"
+                                 referencedTableName="user" referencedColumnNames="id"
+                                 constraintName="fk_lb_BghgUh5sx7" />
+
+        <addForeignKeyConstraint baseTableName="refresh_token" baseColumnNames="access_token_id"
+                                 referencedTableName="access_token" referencedColumnNames="id"
+                                 constraintName="fk_lb_r1rYCdT9yF" />
+
+        <addForeignKeyConstraint baseTableName="refresh_token_scope" baseColumnNames="permission_id"
+                                 referencedTableName="permission" referencedColumnNames="id"
+                                 constraintName="fk_lb_V4Cztk0kao" />
+
+        <addForeignKeyConstraint baseTableName="refresh_token_scope" baseColumnNames="refresh_token_id"
+                                 referencedTableName="refresh_token" referencedColumnNames="id"
+                                 constraintName="fk_lb_TL70kmzZVA" />
 
     </changeSet>
 
