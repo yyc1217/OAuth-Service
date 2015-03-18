@@ -4,6 +4,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.test.util.AssertionErrors.assertEquals;
@@ -11,13 +13,20 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 public class ResponseURLMatcher implements ResultMatcher {
 
     private Map< String, String > expectedParams;
+    private List< String > expectedExistParams;
 
     protected ResponseURLMatcher() {
         expectedParams = new HashMap<>();
+        expectedExistParams = new LinkedList<>();
     }
 
     public ResponseURLMatcher param( String name, String expectedValue ) {
         expectedParams.put( name, expectedValue );
+        return this;
+    }
+
+    public ResponseURLMatcher paramExist( String name ) {
+        expectedExistParams.add( name );
         return this;
     }
 
@@ -28,6 +37,11 @@ public class ResponseURLMatcher implements ResultMatcher {
 
             for ( Map.Entry< String, String > param : expectedParams.entrySet() ) {
                 assertEquals("response url param", param.getValue(), actualParams.get( param.getKey() ));
+            }
+            for ( String expectedKey : expectedExistParams ) {
+                if( ! actualParams.containsKey( expectedKey ) ) {
+                    throw new AssertionError( "expected url param " + expectedKey + "not exist" );
+                }
             }
         }
     }
