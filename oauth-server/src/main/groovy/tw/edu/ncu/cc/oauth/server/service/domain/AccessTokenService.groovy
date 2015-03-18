@@ -9,14 +9,14 @@ interface AccessTokenService {
     AccessToken createByCode( AccessToken accessToken, String authorizationCode );
 
     AccessToken readUnexpiredByRealToken( String token );
-    AccessToken readUnexpiredByRealToken( String token, Map fetchOption );
+    AccessToken readUnexpiredByRealToken( String token, List includeField );
     AccessToken readUnexpiredById  ( String tokenId );
-    AccessToken readUnexpiredById  ( String tokenId, Map fetchOption );
+    AccessToken readUnexpiredById  ( String tokenId, List includeField );
 
     List< AccessToken > readAllUnexpiredByUserName( String userName );
-    List< AccessToken > readAllUnexpiredByUserName( String userName, Map fetchOption );
+    List< AccessToken > readAllUnexpiredByUserName( String userName, List includeField );
     List< AccessToken > readAllUnexpiredByClientId( String clientId );
-    List< AccessToken > readAllUnexpiredByClientId( String clientId, Map fetchOption );
+    List< AccessToken > readAllUnexpiredByClientId( String clientId, List includeField );
 
     AccessToken revoke( AccessToken accessToken );
 

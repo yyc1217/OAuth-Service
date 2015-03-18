@@ -1,7 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
 import specification.IntegrationSpecification
-
 import tw.edu.ncu.cc.oauth.server.domain.Client
 import tw.edu.ncu.cc.oauth.server.domain.Permission
 
@@ -11,24 +10,22 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-
 class AccessConfirmControllerTest extends IntegrationSpecification {
 
     def targetURL = "/oauth/confirm"
 
-    def "it should return ok if params are correct"() {
-
+    def "it should return 302 if user deny"() {
         given:
             def state = "abc123"
-            def scope = [ Permission.get( 1 ) ]
-            def client = new Client( id: 3, callback: "example.com" )
+            def scope = [ Permission.get( 1 ) ] as Set< Permission >
+            def client = Client.get( 1 )
         expect:
             server().perform(
                     post( targetURL )
                             .sessionAttr( "state", state )
                             .sessionAttr( "scope", scope )
                             .sessionAttr( "client", client )
-                            .with( user( "testman" ) )
+                            .with( user( "ADMIN1" ) )
                             .with( csrf() )
                             .param( "approval", "false" )
             ).andExpect(
@@ -40,11 +37,34 @@ class AccessConfirmControllerTest extends IntegrationSpecification {
             )
     }
 
+    def "it should return 302 if user agree"() {
+        given:
+            def state = "abc123"
+            def scope = [ Permission.get( 1 ) ]
+            def client = Client.get( 1 )
+        expect:
+            server().perform(
+                    post( targetURL )
+                            .sessionAttr( "state", state )
+                            .sessionAttr( "scope", scope )
+                            .sessionAttr( "client", client )
+                            .with( user( "ADMIN1" ) )
+                            .with( csrf() )
+                            .param( "approval", "true" )
+            ).andExpect(
+                    status().isFound()
+            ).andExpect(
+                    url()
+                            .param( "state", state )
+                            .paramExist( "code" )
+            )
+    }
+
     def "it should return 403 if csrf not correct"() {
         expect:
             server().perform(
                     post( targetURL )
-                            .with( user( "testman" ) )
+                            .with( user( "ADMIN1" ) )
             ).andExpect(
                     status().isForbidden()
             )

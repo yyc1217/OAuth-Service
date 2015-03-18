@@ -9,8 +9,8 @@ import tw.edu.ncu.cc.oauth.server.domain.User
 class UserServiceImpl implements UserService {
 
     @Override
-    User readByName( String name, Map fetchOption = [:] ) {
-        return User.findByName( name, [ fetch: fetchOption ] )
+    User readByName( String name, List includeField = [] ) {
+        return User.findByName( name, [ fetch: User.lazyAttrModes.subMap( includeField ) ] )
     }
 
     @Override

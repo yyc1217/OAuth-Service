@@ -44,8 +44,8 @@ class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    Client readByID( String id, Map fetchOption = [:] ) {
-        return Client.findById( id as long, [ fetch: fetchOption ] )
+    Client readByID( String id, List includeField = [] ) {
+        return Client.findById( id as long, [ fetch: Client.lazyAttrModes.subMap( includeField ) ] )
     }
 
     @Override

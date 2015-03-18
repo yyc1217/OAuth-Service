@@ -25,9 +25,9 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     }
 
     @Override
-    AuthorizationCode readUnexpiredByRealCode( String code, Map fetchOption = [:] ) {
+    AuthorizationCode readUnexpiredByRealCode( String code, List includeField = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( code )
-        AuthorizationCode authorizationCode = readUnexpiredById( serialSecret.id as String )
+        AuthorizationCode authorizationCode = readUnexpiredById( serialSecret.id as String, includeField )
         if( authorizationCode != null && secretService.matchesSecret( serialSecret.secret, authorizationCode.code ) ) {
             return authorizationCode
         } else {
@@ -36,29 +36,29 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     }
 
     @Override
-    AuthorizationCode readUnexpiredById( String codeId, Map fetchOption = [:] ) {
+    AuthorizationCode readUnexpiredById( String codeId, List includeField = [] ) {
         return AuthorizationCode.where{
             id == "${codeId}" as long && dateExpired > new Date()
         }.find(
-            [ fetch: fetchOption ]
+            [ fetch: AuthorizationCode.lazyAttrModes.subMap( includeField ) ]
         )
     }
 
     @Override
-    List< AuthorizationCode > readAllUnexpiredByUserName( String userName, Map fetchOption = [:] ) {
+    List< AuthorizationCode > readAllUnexpiredByUserName( String userName, List includeField = [] ) {
         return AuthorizationCode.where{
             user.name == "${userName}" && dateExpired > new Date()
         }.list(
-            [ fetch: fetchOption ]
+            [ fetch: AuthorizationCode.lazyAttrModes.subMap( includeField ) ]
         )
     }
 
     @Override
-    List< AuthorizationCode > readAllUnexpiredByClientId( String clientId, Map fetchOption = [:] ) {
+    List< AuthorizationCode > readAllUnexpiredByClientId( String clientId, List includeField = [] ) {
         return AuthorizationCode.where{
             client.id == "${clientId}" as long && dateExpired > new Date()
         }.list(
-            [ fetch: fetchOption ]
+            [ fetch: AuthorizationCode.lazyAttrModes.subMap( includeField ) ]
         )
     }
 

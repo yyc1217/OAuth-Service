@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ClientAccessTokenObject
 import tw.edu.ncu.cc.oauth.server.domain.AccessToken
-import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder
 import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
+
+import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
+import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 
 @RestController
 @RequestMapping( value = "management/v1/token" )
@@ -25,52 +27,40 @@ public class TokenController {
 
     @RequestMapping( value = "{id}", method = RequestMethod.GET )
     public ResponseEntity getTokenById( @PathVariable( "id" ) final String id ) {
-        return ResponseBuilder
-                .noneValidation()
-                .resource( new ResponseBuilder.ResourceBuilder() {
-                    @Override
-                    public Object build() {
-                        return conversionService.convert(
-                                accessTokenService.readUnexpiredById( id, [ client: 'join', user: 'join', scope: 'eager' ] ), ClientAccessTokenObject.class
-                        );
-                    }
-                } )
-                .build();
+        respondWith(
+            resource()
+            .pipe {
+                return conversionService.convert(
+                        accessTokenService.readUnexpiredById( id, [ 'client', 'user', 'scope' ] ), ClientAccessTokenObject.class
+                );
+            }
+        )
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
     public ResponseEntity deleteTokenById( @PathVariable( "id" ) final String id ) {
-        return ResponseBuilder
-                .noneValidation()
-                .resource( new ResponseBuilder.ResourceBuilder() {
-                    @Override
-                    public Object build() {
-                        AccessToken accessToken = accessTokenService.readUnexpiredById( id, [ client: 'join', user: 'join', scope: 'eager' ] )
-                        if( accessToken == null ) {
-                            return null
-                        } else {
-                            return conversionService.convert(
-                                    accessTokenService.revoke( accessToken ), ClientAccessTokenObject.class
-                            );
-                        }
-                    }
-                } )
-                .build();
+        respondWith(
+            resource()
+            .pipe {
+                accessTokenService.readUnexpiredById( id, [ 'client', 'user', 'scope' ] )
+            }.pipe { AccessToken accessToken ->
+                conversionService.convert(
+                        accessTokenService.revoke( accessToken ), ClientAccessTokenObject.class
+                );
+            }
+        )
     }
 
     @RequestMapping( value = "string/{token}", method = RequestMethod.GET )
     public ResponseEntity getTokenByString( @PathVariable( "token" ) final String token ) {
-        return ResponseBuilder
-                .noneValidation()
-                .resource( new ResponseBuilder.ResourceBuilder() {
-                    @Override
-                    public Object build() {
-                        return conversionService.convert(
-                                accessTokenService.readUnexpiredByRealToken( token, [ scope: 'eager', user: 'join' ] ), AccessTokenObject.class
-                        );
-                    }
-                } )
-                .build();
+        respondWith(
+            resource()
+            .pipe {
+                conversionService.convert(
+                        accessTokenService.readUnexpiredByRealToken( token, [ 'user', 'scope' ] ), AccessTokenObject.class
+                );
+            }
+        )
     }
 
 }

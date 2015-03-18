@@ -8,14 +8,14 @@ interface AuthorizationCodeService {
     AuthorizationCode create( AuthorizationCode authorizationCode );
 
     AuthorizationCode readUnexpiredByRealCode( String code );
-    AuthorizationCode readUnexpiredByRealCode( String code, Map fetchOption );
+    AuthorizationCode readUnexpiredByRealCode( String code, List includeField );
     AuthorizationCode readUnexpiredById( String codeId );
-    AuthorizationCode readUnexpiredById( String codeId, Map fetchOption );
+    AuthorizationCode readUnexpiredById( String codeId, List includeField );
 
     List< AuthorizationCode > readAllUnexpiredByUserName( String userName );
-    List< AuthorizationCode > readAllUnexpiredByUserName( String userName, Map fetchOption );
+    List< AuthorizationCode > readAllUnexpiredByUserName( String userName, List includeField );
     List< AuthorizationCode > readAllUnexpiredByClientId( String clientId );
-    List< AuthorizationCode > readAllUnexpiredByClientId( String clientId, Map fetchOption );
+    List< AuthorizationCode > readAllUnexpiredByClientId( String clientId, List includeField );
 
     AuthorizationCode revokeByID( String codeId );
 

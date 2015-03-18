@@ -26,4 +26,10 @@ class AuthorizationCode implements Auditable, Expireable {
         dateExpired > timeNow()
     }
 
+    static lazyAttrModes =  [
+        'user'   : 'join',
+        'client' : 'join',
+        'scope'  : 'eager'
+    ]
+
 }

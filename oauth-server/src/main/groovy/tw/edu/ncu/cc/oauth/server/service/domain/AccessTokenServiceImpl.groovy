@@ -44,9 +44,9 @@ class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
-    AccessToken readUnexpiredByRealToken( String token, Map fetchOption = [:] ) {
+    AccessToken readUnexpiredByRealToken( String token, List includeField = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( token )
-        AccessToken accessToken = readUnexpiredById( serialSecret.id as String, fetchOption )
+        AccessToken accessToken = readUnexpiredById( serialSecret.id as String, includeField )
         if( accessToken != null && secretService.matchesSecret( serialSecret.secret, accessToken.token ) ) {
             return accessToken
         } else {
@@ -55,29 +55,29 @@ class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
-    AccessToken readUnexpiredById( String tokenId, Map fetchOption = [:] ) {
+    AccessToken readUnexpiredById( String tokenId, List includeField = [] ) {
         return AccessToken.where {
             id == "${tokenId}" as long && dateExpired > new Date()
         }.find(
-            [ fetch: fetchOption ]
+            [ fetch: AccessToken.lazyAttrModes.subMap( includeField ) ]
         )
     }
 
     @Override
-    List< AccessToken > readAllUnexpiredByUserName( String userName, Map fetchOption = [:] ) {
+    List< AccessToken > readAllUnexpiredByUserName( String userName, List includeField = [] ) {
         return AccessToken.where {
             user.name == "${userName}" && dateExpired > new Date()
         }.list(
-            [ fetch: fetchOption ]
+            [ fetch: AccessToken.lazyAttrModes.subMap( includeField ) ]
         )
     }
 
     @Override
-    List< AccessToken > readAllUnexpiredByClientId( String clientId, Map fetchOption = [:] ) {
+    List< AccessToken > readAllUnexpiredByClientId( String clientId, List includeField = [] ) {
         return AccessToken.where {
             client.id == "${clientId}" as long && dateExpired > new Date()
         }.list(
-            [ fetch: fetchOption ]
+            [ fetch: AccessToken.lazyAttrModes.subMap( includeField ) ]
         )
     }
 

@@ -13,9 +13,11 @@ import tw.edu.ncu.cc.oauth.data.v1.management.user.UserObject
 import tw.edu.ncu.cc.oauth.server.domain.AccessToken
 import tw.edu.ncu.cc.oauth.server.domain.Client
 import tw.edu.ncu.cc.oauth.server.domain.User
-import tw.edu.ncu.cc.oauth.server.helper.ResponseBuilder
 import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.service.domain.UserService
+
+import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
+import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 
 @RestController
 @RequestMapping( value = "management/v1/user" )
@@ -33,62 +35,48 @@ public class UserController {
     @SuppressWarnings( "unchecked" )
     @RequestMapping( value = "{userName}/token", method = RequestMethod.GET )
     public ResponseEntity getUserTokens( @PathVariable( "userName" ) final String userName ) {
-        return ResponseBuilder
-                .noneValidation()
-                .resource( new ResponseBuilder.ResourceBuilder() {
-                    @Override
-                    public Object build() {
-                        if( userService.readByName( userName ) == null ) {
-                            return null
-                        }  else {
-                            return conversionService.convert(
-                                    accessTokenService.readAllUnexpiredByUserName( userName, [ user: 'join', scope: 'eager' ] ),
-                                    TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( AccessToken.class ) ),
-                                    TypeDescriptor.array( TypeDescriptor.valueOf( AccessTokenObject.class ) )
-                            );
-                        }
-                    }
-                } )
-                .build();
+        respondWith(
+            resource()
+            .pipe {
+                userService.readByName( userName )
+            }.pipe {
+                conversionService.convert(
+                        accessTokenService.readAllUnexpiredByUserName( userName, [ 'user', 'scope' ] ),
+                        TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( AccessToken.class ) ),
+                        TypeDescriptor.array( TypeDescriptor.valueOf( AccessTokenObject.class ) )
+                );
+            }
+        )
     }
 
     @SuppressWarnings( "unchecked" )
     @RequestMapping( value = "{userName}/application", method = RequestMethod.GET )
     public ResponseEntity getUserApplications( @PathVariable( "userName" ) final String userName ) {
-        return ResponseBuilder
-                .noneValidation()
-                .resource( new ResponseBuilder.ResourceBuilder() {
-                    @Override
-                    public Object build() {
-                        User user = userService.readByName( userName, [ clients: 'eager' ] )
-                        if( user == null ) {
-                            return null
-                        } else {
-                            return conversionService.convert(
-                                    user.clients,
-                                    TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( Client.class ) ),
-                                    TypeDescriptor.array( TypeDescriptor.valueOf( IdClientObject.class ) )
-                            );
-                        }
-                    }
-                } )
-                .build();
+        respondWith(
+            resource()
+            .pipe {
+                userService.readByName( userName, [ 'clients' ] )
+            }.pipe { User user ->
+                conversionService.convert(
+                        user.clients,
+                        TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( Client.class ) ),
+                        TypeDescriptor.array( TypeDescriptor.valueOf( IdClientObject.class ) )
+                );
+            }
+        )
     }
 
     @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity createUserIfNotExist( @Validated @RequestBody final UserObject userObject, BindingResult result ) {
-        return ResponseBuilder
-                .validation()
-                .errors( result )
-                .resource( new ResponseBuilder.ResourceBuilder() {
-                    @Override
-                    public Object build() {
-                        return conversionService.convert(
-                                userService.createWithNameIfNotExist( userObject.getName() ), UserObject.class
-                        );
-                    }
-                } )
-                .build();
+    public ResponseEntity createUserIfNotExist( @Validated @RequestBody final UserObject userObject, BindingResult validation ) {
+        respondWith(
+            resource()
+            .validate( validation )
+            .pipe {
+                conversionService.convert(
+                        userService.createWithNameIfNotExist( userObject.getName() ), UserObject.class
+                );
+            }
+        )
     }
 
 }

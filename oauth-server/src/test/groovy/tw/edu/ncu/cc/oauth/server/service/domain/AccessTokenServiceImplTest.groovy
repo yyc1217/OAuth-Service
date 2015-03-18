@@ -21,11 +21,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
             accessToken.scope = [ Permission.get( 1 ) ]
         when:
             def token = accessTokenService.readUnexpiredById(
-                    accessTokenService.create( accessToken ).id as String, [
-                        client: 'join',
-                        user: 'join',
-                        scope: 'eager'
-                    ]
+                    accessTokenService.create( accessToken ).id as String, [ 'client', 'user', 'scope' ]
             )
         then:
             token.client.name == 'APP1'

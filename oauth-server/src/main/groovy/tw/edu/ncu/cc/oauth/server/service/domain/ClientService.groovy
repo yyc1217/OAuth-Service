@@ -9,7 +9,7 @@ interface ClientService {
     Client update( Client client )
     Client delete( Client client )
     Client readByID( String id )
-    Client readByID( String id, Map fetchOption )
+    Client readByID( String id, List includeField )
     Client refreshSecret( Client client )
     boolean isIdSecretValid( String id, String secret )
 

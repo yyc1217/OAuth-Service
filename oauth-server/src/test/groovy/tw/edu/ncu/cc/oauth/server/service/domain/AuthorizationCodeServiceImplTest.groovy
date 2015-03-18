@@ -23,11 +23,7 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
             )
         when:
             def code = authorizationCodeService.readUnexpiredById(
-                    authorizationCodeService.create( authorizationCode ).id as String, [
-                            client: 'join',
-                            user: 'join',
-                            scope: 'eager'
-                    ]
+                    authorizationCodeService.create( authorizationCode ).id as String, [ 'client', 'user', 'scope' ]
             )
         then:
             code.client.name == 'APP1'
