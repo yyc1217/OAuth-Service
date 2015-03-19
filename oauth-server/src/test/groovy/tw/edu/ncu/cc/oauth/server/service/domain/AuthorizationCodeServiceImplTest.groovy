@@ -83,8 +83,8 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
 
     def "it can check if authorization code is unexpired and binded with specified client"() {
         expect:
-            authorizationCodeService.isCodeUnexpiredWithClientId( 'Mzo6OkNPREU=', '3' )
-            ! authorizationCodeService.isCodeUnexpiredWithClientId( 'abc', '3' )
+            authorizationCodeService.isCodeUnexpiredWithClientId( 'Mzo6OkNPREU=', serialId( 3 ) )
+            ! authorizationCodeService.isCodeUnexpiredWithClientId( 'abc', serialId( 3 ) )
     }
 
 }

@@ -44,7 +44,7 @@ public final class AuthorizationController {
 
             model.addAttribute( "state", oauthRequest.getState() == null ? "" : oauthRequest.getState() );
             model.addAttribute( "scope", convertToPermissions( oauthRequest.getScopes() ) );
-            model.addAttribute( "client", clientService.readByID( oauthRequest.getClientId() ) );
+            model.addAttribute( "client", clientService.readBySerialId( oauthRequest.getClientId() ) );
             model.addAttribute( "user_id", authentication.getName() );
             model.addAttribute( "confirm_page", request.getContextPath() + "/oauth/confirm" );
 
@@ -76,7 +76,7 @@ public final class AuthorizationController {
         String clientState = oauthRequest.getState();
         String clientID    = oauthRequest.getClientId();
 
-        Client client = clientService.readByID( clientID )
+        Client client = clientService.readBySerialId( clientID )
         if( client == null ) {
             throw OAuthProblemBuilder
                     .error( OAuthError.CodeResponse.INVALID_REQUEST )

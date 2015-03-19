@@ -1,5 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.converter
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ClientAccessTokenObject
@@ -9,7 +10,8 @@ import tw.edu.ncu.cc.oauth.server.helper.ScopeHelper
 @Component
 class AccessToken_ClientAccessTokenConverter implements Converter< AccessToken, ClientAccessTokenObject >{
 
-    def client_idClientObjectConverter = new Client_IdClientObjectConverter()
+    @Autowired
+    def Client_IdClientObjectConverter client_idClientObjectConverter
 
     @Override
     ClientAccessTokenObject convert( AccessToken source ) {

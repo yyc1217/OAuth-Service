@@ -44,13 +44,15 @@ class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    Client readByID( String id, List includeField = [] ) {
-        return Client.findById( id as long, [ fetch: Client.lazyAttrModes.subMap( includeField ) ] )
+    Client readBySerialId( String serialId, List includeField = [] ) {
+        return Client.findById(
+                secretService.decodeHashId( serialId ), [ fetch: Client.lazyAttrModes.subMap( includeField ) ]
+        )
     }
 
     @Override
-    boolean isIdSecretValid( String id, String secret ) {
-        Client client = readByID( id )
+    boolean isSerialIdSecretValid( String serialId, String secret ) {
+        Client client = readBySerialId( serialId )
         if( client == null ) {
             return false
         } else {

@@ -16,7 +16,7 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
             server().perform(
                     post( targetURL )
                             .param( "grant_type", "error" )
-                            .param( "client_id", "3" )
+                            .param( "client_id", serialId( 3 ) )
                             .param( "client_secret", "SECRET" )
                             .param( "code", "CODE" )
             ).andExpect(
@@ -29,7 +29,7 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
             server().perform(
                     post( targetURL )
                             .param( "grant_type", "authorization_code" )
-                            .param( "client_id", "4" )
+                            .param( "client_id", serialId( 4 ) )
                             .param( "client_secret", "SECRET" )
                             .param( "code", "CODE" )
             ).andExpect(
@@ -43,7 +43,7 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
                     post( targetURL )
                             .contentType( MediaType.APPLICATION_FORM_URLENCODED )
                             .param( "grant_type", "authorization_code" )
-                            .param( "client_id", "3" )
+                            .param( "client_id", serialId( 3 ) )
                             .param( "client_secret", "SECRET" )
                             .param( "code", "INVALID" )
             ).andExpect(
@@ -59,7 +59,7 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
                             post( targetURL )
                                     .contentType( MediaType.APPLICATION_FORM_URLENCODED )
                                     .param( "grant_type", "authorization_code" )
-                                    .param( "client_id", "3" )
+                                    .param( "client_id", serialId( 3 ) )
                                     .param( "client_secret", "SECRET" )
                                     .param( "code", "Mzo6OkNPREU=" )
                     ).andExpect(
