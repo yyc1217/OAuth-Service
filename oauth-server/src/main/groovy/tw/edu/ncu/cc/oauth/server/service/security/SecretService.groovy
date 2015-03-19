@@ -13,4 +13,7 @@ interface SecretService {
     String encodeSerialSecret( SerialSecret serialSecret )
     SerialSecret decodeSerialSecret( String encodedSerialSecret )
 
+    String encodeHashId( long id )
+    long decodeHashId( String hashId )
+
 }
