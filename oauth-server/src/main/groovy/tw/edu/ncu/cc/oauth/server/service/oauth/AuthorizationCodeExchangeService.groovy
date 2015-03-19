@@ -39,7 +39,7 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
 
     private void validateOauthRequest( OAuthTokenRequest request ) throws OAuthProblemException, OAuthSystemException {
 
-        String clientID    = request.getClientId();
+        String clientID     = request.getClientId();
         String clientSecret = request.getClientSecret();
         String authCode     = request.getCode();
 
@@ -50,7 +50,7 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
                 )
         );
 
-        if ( ! clientService.isIdSecretValid( clientID, clientSecret ) ) {
+        if ( ! clientService.isSerialIdSecretValid( clientID, clientSecret ) ) {
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.INVALID_CLIENT, "INVALID CLIENT"
             );

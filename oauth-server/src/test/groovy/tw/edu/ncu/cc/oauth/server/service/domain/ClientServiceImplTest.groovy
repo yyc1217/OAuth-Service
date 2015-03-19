@@ -30,13 +30,13 @@ class ClientServiceImplTest extends SpringSpecification {
     @Transactional
     def "it can update exist client"() {
         given:
-            def client = clientService.readByID( 1 as String )
+            def client = clientService.readBySerialId( serialId( 1 ) )
         when:
             client.name = 'newname'
         and:
             clientService.update( client )
         then:
-            clientService.readByID( 1 as String ).name == 'newname'
+            clientService.readBySerialId( serialId( 1 ) ).name == 'newname'
     }
 
     def "it can delete client"() {
@@ -53,13 +53,13 @@ class ClientServiceImplTest extends SpringSpecification {
         when:
             clientService.delete( client )
         then:
-            clientService.readByID( client.id as String ) == null
+            clientService.readBySerialId( serialId( client.id ) ) == null
     }
 
     def "it can validate the client id and secret"() {
         expect:
-            clientService.isIdSecretValid( "3", "SECRET" )
-            ! clientService.isIdSecretValid( "3", "SECR" )
+            clientService.isSerialIdSecretValid( serialId( 3 ), "SECRET" )
+            ! clientService.isSerialIdSecretValid( serialId( 3 ), "SECR" )
     }
 
     def "it can refresh client secret"() {
@@ -74,13 +74,13 @@ class ClientServiceImplTest extends SpringSpecification {
                     )
             )
         and:
-            def clientId = client.id as String
+            def clientSerialId = serialId( client.id )
         and:
-            def originSecret = clientService.readByID( clientId ).secret
+            def originSecret = clientService.readBySerialId( clientSerialId ).secret
         when:
-            clientService.refreshSecret( clientService.readByID( clientId ) )
+            clientService.refreshSecret( clientService.readBySerialId( clientSerialId ) )
         then:
-            clientService.readByID( clientId ).secret != originSecret
+            clientService.readBySerialId( clientSerialId ).secret != originSecret
     }
 
 }

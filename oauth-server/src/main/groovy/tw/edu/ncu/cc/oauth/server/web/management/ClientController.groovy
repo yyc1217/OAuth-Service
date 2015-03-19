@@ -58,7 +58,7 @@ public class ClientController {
             resource()
             .pipe {
                 conversionService.convert(
-                        clientService.readByID( appID, [ 'owner' ] ), IdClientObject.class
+                        clientService.readBySerialId( appID, [ 'owner' ] ), IdClientObject.class
                 );
             }
         )
@@ -71,7 +71,7 @@ public class ClientController {
             resource()
             .validate( validation )
             .pipe {
-                clientService.readByID( appID, [ 'owner' ] )
+                clientService.readBySerialId( appID, [ 'owner' ] )
             }.pipe { Client client ->
                 client.name = clientObject.name
                 client.url = clientObject.url
@@ -90,7 +90,7 @@ public class ClientController {
         respondWith(
             resource()
             .pipe {
-                clientService.readByID( appID, [ 'owner' ] )
+                clientService.readBySerialId( appID, [ 'owner' ] )
             }.pipe { Client client ->
                 conversionService.convert(
                         clientService.delete( client ), IdClientObject.class
@@ -104,7 +104,7 @@ public class ClientController {
         respondWith(
             resource()
             .pipe {
-                clientService.readByID( appID, [ 'owner' ] )
+                clientService.readBySerialId( appID, [ 'owner' ] )
             }.pipe { Client client ->
                 conversionService.convert(
                         clientService.refreshSecret( client ), SecretIdClientObject.class
