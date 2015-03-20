@@ -2,9 +2,10 @@ package tw.edu.ncu.cc.oauth.server.domain
 
 import grails.persistence.Entity
 import tw.edu.ncu.cc.oauth.server.domain.concern.Auditable
+import tw.edu.ncu.cc.oauth.server.domain.concern.Lazyable
 
 @Entity
-class Client implements Auditable {
+class Client implements Auditable, Lazyable {
 
     String secret
     String name
@@ -24,7 +25,7 @@ class Client implements Auditable {
         url nullable: true, blank: true
     }
 
-    static lazyAttrModes = [
+    static attrFetchModes = [
         'owner'  : 'join',
         'codes'  : 'eager',
         'tokens' : 'eager'

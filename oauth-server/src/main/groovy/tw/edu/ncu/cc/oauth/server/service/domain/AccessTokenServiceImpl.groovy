@@ -59,7 +59,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
         return AccessToken.where {
             id == "${tokenId}" as long && dateExpired > new Date()
         }.find(
-            [ fetch: AccessToken.lazyAttrModes.subMap( includeField ) ]
+            [ fetch: AccessToken.attrFetchModeMap( includeField ) ]
         )
     }
 
@@ -68,7 +68,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
         return AccessToken.where {
             user.name == "${userName}" && dateExpired > new Date()
         }.list(
-            [ fetch: AccessToken.lazyAttrModes.subMap( includeField ) ]
+            [ fetch: AccessToken.attrFetchModeMap( includeField ) ]
         )
     }
 
@@ -77,7 +77,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
         return AccessToken.where {
             client.id == "${clientId}" as long && dateExpired > new Date()
         }.list(
-            [ fetch: AccessToken.lazyAttrModes.subMap( includeField ) ]
+            [ fetch: AccessToken.attrFetchModeMap( includeField ) ]
         )
     }
 

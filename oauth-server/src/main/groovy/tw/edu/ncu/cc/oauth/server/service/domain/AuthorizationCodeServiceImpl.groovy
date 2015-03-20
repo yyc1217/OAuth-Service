@@ -40,7 +40,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
         return AuthorizationCode.where{
             id == "${codeId}" as long && dateExpired > new Date()
         }.find(
-            [ fetch: AuthorizationCode.lazyAttrModes.subMap( includeField ) ]
+            [ fetch: AuthorizationCode.attrFetchModeMap( includeField ) ]
         )
     }
 
@@ -49,7 +49,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
         return AuthorizationCode.where{
             user.name == "${userName}" && dateExpired > new Date()
         }.list(
-            [ fetch: AuthorizationCode.lazyAttrModes.subMap( includeField ) ]
+            [ fetch: AuthorizationCode.attrFetchModeMap( includeField ) ]
         )
     }
 
@@ -58,7 +58,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
         return AuthorizationCode.where{
             client.id == "${clientId}" as long && dateExpired > new Date()
         }.list(
-            [ fetch: AuthorizationCode.lazyAttrModes.subMap( includeField ) ]
+            [ fetch: AuthorizationCode.attrFetchModeMap( includeField ) ]
         )
     }
 

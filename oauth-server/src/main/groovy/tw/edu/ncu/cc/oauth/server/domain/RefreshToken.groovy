@@ -3,9 +3,10 @@ package tw.edu.ncu.cc.oauth.server.domain
 import grails.persistence.Entity
 import tw.edu.ncu.cc.oauth.server.domain.concern.Auditable
 import tw.edu.ncu.cc.oauth.server.domain.concern.Expireable
+import tw.edu.ncu.cc.oauth.server.domain.concern.Lazyable
 
 @Entity
-class RefreshToken implements Auditable, Expireable {
+class RefreshToken implements Auditable, Expireable, Lazyable {
 
     String token
     AccessToken accessToken
@@ -27,7 +28,7 @@ class RefreshToken implements Auditable, Expireable {
         dateExpired > timeNow()
     }
 
-    static lazyAttrModes = [
+    static attrFetchModes = [
         'user'   : 'join',
         'client' : 'join',
         'scope'  : 'eager'

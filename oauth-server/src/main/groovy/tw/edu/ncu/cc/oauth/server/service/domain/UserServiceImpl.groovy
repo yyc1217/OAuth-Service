@@ -10,7 +10,7 @@ class UserServiceImpl implements UserService {
 
     @Override
     User readByName( String name, List includeField = [] ) {
-        return User.findByName( name, [ fetch: User.lazyAttrModes.subMap( includeField ) ] )
+        return User.findByName( name, [ fetch: User.attrFetchModeMap( includeField ) ] )
     }
 
     @Override

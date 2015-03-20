@@ -46,7 +46,7 @@ class ClientServiceImpl implements ClientService {
     @Override
     Client readBySerialId( String serialId, List includeField = [] ) {
         return Client.findById(
-                secretService.decodeHashId( serialId ), [ fetch: Client.lazyAttrModes.subMap( includeField ) ]
+                secretService.decodeHashId( serialId ), [ fetch: Client.attrFetchModeMap( includeField ) ]
         )
     }
 
