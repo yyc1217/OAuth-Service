@@ -6,5 +6,5 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException
 
 
 interface TokenExchangeService {
-    public String createToken( OAuthTokenRequest request, long expireSeconds ) throws OAuthProblemException, OAuthSystemException;
+    public String buildResonseMessage( OAuthTokenRequest request, long expireSeconds ) throws OAuthProblemException, OAuthSystemException;
 }

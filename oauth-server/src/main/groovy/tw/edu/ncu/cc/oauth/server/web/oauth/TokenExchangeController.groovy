@@ -1,7 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
-import org.apache.oltu.oauth2.as.response.OAuthASResponse
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
@@ -17,7 +16,6 @@ import tw.edu.ncu.cc.oauth.server.service.oauth.TokenExchangeService
 
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 import static org.apache.oltu.oauth2.common.message.types.GrantType.AUTHORIZATION_CODE
 import static org.apache.oltu.oauth2.common.message.types.GrantType.REFRESH_TOKEN
@@ -72,15 +70,8 @@ public class TokenExchangeController {
     }
 
     private String buildSuccessMessage( OAuthTokenRequest tokenRequest ) throws OAuthProblemException, OAuthSystemException {
-        return OAuthASResponse
-            .tokenResponse( HttpServletResponse.SC_OK )
-            .setAccessToken(
-                    decideTokenService( tokenRequest ).createToken( tokenRequest, accessTokenExpireSeconds )
-            )
-            .setTokenType( "Bearer" )
-            .setExpiresIn( accessTokenExpireSeconds + "" )
-            .buildJSONMessage()
-            .getBody();
+        return decideTokenService( tokenRequest )
+                .buildResonseMessage( tokenRequest, accessTokenExpireSeconds )
     }
 
     private TokenExchangeService decideTokenService( OAuthTokenRequest tokenRequest ) throws OAuthProblemException {
