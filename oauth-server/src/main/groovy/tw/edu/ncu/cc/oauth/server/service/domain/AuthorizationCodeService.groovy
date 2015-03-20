@@ -17,7 +17,7 @@ interface AuthorizationCodeService {
     List< AuthorizationCode > readAllUnexpiredByClientId( String clientId );
     List< AuthorizationCode > readAllUnexpiredByClientId( String clientId, List includeField );
 
-    AuthorizationCode revokeByID( String codeId );
+    AuthorizationCode revoke( AuthorizationCode authorizationCode );
 
     boolean isCodeUnexpiredWithClientId( String authCode, String clientID );
 }

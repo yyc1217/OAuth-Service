@@ -63,14 +63,9 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     }
 
     @Override
-    AuthorizationCode revokeByID( String codeId ) {
-        AuthorizationCode authorizationCode = readUnexpiredById( codeId )
-        if( authorizationCode == null ) {
-            return null
-        }  else {
-            authorizationCode.revoke()
-            authorizationCode.save( failOnError: true, flush: true )
-        }
+    AuthorizationCode revoke( AuthorizationCode authorizationCode ) {
+        authorizationCode.revoke()
+        authorizationCode.save( failOnError: true, flush: true )
     }
 
     @Override

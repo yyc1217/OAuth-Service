@@ -73,10 +73,8 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
             )
         when:
             def codeId = authorizationCode.id as String
-        then:
-            authorizationCodeService.readUnexpiredById( codeId ) != null
-        when:
-            authorizationCodeService.revokeByID( codeId )
+        and:
+            authorizationCodeService.revoke( authorizationCodeService.readUnexpiredById( codeId ) )
         then:
             authorizationCodeService.readUnexpiredById( codeId ) == null
     }

@@ -34,7 +34,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
         if( code == null ) {
             return null
         } else {
-            authorizationCodeService.revokeByID( code.id as String )
+            authorizationCodeService.revoke( code )
             accessToken.client = code.client
             accessToken.scope = code.scope
             accessToken.user = code.user
