@@ -42,9 +42,9 @@ class AccessTokenServiceImplTest extends SpringSpecification {
         then:
             authorizationCodeService.readUnexpiredByRealCode( authorizationCode.code ) != null
         when:
-            def token = accessTokenService.createByCode( new AccessToken(
+            def token = accessTokenService.createByAuthorizationCode( new AccessToken(
                     dateExpired: laterTime()
-            ), authorizationCode.code )
+            ), authorizationCode )
         then:
             authorizationCodeService.readUnexpiredByRealCode( authorizationCode.code ) == null
         and:

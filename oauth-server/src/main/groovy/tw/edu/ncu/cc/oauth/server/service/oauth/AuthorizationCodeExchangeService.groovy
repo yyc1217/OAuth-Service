@@ -68,11 +68,11 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
     }
 
     private String prepareAccessToken( OAuthTokenRequest request, long expireSeconds ) {
-        return accessTokenService.createByCode(
+        return accessTokenService.createByAuthorizationCode(
                 new AccessToken(
                         dateExpired: dicideExpireDate( expireSeconds )
                 ),
-                request.getCode()
+                authCodeService.readUnexpiredByRealCode( request.getCode(), [ 'client', 'scope', 'user' ] )
         ).getToken();
     }
 

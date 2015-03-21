@@ -31,18 +31,13 @@ class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
-    AccessToken createByCode( AccessToken accessToken, String authorizationCode ) {
-        AuthorizationCode code = authorizationCodeService.readUnexpiredByRealCode( authorizationCode )
-        if( code == null ) {
-            return null
-        } else {
-            authorizationCodeService.revoke( code )
-            accessToken.client = code.client
-            accessToken.scope = code.scope
-            accessToken.user = code.user
-            code.discard()
-            return create( accessToken )
-        }
+    AccessToken createByAuthorizationCode( AccessToken accessToken, AuthorizationCode authorizationCode ) {
+        authorizationCodeService.revoke( authorizationCode )
+        accessToken.client = authorizationCode.client
+        accessToken.scope = authorizationCode.scope
+        accessToken.user = authorizationCode.user
+        authorizationCode.discard()
+        return create( accessToken )
     }
 
     @Override
