@@ -51,14 +51,14 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
 
     def "it can read unexpired authorization codes by client id"() {
         expect:
-            authorizationCodeService.readAllUnexpiredByClientId( '2' ).size() == 0
-            authorizationCodeService.readAllUnexpiredByClientId( '3' ).size() == 1
+            authorizationCodeService.readAllUnexpiredByClient( Client.get( 2 ) ).size() == 0
+            authorizationCodeService.readAllUnexpiredByClient( Client.get( 3 ) ).size() == 1
     }
 
     def "it can read unexpired authorization codes by user name"() {
         expect:
-            authorizationCodeService.readAllUnexpiredByUserName( 'ADMIN2' ).size() == 0
-            authorizationCodeService.readAllUnexpiredByUserName( 'ADMIN3' ).size() == 1
+            authorizationCodeService.readAllUnexpiredByUser( User.get( 2 ) ).size() == 0
+            authorizationCodeService.readAllUnexpiredByUser( User.get( 3 ) ).size() == 1
     }
 
     def "it can revoke authorization code by id"() {
@@ -73,10 +73,8 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
             )
         when:
             def codeId = authorizationCode.id as String
-        then:
-            authorizationCodeService.readUnexpiredById( codeId ) != null
-        when:
-            authorizationCodeService.revokeByID( codeId )
+        and:
+            authorizationCodeService.revoke( authorizationCodeService.readUnexpiredById( codeId ) )
         then:
             authorizationCodeService.readUnexpiredById( codeId ) == null
     }

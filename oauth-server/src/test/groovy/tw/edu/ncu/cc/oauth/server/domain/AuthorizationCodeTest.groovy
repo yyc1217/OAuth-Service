@@ -23,9 +23,7 @@ class AuthorizationCodeTest extends SpringSpecification {
             code.revoke()
             code.save()
         and:
-            def result = AuthorizationCode.unexpired.find {
-                id == 1
-            }
+            def result = AuthorizationCode.unexpired.get( 1 )
         then:
             result == null
     }

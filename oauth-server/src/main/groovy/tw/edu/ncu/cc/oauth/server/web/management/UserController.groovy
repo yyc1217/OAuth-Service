@@ -39,9 +39,9 @@ public class UserController {
             resource()
             .pipe {
                 userService.readByName( userName )
-            }.pipe {
+            }.pipe { User user ->
                 conversionService.convert(
-                        accessTokenService.readAllUnexpiredByUserName( userName, [ 'user', 'scope' ] ),
+                        accessTokenService.readAllUnexpiredByUser( user, [ 'user', 'scope' ] ),
                         TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( AccessToken.class ) ),
                         TypeDescriptor.array( TypeDescriptor.valueOf( AccessTokenObject.class ) )
                 );

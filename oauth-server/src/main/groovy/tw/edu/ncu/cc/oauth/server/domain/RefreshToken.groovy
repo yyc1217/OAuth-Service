@@ -23,14 +23,15 @@ class RefreshToken implements Auditable, Expireable {
         token unique: true
     }
 
-    static unexpired = where {
-        dateExpired > timeNow()
+    static namedQueries = {
+        unexpired {
+            gt 'dateExpired' , this.timeNow()
+        }
+        include { attrs ->
+            attrs.each {
+                join it
+            }
+        }
     }
-
-    static lazyAttrModes = [
-        'user'   : 'join',
-        'client' : 'join',
-        'scope'  : 'eager'
-    ]
 
 }

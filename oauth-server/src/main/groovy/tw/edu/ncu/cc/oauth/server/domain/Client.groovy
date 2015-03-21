@@ -24,10 +24,12 @@ class Client implements Auditable {
         url nullable: true, blank: true
     }
 
-    static lazyAttrModes = [
-        'owner'  : 'join',
-        'codes'  : 'eager',
-        'tokens' : 'eager'
-    ]
+    static namedQueries = {
+        include { attrs ->
+            attrs.each {
+                join it
+            }
+        }
+    }
 
 }

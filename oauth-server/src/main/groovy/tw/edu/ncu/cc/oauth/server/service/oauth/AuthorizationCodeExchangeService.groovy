@@ -15,6 +15,8 @@ import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.service.domain.AuthorizationCodeService
 import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
 
+import javax.servlet.http.HttpServletResponse
+
 @Service( "AuthCodeExchangeService" )
 class AuthorizationCodeExchangeService implements TokenExchangeService {
 
@@ -30,11 +32,13 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
     private Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     @Override
-    String createToken( OAuthTokenRequest request, long expireSeconds ) throws OAuthProblemException, OAuthSystemException {
+    String buildResonseMessage( OAuthTokenRequest request, long expireSeconds ) throws OAuthProblemException, OAuthSystemException {
 
         validateOauthRequest( request );
 
-        return prepareAccessToken( request, expireSeconds );
+        String token = prepareAccessToken( request, expireSeconds );
+
+        return buildResponseMessage( token, expireSeconds );
     }
 
     private void validateOauthRequest( OAuthTokenRequest request ) throws OAuthProblemException, OAuthSystemException {
@@ -45,8 +49,8 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
 
         logger.info(
                 String.format(
-                        "EXCHANGE [clientID:%s] [clientSecret:%s] [authCode:%s]",
-                        clientID, clientSecret, authCode
+                        "EXCHANGE CODE:%s CLIENT:%s",
+                        authCode, clientID
                 )
         );
 
@@ -64,11 +68,11 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
     }
 
     private String prepareAccessToken( OAuthTokenRequest request, long expireSeconds ) {
-        return accessTokenService.createByCode(
+        return accessTokenService.createByAuthorizationCode(
                 new AccessToken(
                         dateExpired: dicideExpireDate( expireSeconds )
                 ),
-                request.getCode()
+                authCodeService.readUnexpiredByRealCode( request.getCode(), [ 'client', 'scope', 'user' ] )
         ).getToken();
     }
 
@@ -78,6 +82,16 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
         } else {
             return TimeBuilder.now().after( expireSeconds, TimeUnit.SECOND ).buildDate()
         }
+    }
+
+    private static String buildResponseMessage( String token, long expireSeconds ) {
+        return org.apache.oltu.oauth2.as.response.OAuthASResponse
+                .tokenResponse( HttpServletResponse.SC_OK )
+                .setAccessToken(  token )
+                .setTokenType( "Bearer" )
+                .setExpiresIn( expireSeconds + "" )
+                .buildJSONMessage()
+                .getBody();
     }
 
 }
