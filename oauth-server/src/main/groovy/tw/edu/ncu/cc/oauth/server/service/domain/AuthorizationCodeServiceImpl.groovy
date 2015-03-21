@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.domain.AuthorizationCode
+import tw.edu.ncu.cc.oauth.server.domain.Client
+import tw.edu.ncu.cc.oauth.server.domain.User
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.service.security.SecretService
 
@@ -37,29 +39,17 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
 
     @Override
     AuthorizationCode readUnexpiredById( String codeId, List includeField = [] ) {
-        return AuthorizationCode.where{
-            id == "${codeId}" as long && dateExpired > new Date()
-        }.find(
-            [ fetch: AuthorizationCode.attrFetchModeMap( includeField ) ]
-        )
+        AuthorizationCode.unexpired.include( includeField ).findWhere( id: codeId as long )
     }
 
     @Override
-    List< AuthorizationCode > readAllUnexpiredByUserName( String userName, List includeField = [] ) {
-        return AuthorizationCode.where{
-            user.name == "${userName}" && dateExpired > new Date()
-        }.list(
-            [ fetch: AuthorizationCode.attrFetchModeMap( includeField ) ]
-        )
+    List< AuthorizationCode > readAllUnexpiredByUser( User user, List includeField = [] ) {
+        AuthorizationCode.unexpired.include( includeField ).findAllWhere( user: user )
     }
 
     @Override
-    List< AuthorizationCode > readAllUnexpiredByClientId( String clientId, List includeField = [] ) {
-        return AuthorizationCode.where{
-            client.id == "${clientId}" as long && dateExpired > new Date()
-        }.list(
-            [ fetch: AuthorizationCode.attrFetchModeMap( includeField ) ]
-        )
+    List< AuthorizationCode > readAllUnexpiredByClient( Client client, List includeField = [] ) {
+        AuthorizationCode.unexpired.include( includeField ).findAllWhere( client: client )
     }
 
     @Override

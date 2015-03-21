@@ -1,6 +1,8 @@
 package tw.edu.ncu.cc.oauth.server.service.domain
 
 import tw.edu.ncu.cc.oauth.server.domain.AccessToken
+import tw.edu.ncu.cc.oauth.server.domain.Client
+import tw.edu.ncu.cc.oauth.server.domain.User
 
 
 interface AccessTokenService {
@@ -13,10 +15,10 @@ interface AccessTokenService {
     AccessToken readUnexpiredById  ( String tokenId );
     AccessToken readUnexpiredById  ( String tokenId, List includeField );
 
-    List< AccessToken > readAllUnexpiredByUserName( String userName );
-    List< AccessToken > readAllUnexpiredByUserName( String userName, List includeField );
-    List< AccessToken > readAllUnexpiredByClientId( String clientId );
-    List< AccessToken > readAllUnexpiredByClientId( String clientId, List includeField );
+    List< AccessToken > readAllUnexpiredByUser( User user );
+    List< AccessToken > readAllUnexpiredByUser( User user, List includeField );
+    List< AccessToken > readAllUnexpiredByClient( Client client );
+    List< AccessToken > readAllUnexpiredByClient( Client client, List includeField );
 
     AccessToken revoke( AccessToken accessToken );
 

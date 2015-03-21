@@ -3,10 +3,9 @@ package tw.edu.ncu.cc.oauth.server.domain
 import grails.persistence.Entity
 import tw.edu.ncu.cc.oauth.server.domain.concern.Auditable
 import tw.edu.ncu.cc.oauth.server.domain.concern.Expireable
-import tw.edu.ncu.cc.oauth.server.domain.concern.Lazyable
 
 @Entity
-class AuthorizationCode implements Auditable, Expireable, Lazyable {
+class AuthorizationCode implements Auditable, Expireable {
 
     String code
 
@@ -23,14 +22,15 @@ class AuthorizationCode implements Auditable, Expireable, Lazyable {
         code unique: true
     }
 
-    static unexpired = where {
-        dateExpired > timeNow()
+    static namedQueries = {
+        unexpired {
+            gt 'dateExpired' , this.timeNow()
+        }
+        include { attrs ->
+            attrs.each {
+                join it
+            }
+        }
     }
-
-    static attrFetchModes =  [
-        'user'   : 'join',
-        'client' : 'join',
-        'scope'  : 'eager'
-    ]
 
 }

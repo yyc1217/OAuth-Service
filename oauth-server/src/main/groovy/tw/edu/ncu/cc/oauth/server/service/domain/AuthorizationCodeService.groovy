@@ -1,6 +1,8 @@
 package tw.edu.ncu.cc.oauth.server.service.domain
 
 import tw.edu.ncu.cc.oauth.server.domain.AuthorizationCode
+import tw.edu.ncu.cc.oauth.server.domain.Client
+import tw.edu.ncu.cc.oauth.server.domain.User
 
 
 interface AuthorizationCodeService {
@@ -12,10 +14,10 @@ interface AuthorizationCodeService {
     AuthorizationCode readUnexpiredById( String codeId );
     AuthorizationCode readUnexpiredById( String codeId, List includeField );
 
-    List< AuthorizationCode > readAllUnexpiredByUserName( String userName );
-    List< AuthorizationCode > readAllUnexpiredByUserName( String userName, List includeField );
-    List< AuthorizationCode > readAllUnexpiredByClientId( String clientId );
-    List< AuthorizationCode > readAllUnexpiredByClientId( String clientId, List includeField );
+    List< AuthorizationCode > readAllUnexpiredByUser( User user );
+    List< AuthorizationCode > readAllUnexpiredByUser( User user, List includeField );
+    List< AuthorizationCode > readAllUnexpiredByClient( Client client );
+    List< AuthorizationCode > readAllUnexpiredByClient( Client client, List includeField );
 
     AuthorizationCode revoke( AuthorizationCode authorizationCode );
 

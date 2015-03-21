@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.domain.AccessToken
 import tw.edu.ncu.cc.oauth.server.domain.AuthorizationCode
+import tw.edu.ncu.cc.oauth.server.domain.Client
+import tw.edu.ncu.cc.oauth.server.domain.User
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.service.security.SecretService
 
@@ -56,29 +58,17 @@ class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     AccessToken readUnexpiredById( String tokenId, List includeField = [] ) {
-        return AccessToken.where {
-            id == "${tokenId}" as long && dateExpired > new Date()
-        }.find(
-            [ fetch: AccessToken.attrFetchModeMap( includeField ) ]
-        )
+        AccessToken.unexpired.include( includeField ).findWhere( id : tokenId as long )
     }
 
     @Override
-    List< AccessToken > readAllUnexpiredByUserName( String userName, List includeField = [] ) {
-        return AccessToken.where {
-            user.name == "${userName}" && dateExpired > new Date()
-        }.list(
-            [ fetch: AccessToken.attrFetchModeMap( includeField ) ]
-        )
+    List< AccessToken > readAllUnexpiredByUser( User user, List includeField = [] ) {
+        AccessToken.unexpired.include( includeField ).findAllWhere( user : user )
     }
 
     @Override
-    List< AccessToken > readAllUnexpiredByClientId( String clientId, List includeField = [] ) {
-        return AccessToken.where {
-            client.id == "${clientId}" as long && dateExpired > new Date()
-        }.list(
-            [ fetch: AccessToken.attrFetchModeMap( includeField ) ]
-        )
+    List< AccessToken > readAllUnexpiredByClient( Client client, List includeField = [] ) {
+        AccessToken.unexpired.include( includeField ).findAllWhere( client : client )
     }
 
     @Override

@@ -24,11 +24,18 @@ class AccessTokenTest extends SpringSpecification {
             token.revoke()
             token.save()
         and:
-            def result = AccessToken.unexpired.find {
-                id == 1
-            }
+            def result = AccessToken.unexpired.get( 1 )
         then:
             result == null
+    }
+
+    def "111"() {
+        when:
+            def token = AccessToken.include(['user','client','scope']).get( 1 )
+        then:
+            token.user.name == 'ADMIN1'
+            token.client.name == 'APP1'
+            token.scope.size() == 2
     }
 
 }

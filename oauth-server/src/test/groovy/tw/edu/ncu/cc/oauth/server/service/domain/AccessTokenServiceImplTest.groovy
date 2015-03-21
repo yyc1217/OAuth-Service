@@ -60,14 +60,14 @@ class AccessTokenServiceImplTest extends SpringSpecification {
 
     def "it can read unexpired access tokens by client id"() {
         expect:
-            accessTokenService.readAllUnexpiredByClientId( '2' ).size() == 0
-            accessTokenService.readAllUnexpiredByClientId( '3' ).size() == 1
+            accessTokenService.readAllUnexpiredByClient( Client.get( 2 ) ).size() == 0
+            accessTokenService.readAllUnexpiredByClient( Client.get( 3 ) ).size() == 1
     }
 
     def "it can read unexpired access tokens by user name"() {
         expect:
-            accessTokenService.readAllUnexpiredByUserName( 'ADMIN2' ).size() == 0
-            accessTokenService.readAllUnexpiredByUserName( 'ADMIN3' ).size() == 1
+            accessTokenService.readAllUnexpiredByUser( User.get( 2 ) ).size() == 0
+            accessTokenService.readAllUnexpiredByUser( User.get( 3 ) ).size() == 1
     }
 
     def "it can revoke access token by id"() {
