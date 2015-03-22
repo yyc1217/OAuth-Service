@@ -31,6 +31,7 @@ public class TokenExchangeController {
     @Value( '${custom.oauth.accessToken.expire-seconds}' )
     def long accessTokenExpireSeconds
 
+    @Resource( name = "RefreshTokenExchangeService" )
     def TokenExchangeService refreshTokenService;
 
     @Resource( name = "AuthCodeExchangeService" )
