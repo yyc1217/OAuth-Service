@@ -21,6 +21,9 @@ public class TimeBuilder {
     public TimeBuilder after( long number, TimeUnit unit ) {
         long offset = 0;
         switch ( unit ) {
+            case TimeUnit.MONTH:
+                offset = number * 1000 * 60 * 60 * 24 * 30;
+                break;
             case TimeUnit.DAY:
                 offset = number * 1000 * 60 * 60 * 24;
                 break;
