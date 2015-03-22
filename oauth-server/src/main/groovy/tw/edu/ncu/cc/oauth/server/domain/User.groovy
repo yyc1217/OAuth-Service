@@ -9,7 +9,7 @@ class User implements Auditable {
     String name
 
     static hasMany = [
-        tokens: AccessToken ,
+        accessTokens: AccessToken ,
         codes: AuthorizationCode,
         clients: Client
     ]
