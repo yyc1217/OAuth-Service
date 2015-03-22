@@ -3,10 +3,7 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import tw.edu.ncu.cc.oauth.server.domain.AccessToken
-import tw.edu.ncu.cc.oauth.server.domain.AuthorizationCode
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.domain.User
+import tw.edu.ncu.cc.oauth.server.domain.*
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.service.security.SecretService
 
@@ -19,6 +16,9 @@ class AccessTokenServiceImpl implements AccessTokenService {
 
     @Autowired
     def AuthorizationCodeService authorizationCodeService
+
+    @Autowired
+    def RefreshTokenService refreshTokenService
 
     @Override
     AccessToken create( AccessToken accessToken ) {
@@ -38,6 +38,18 @@ class AccessTokenServiceImpl implements AccessTokenService {
         accessToken.user = authorizationCode.user
         authorizationCode.discard()
         return create( accessToken )
+    }
+
+    @Override
+    AccessToken createByRefreshToken( AccessToken accessToken, RefreshToken refreshToken ) {
+        accessToken.client = refreshToken.client
+        accessToken.scope = refreshToken.scope
+        accessToken.user = refreshToken.user
+        create( accessToken )
+        revoke( refreshToken.accessToken )
+        refreshToken.accessToken = accessToken
+        refreshToken.save( failOnError: true )
+        return accessToken
     }
 
     @Override

@@ -1,6 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.web.management
 
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.test.annotation.Rollback
 import specification.IntegrationSpecification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -37,7 +37,7 @@ class TokenControllerTest extends IntegrationSpecification {
             response.user == "ADMIN3"
     }
 
-    @Transactional
+    @Rollback
     def "user can delete access token by id"() {
         when:
             server().perform(

@@ -5,10 +5,9 @@ import specification.SpringSpecification
 
 class AuthorizationCodeTest extends SpringSpecification {
 
-    @Transactional
     def "it can map to exist data"() {
         given:
-            def code = AuthorizationCode.get( 1 )
+            def code = AuthorizationCode.include( [ 'client', 'user' ] ).get( 1 )
         expect:
             code.code == 'CODE1'
             code.client.name == 'APP1'

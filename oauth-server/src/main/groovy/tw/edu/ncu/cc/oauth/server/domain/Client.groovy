@@ -15,8 +15,9 @@ class Client implements Auditable {
     static belongsTo = [ owner:User ]
 
     static hasMany = [
-        tokens:AccessToken,
-        codes:AuthorizationCode
+        accessTokens:AccessToken,
+        codes:AuthorizationCode,
+        refreshTokens: RefreshToken
     ]
 
     static constraints = {

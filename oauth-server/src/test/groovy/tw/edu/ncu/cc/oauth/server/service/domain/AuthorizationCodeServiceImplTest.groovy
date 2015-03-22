@@ -61,7 +61,7 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
             authorizationCodeService.readAllUnexpiredByUser( User.get( 3 ) ).size() == 1
     }
 
-    def "it can revoke authorization code by id"() {
+    def "it can revoke authorization code"() {
         given:
             def authorizationCode = authorizationCodeService.create(
                     new AuthorizationCode(
