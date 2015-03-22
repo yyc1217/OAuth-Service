@@ -25,10 +25,10 @@ class UserServiceImplTest extends SpringSpecification {
 
     def "it can read user with it's relational attributes"() {
         when:
-            def user = userService.readByName( "ADMIN1", [ 'clients', 'tokens', 'codes' ] )
+            def user = userService.readByName( "ADMIN1", [ 'clients', 'accessTokens', 'codes' ] )
         then:
             user.clients.find { it.name == 'APP1' } != null
-            user.tokens.find { it.token == 'TOKEN1' } != null
+            user.accessTokens.find { it.token == 'TOKEN1' } != null
             user.codes.find { it.code == 'CODE1' } != null
     }
 
