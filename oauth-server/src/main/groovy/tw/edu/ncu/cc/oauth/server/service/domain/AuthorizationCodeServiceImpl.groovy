@@ -61,11 +61,8 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     @Override
     boolean isCodeUnexpiredWithClientId( String code, String clientID ) {
         AuthorizationCode authorizationCode = readUnexpiredByRealCode( code )
-        if( authorizationCode != null && authorizationCode.client.id == secretService.decodeHashId( clientID ) ) {
-            return new Date().before( authorizationCode.dateExpired )
-        } else {
-            return false
-        }
+        return authorizationCode != null &&
+               authorizationCode.client.id == secretService.decodeHashId( clientID )
     }
 
 }
