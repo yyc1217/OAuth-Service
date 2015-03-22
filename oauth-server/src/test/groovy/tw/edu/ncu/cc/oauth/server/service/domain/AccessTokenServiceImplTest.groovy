@@ -10,6 +10,9 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     AccessTokenService accessTokenService
 
     @Autowired
+    RefreshTokenService refreshTokenService
+
+    @Autowired
     AuthorizationCodeService authorizationCodeService
 
     def "it can create access token"() {
@@ -52,6 +55,36 @@ class AccessTokenServiceImplTest extends SpringSpecification {
             token.client.name == 'APP1'
     }
 
+    def "it can create access token from refresh token"() {
+        given:
+            def accessTokenOfRefreshToken = accessTokenService.create(
+                    new AccessToken(
+                            client: Client.get( 1 ),
+                            user: User.get( 1 ),
+                            scope: [ Permission.get( 1 ) ],
+                            dateExpired: laterTime()
+                    )
+            )
+            def refreshToken = refreshTokenService.createByAccessToken(
+                    new RefreshToken(
+                            dateExpired: laterTime()
+                    ) ,
+                    accessTokenOfRefreshToken
+            )
+        when:
+            def accessToken = accessTokenService.createByRefreshToken(
+                    new AccessToken(
+                        dateExpired: laterTime()
+                    ),
+                    refreshToken
+            )
+        then:
+            refreshTokenService.readUnexpiredById( refreshToken.id as String, [ 'accessToken' ] ).accessToken.id != accessTokenOfRefreshToken.id
+        and:
+            accessToken.user.name == 'ADMIN1'
+            accessToken.client.name == 'APP1'
+    }
+
     def "it can read unexpired access token by real code"() {
         expect:
             accessTokenService.readUnexpiredByRealToken( "Mzo6OlRPS0VO" ) != null
@@ -70,7 +103,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
             accessTokenService.readAllUnexpiredByUser( User.get( 3 ) ).size() == 1
     }
 
-    def "it can revoke access token by id"() {
+    def "it can revoke access token"() {
         given:
             def accessToken = accessTokenService.create(
                     new AccessToken(
