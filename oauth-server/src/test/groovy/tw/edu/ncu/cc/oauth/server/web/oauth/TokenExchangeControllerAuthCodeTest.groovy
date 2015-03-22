@@ -1,13 +1,13 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
 import org.springframework.http.MediaType
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.test.annotation.Rollback
 import specification.IntegrationSpecification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class TokenExchangeControllerTest extends IntegrationSpecification {
+class TokenExchangeControllerAuthCodeTest extends IntegrationSpecification {
 
     def targetURL = "/oauth/token"
 
@@ -51,8 +51,8 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
             )
     }
 
-    @Transactional
-    def "it can exchange access token with auth code"() {
+    @Rollback
+    def "it can exchange access token and refresh token with auth code"() {
         when:
             def response = JSON(
                     server().perform(
@@ -68,6 +68,7 @@ class TokenExchangeControllerTest extends IntegrationSpecification {
             )
         then:
             response.access_token != null
+            response.refresh_token != null
     }
 
 }
