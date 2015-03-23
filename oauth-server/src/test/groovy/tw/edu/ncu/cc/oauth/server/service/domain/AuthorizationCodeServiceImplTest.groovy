@@ -77,6 +77,12 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
             authorizationCodeService.revoke( authorizationCodeService.readUnexpiredById( codeId ) )
         then:
             authorizationCodeService.readUnexpiredById( codeId ) == null
+        when:
+            def code = AuthorizationCode.include( [ 'client', 'user', 'scope' ] ).get( authorizationCode.id )
+        then:
+            code.client.name == 'APP1'
+            code.user.name == 'ADMIN1'
+            code.scope.size() == 1
     }
 
     def "it can check if authorization code is unexpired and binded with specified client"() {

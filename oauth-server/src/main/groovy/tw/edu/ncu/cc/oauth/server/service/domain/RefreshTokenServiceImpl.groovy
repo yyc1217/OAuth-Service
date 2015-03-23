@@ -20,7 +20,7 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     RefreshToken createByAccessToken( RefreshToken refreshToken, AccessToken accessToken ) {
         refreshToken.accessToken = accessToken
         refreshToken.client = accessToken.client
-        refreshToken.scope = accessToken.scope
+        refreshToken.scope = accessToken.scope.collect()
         refreshToken.user = accessToken.user
         return create( refreshToken )
     }

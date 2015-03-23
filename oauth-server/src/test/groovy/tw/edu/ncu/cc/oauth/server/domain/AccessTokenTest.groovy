@@ -7,12 +7,12 @@ class AccessTokenTest extends SpringSpecification {
 
     def "it can map to exist data"() {
         given:
-            def token = AccessToken.include( [ 'token', 'client', 'user', 'scope' ] ).get( 1 )
+            def token = AccessToken.include( [ 'client', 'user', 'scope' ] ).get( 1 )
         expect:
             token.token == 'TOKEN1'
             token.client.name == 'APP1'
             token.user.name == 'ADMIN1'
-//            token.scope.size() == 2 TODO fix
+            token.scope.size() == 2
     }
 
     @Transactional
@@ -22,10 +22,8 @@ class AccessTokenTest extends SpringSpecification {
         when:
             token.revoke()
             token.save()
-        and:
-            def result = AccessToken.unexpired.get( 1 )
         then:
-            result == null
+            AccessToken.unexpired.get( 1 ) == null
     }
 
 }

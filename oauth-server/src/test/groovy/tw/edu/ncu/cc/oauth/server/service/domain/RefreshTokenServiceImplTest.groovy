@@ -22,12 +22,15 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
                     new RefreshToken(
                             dateExpired: laterTime()
                     ),
-                    accessTokenService.readUnexpiredById( "1", [ 'client', 'user', 'scope' ] )
+                    accessTokenService.readUnexpiredById( "1", [ 'client', 'user', 'scope' ] ) //TODO VALUE IS CHANGED BY SOME OTHER TEST
             )
+        and:
+            def refreshTokenDB = refreshTokenService.readUnexpiredById( refreshToken.id as String, [ 'client', 'user', 'scope', 'accessToken' ] )
         then:
-            refreshToken.user.name == 'ADMIN1'
-            refreshToken.client.name == 'APP1'
-            refreshToken.accessToken.id == 1
+            refreshTokenDB.user.name == 'ADMIN1'
+            refreshTokenDB.client.name == 'APP1'
+            refreshTokenDB.accessToken.id == 1
+            refreshTokenDB.scope.size() > 0
     }
 
     def "it can read unexpired refresh token by real code"() {

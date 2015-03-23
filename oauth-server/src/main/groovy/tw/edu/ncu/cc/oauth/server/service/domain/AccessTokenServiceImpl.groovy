@@ -15,10 +15,13 @@ class AccessTokenServiceImpl implements AccessTokenService {
     def SecretService secretService
 
     @Autowired
-    def AuthorizationCodeService authorizationCodeService
+    def PermissionService permissionService
 
     @Autowired
     def RefreshTokenService refreshTokenService
+
+    @Autowired
+    def AuthorizationCodeService authorizationCodeService
 
     @Override
     AccessToken create( AccessToken accessToken ) {
@@ -34,16 +37,15 @@ class AccessTokenServiceImpl implements AccessTokenService {
     AccessToken createByAuthorizationCode( AccessToken accessToken, AuthorizationCode authorizationCode ) {
         authorizationCodeService.revoke( authorizationCode )
         accessToken.client = authorizationCode.client
-        accessToken.scope = authorizationCode.scope
+        accessToken.scope = authorizationCode.scope.collect()
         accessToken.user = authorizationCode.user
-        authorizationCode.discard()
         return create( accessToken )
     }
 
     @Override
     AccessToken createByRefreshToken( AccessToken accessToken, RefreshToken refreshToken ) {
         accessToken.client = refreshToken.client
-        accessToken.scope = refreshToken.scope
+        accessToken.scope = refreshToken.scope.collect()
         accessToken.user = refreshToken.user
         create( accessToken )
         revoke( refreshToken.accessToken )
@@ -81,7 +83,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     AccessToken revoke( AccessToken accessToken ) {
         accessToken.revoke()
-        accessToken.save( failOnError: true )
+        accessToken.save( failOnError: true, flush: true )
     }
 
 }

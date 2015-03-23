@@ -17,11 +17,12 @@ class AccessTokenServiceImplTest extends SpringSpecification {
 
     def "it can create access token"() {
         given:
-            def accessToken = new AccessToken()
-            accessToken.client = Client.get( 1 )
-            accessToken.user = User.get( 1 )
-            accessToken.dateExpired = laterTime()
-            accessToken.scope = [ Permission.get( 1 ) ]
+            def accessToken = new AccessToken(
+                    client: Client.get( 1 ),
+                    user: User.get( 1 ),
+                    dateExpired: laterTime(),
+                    scope: [ Permission.get( 1 ) ]
+            )
         when:
             def token = accessTokenService.readUnexpiredById(
                     accessTokenService.create( accessToken ).id as String, [ 'client', 'user', 'scope' ]
@@ -33,7 +34,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     }
 
     def "it can create access token from authorization code"() {
-        when:
+        given:
             def authorizationCode = authorizationCodeService.create(
                     new AuthorizationCode(
                         client: Client.get( 1 ),
@@ -42,17 +43,21 @@ class AccessTokenServiceImplTest extends SpringSpecification {
                         dateExpired: laterTime()
                     )
             )
-        then:
-            authorizationCodeService.readUnexpiredByRealCode( authorizationCode.code ) != null
         when:
-            def token = accessTokenService.createByAuthorizationCode( new AccessToken(
-                    dateExpired: laterTime()
-            ), authorizationCode )
+            def token = accessTokenService.createByAuthorizationCode(
+                    new AccessToken(
+                        dateExpired: laterTime()
+                    ),
+                    authorizationCode
+            )
         then:
             authorizationCodeService.readUnexpiredByRealCode( authorizationCode.code ) == null
         and:
+            AuthorizationCode.include( [ 'scope' ] ).get( authorizationCode.id ).scope.size() == 1
+        and:
             token.user.name == 'ADMIN1'
             token.client.name == 'APP1'
+            token.scope.size() == 1
     }
 
     def "it can create access token from refresh token"() {
@@ -83,6 +88,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
         and:
             accessToken.user.name == 'ADMIN1'
             accessToken.client.name == 'APP1'
+            accessToken.scope.size() == 1
     }
 
     def "it can read unexpired access token by real code"() {

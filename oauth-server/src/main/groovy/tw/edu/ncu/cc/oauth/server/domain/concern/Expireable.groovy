@@ -5,7 +5,7 @@ trait Expireable {
     Date dateExpired
 
     def revoke() {
-        dateExpired = new Date( System.currentTimeMillis() - 10000 )
+        dateExpired = new Date( System.currentTimeMillis() )
     }
 
     static Date timeNow() {
