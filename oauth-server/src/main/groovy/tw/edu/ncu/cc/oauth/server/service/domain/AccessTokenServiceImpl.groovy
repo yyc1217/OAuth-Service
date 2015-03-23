@@ -81,7 +81,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     AccessToken revoke( AccessToken accessToken ) {
         accessToken.revoke()
-        accessToken.save( failOnError: true )
+        accessToken.save( failOnError: true, flush: true )
     }
 
 }
