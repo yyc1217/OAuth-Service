@@ -18,6 +18,7 @@ class Client_SecretIdClientObjectConverter implements Converter< Client, SecretI
         SecretIdClientObject secretIdClientObject = new SecretIdClientObject()
         secretIdClientObject.id = secretService.encodeHashId( source.id )
         secretIdClientObject.secret = source.secret
+        secretIdClientObject.apiToken = source.apiToken
         secretIdClientObject.name = source.name
         secretIdClientObject.description = source.description
         secretIdClientObject.owner = source.owner.name
