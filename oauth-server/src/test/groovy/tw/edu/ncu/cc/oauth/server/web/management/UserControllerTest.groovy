@@ -16,7 +16,7 @@ class UserControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/ADMIN1/token" )
+                            get( targetURL + "/ADMIN1/tokens" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -28,7 +28,7 @@ class UserControllerTest extends IntegrationSpecification {
     def "it can handle get of specified user's tokens 2"() {
         expect:
             server().perform(
-                    get( targetURL + "/NOT_EXIST/token" )
+                    get( targetURL + "/NOT_EXIST/tokens" )
             ).andExpect(
                     status().isNotFound()
             )
@@ -38,7 +38,7 @@ class UserControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/ADMIN1/application" )
+                            get( targetURL + "/ADMIN1/applications" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()

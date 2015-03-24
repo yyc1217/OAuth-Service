@@ -33,7 +33,7 @@ public class UserController {
     def ConversionService conversionService;
 
     @SuppressWarnings( "unchecked" )
-    @RequestMapping( value = "{userName}/token", method = RequestMethod.GET )
+    @RequestMapping( value = "{userName}/tokens", method = RequestMethod.GET )
     public ResponseEntity getUserTokens( @PathVariable( "userName" ) final String userName ) {
         respondWith(
             resource()
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @SuppressWarnings( "unchecked" )
-    @RequestMapping( value = "{userName}/application", method = RequestMethod.GET )
+    @RequestMapping( value = "{userName}/applications", method = RequestMethod.GET )
     public ResponseEntity getUserApplications( @PathVariable( "userName" ) final String userName ) {
         respondWith(
             resource()
