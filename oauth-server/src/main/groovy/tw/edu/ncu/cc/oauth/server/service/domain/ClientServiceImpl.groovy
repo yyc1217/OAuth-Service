@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.domain.Client
+import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.service.security.SecretService
 
 @Service
@@ -15,20 +16,34 @@ class ClientServiceImpl implements ClientService {
 
     @Override
     Client create( Client client ) {
-        return generateSecretAndSave( client )
+        String newSecret   = secretService.generateToken()
+        String newAPIToken = secretService.generateToken()
+        client.secret   = secretService.encodeSecret( newSecret )
+        client.apiToken = secretService.encodeSecret( newAPIToken )
+        client.save( failOnError: true, flush: true )
+        client.discard()
+        client.secret   = newSecret
+        client.apiToken = secretService.encodeSerialSecret( new SerialSecret( client.id, newAPIToken ) )
+        return client
     }
 
     @Override
     Client refreshSecret( Client client ) {
-        return generateSecretAndSave( client )
-    }
-
-    private Client generateSecretAndSave( Client client ) {
         String newSecret = secretService.generateToken()
         client.secret = secretService.encodeSecret( newSecret )
         client.save( failOnError: true, flush: true )
         client.discard()
         client.secret = newSecret
+        return client
+    }
+
+    @Override
+    Client refreshAPIToken( Client client ) {
+        String newAPIToken = secretService.generateToken()
+        client.apiToken = secretService.encodeSecret( newAPIToken )
+        client.save( failOnError: true, flush: true )
+        client.discard()
+        client.apiToken = secretService.encodeSerialSecret( new SerialSecret( client.id, newAPIToken ) )
         return client
     }
 
