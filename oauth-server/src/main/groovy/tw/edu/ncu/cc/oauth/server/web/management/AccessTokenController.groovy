@@ -16,8 +16,8 @@ import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 
 @RestController
-@RequestMapping( value = "management/v1/token" )
-public class TokenController {
+@RequestMapping( value = "management/v1/accessToken" )
+public class AccessTokenController {
 
     @Autowired
     def ConversionService conversionService;
@@ -25,20 +25,31 @@ public class TokenController {
     @Autowired
     def AccessTokenService accessTokenService;
 
-    @RequestMapping( value = "{id}", method = RequestMethod.GET )
-    public ResponseEntity getTokenById( @PathVariable( "id" ) final String id ) {
-        respondWith(
-            resource()
-            .pipe {
-                return conversionService.convert(
-                        accessTokenService.readUnexpiredById( id, [ 'client', 'user', 'scope' ] ), ClientAccessTokenObject.class
-                );
-            }
-        )
+    @RequestMapping( value = "{idOrToken}", method = RequestMethod.GET )
+    public ResponseEntity getToken( @PathVariable( "idOrToken" ) final String idOrToken ) {
+        if( idOrToken.isLong() ) {
+            respondWith(
+                    resource()
+                    .pipe {
+                        return conversionService.convert(
+                                accessTokenService.readUnexpiredById( idOrToken, [ 'client', 'user', 'scope' ] ), ClientAccessTokenObject.class
+                        );
+                    }
+            )
+        } else {
+            respondWith(
+                    resource()
+                    .pipe {
+                        conversionService.convert(
+                                accessTokenService.readUnexpiredByRealToken( idOrToken, [ 'user', 'scope' ] ), AccessTokenObject.class
+                        );
+                    }
+            )
+        }
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
-    public ResponseEntity deleteTokenById( @PathVariable( "id" ) final String id ) {
+    public ResponseEntity revokeTokenById( @PathVariable( "id" ) final String id ) {
         respondWith(
             resource()
             .pipe {
@@ -46,18 +57,6 @@ public class TokenController {
             }.pipe { AccessToken accessToken ->
                 conversionService.convert(
                         accessTokenService.revoke( accessToken ), ClientAccessTokenObject.class
-                );
-            }
-        )
-    }
-
-    @RequestMapping( value = "string/{token}", method = RequestMethod.GET )
-    public ResponseEntity getTokenByString( @PathVariable( "token" ) final String token ) {
-        respondWith(
-            resource()
-            .pipe {
-                conversionService.convert(
-                        accessTokenService.readUnexpiredByRealToken( token, [ 'user', 'scope' ] ), AccessTokenObject.class
                 );
             }
         )
