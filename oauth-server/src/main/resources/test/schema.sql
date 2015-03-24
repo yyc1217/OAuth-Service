@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS client
   last_updated DATETIME,
   callback VARCHAR(255),
   description VARCHAR(255),
+  api_token VARCHAR(255),
   name VARCHAR(255),
   secret VARCHAR(255),
   url VARCHAR(255),
