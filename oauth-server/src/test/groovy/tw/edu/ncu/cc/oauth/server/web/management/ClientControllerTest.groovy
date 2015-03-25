@@ -11,6 +11,23 @@ class ClientControllerTest extends IntegrationSpecification {
 
     def targetURL = "/management/v1/application"
 
+    def "it can handle get of Client"() {
+        given:
+            def client = JSON(
+                    server().perform(
+                            get( targetURL + "/" + serialId( 1 ) )
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
+            )
+        expect:
+            client.name == 'APP1'
+            client.url  == 'http://example.com'
+            client.callback == 'http://example.com'
+            client.description == '1111'
+            client.owner == 'ADMIN1'
+    }
+
     def "it can handle create and update of Client"() {
         given:
             def createResponse = JSON(
@@ -30,6 +47,12 @@ class ClientControllerTest extends IntegrationSpecification {
                             status().isOk()
                     ).andReturn()
             )
+        expect:
+            createResponse.name == 'app'
+            createResponse.callback == 'http://example.com'
+            createResponse.owner == 'ADMIN1'
+            createResponse.secret   != null
+            createResponse.apiToken != null
         when:
             server().perform(
                     put( targetURL + "/${createResponse.id}" )

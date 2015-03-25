@@ -13,6 +13,8 @@ class ClientTest extends SpringSpecification {
             client.callback == 'http://example.com'
             client.description == '1111'
             client.owner.name == 'ADMIN1'
+            client.secret == 'SECRET1'
+            client.apiToken == 'TOKEN1'
     }
 
 }

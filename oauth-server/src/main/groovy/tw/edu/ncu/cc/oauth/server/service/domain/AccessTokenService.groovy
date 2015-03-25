@@ -8,8 +8,8 @@ interface AccessTokenService {
     AccessToken createByAuthorizationCode( AccessToken accessToken, AuthorizationCode authorizationCode );
     AccessToken createByRefreshToken( AccessToken accessToken, RefreshToken refreshToken );
 
-    AccessToken readUnexpiredByRealToken( String token );
-    AccessToken readUnexpiredByRealToken( String token, List includeField );
+    AccessToken readAndUseUnexpiredByRealToken( String token );
+    AccessToken readAndUseUnexpiredByRealToken( String token, List includeField );
     AccessToken readUnexpiredById  ( String tokenId );
     AccessToken readUnexpiredById  ( String tokenId, List includeField );
 

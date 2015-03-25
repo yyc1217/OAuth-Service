@@ -7,9 +7,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class TokenControllerTest extends IntegrationSpecification {
+class AccessTokenControllerTest extends IntegrationSpecification {
 
-    def targetURL = "/management/v1/token"
+    def targetURL = "/management/v1/accessToken"
 
     def "user can get access token info by id"() {
         when:
@@ -28,7 +28,7 @@ class TokenControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/string/Mzo6OlRPS0VO" )
+                            get( targetURL + "/Mzo6OlRPS0VO" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()

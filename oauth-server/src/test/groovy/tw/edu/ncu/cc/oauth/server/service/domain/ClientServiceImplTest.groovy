@@ -11,7 +11,7 @@ class ClientServiceImplTest extends SpringSpecification {
     @Autowired
     private ClientService clientService
 
-    def "it can create client"() {
+    def "it can create client with its api token"() {
         when:
             def client = clientService.create(
                     new Client(
@@ -25,6 +25,7 @@ class ClientServiceImplTest extends SpringSpecification {
         then:
             client.name == "HelloWorld"
             client.owner.name == "ADMIN1"
+            client.apiToken != null
     }
 
     @Transactional
@@ -81,6 +82,27 @@ class ClientServiceImplTest extends SpringSpecification {
             clientService.refreshSecret( clientService.readBySerialId( clientSerialId ) )
         then:
             clientService.readBySerialId( clientSerialId ).secret != originSecret
+    }
+
+    def "it can refresh client api token"() {
+        given:
+            def client = clientService.create(
+                    new Client(
+                            name: "HelloWorld",
+                            description: "description",
+                            callback: "abc://123",
+                            owner: User.get( 1 ),
+                            url: "http://example.com"
+                    )
+            )
+        and:
+            def clientSerialId = serialId( client.id )
+        and:
+            def originAPIToken = clientService.readBySerialId( clientSerialId ).apiToken
+        when:
+            clientService.refreshAPIToken( clientService.readBySerialId( clientSerialId ) )
+        then:
+            clientService.readBySerialId( clientSerialId ).apiToken != originAPIToken
     }
 
 }

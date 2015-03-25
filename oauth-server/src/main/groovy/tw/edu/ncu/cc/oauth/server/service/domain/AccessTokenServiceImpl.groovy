@@ -55,11 +55,12 @@ class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
-    AccessToken readUnexpiredByRealToken( String token, List includeField = [] ) {
+    AccessToken readAndUseUnexpiredByRealToken( String token, List includeField = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( token )
         AccessToken accessToken = readUnexpiredById( serialSecret.id as String, includeField )
         if( accessToken != null && secretService.matchesSecret( serialSecret.secret, accessToken.token ) ) {
-            return accessToken
+            accessToken.updateTimeStamp()
+            accessToken.save( failOnError: true )
         } else {
             return null
         }

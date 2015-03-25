@@ -18,10 +18,6 @@ class AuthorizationCode implements Auditable, Expireable {
         scope:Permission
     ]
 
-    static constraints = {
-        code unique: true
-    }
-
     static namedQueries = {
         unexpired {
             gt 'dateExpired' , this.timeNow()

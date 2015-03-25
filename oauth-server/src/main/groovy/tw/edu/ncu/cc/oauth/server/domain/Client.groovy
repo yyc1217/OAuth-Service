@@ -11,6 +11,8 @@ class Client implements Auditable {
     String description
     String url
     String callback
+    String apiToken
+    int apiUseTimes
 
     static belongsTo = [ owner:User ]
 
