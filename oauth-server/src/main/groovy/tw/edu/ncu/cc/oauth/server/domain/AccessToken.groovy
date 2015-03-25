@@ -18,10 +18,6 @@ public class AccessToken implements Auditable, Expireable {
         scope:Permission
     ]
 
-    static constraints = {
-        token unique: true
-    }
-
     static namedQueries = {
         unexpired {
             gt 'dateExpired' , this.timeNow()
