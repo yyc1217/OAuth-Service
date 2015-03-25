@@ -19,7 +19,7 @@ class AccessToken_ClientAccessTokenConverter implements Converter< AccessToken, 
         ClientAccessTokenObject clientAccessTokenObject = new ClientAccessTokenObject()
         clientAccessTokenObject.id = source.id
         clientAccessTokenObject.user = source.user.name
-        clientAccessTokenObject.application = client_idClientObjectConverter.convert( source.client )
+        clientAccessTokenObject.client = client_idClientObjectConverter.convert( source.client )
         clientAccessTokenObject.scope = ScopeHelper.toStringArray( source.scope )
         clientAccessTokenObject.last_updated = source.lastUpdated
 

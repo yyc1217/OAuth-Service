@@ -16,7 +16,7 @@ import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 
 @RestController
-@RequestMapping( value = "management/v1/accessToken" )
+@RequestMapping( value = "management/v1/access_token" )
 public class AccessTokenController {
 
     @Autowired
