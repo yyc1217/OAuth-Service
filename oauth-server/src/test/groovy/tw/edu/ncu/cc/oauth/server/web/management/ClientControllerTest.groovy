@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ClientControllerTest extends IntegrationSpecification {
 
-    def targetURL = "/management/v1/application"
+    def targetURL = "/management/v1/client"
 
     def "it can handle get of Client"() {
         given:
