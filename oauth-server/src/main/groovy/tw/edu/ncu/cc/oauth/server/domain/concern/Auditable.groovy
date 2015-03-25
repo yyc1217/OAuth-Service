@@ -5,4 +5,8 @@ trait Auditable {
     Date dateCreated
     Date lastUpdated
 
+    def updateTimeStamp() {
+        lastUpdated = new Date()
+    }
+
 }
