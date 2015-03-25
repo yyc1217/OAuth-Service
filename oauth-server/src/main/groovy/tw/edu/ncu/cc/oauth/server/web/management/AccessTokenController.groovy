@@ -41,7 +41,7 @@ public class AccessTokenController {
                     resource()
                     .pipe {
                         conversionService.convert(
-                                accessTokenService.readUnexpiredByRealToken( idOrToken, [ 'user', 'scope' ] ), AccessTokenObject.class
+                                accessTokenService.readAndUseUnexpiredByRealToken( idOrToken, [ 'user', 'scope' ] ), AccessTokenObject.class
                         );
                     }
             )

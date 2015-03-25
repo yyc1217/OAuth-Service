@@ -93,8 +93,13 @@ class AccessTokenServiceImplTest extends SpringSpecification {
 
     def "it can read unexpired access token by real code"() {
         expect:
-            accessTokenService.readUnexpiredByRealToken( "Mzo6OlRPS0VO" ) != null
-            accessTokenService.readUnexpiredByRealToken( "NOTEXIST" ) == null
+            accessTokenService.readAndUseUnexpiredByRealToken( "Mzo6OlRPS0VO" ) != null
+            accessTokenService.readAndUseUnexpiredByRealToken( "NOTEXIST" ) == null
+        when:
+            def token1 = accessTokenService.readAndUseUnexpiredByRealToken( "Mzo6OlRPS0VO" )
+            def token2 = accessTokenService.readAndUseUnexpiredByRealToken( "Mzo6OlRPS0VO" )
+        then:
+            token1.lastUpdated != token2.lastUpdated
     }
 
     def "it can read unexpired access tokens by client id"() {
