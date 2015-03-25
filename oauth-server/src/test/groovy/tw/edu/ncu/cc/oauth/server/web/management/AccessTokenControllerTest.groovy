@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AccessTokenControllerTest extends IntegrationSpecification {
 
-    def targetURL = "/management/v1/accessToken"
+    def targetURL = "/management/v1/access_token"
 
     def "user can get access token info by id"() {
         when:
