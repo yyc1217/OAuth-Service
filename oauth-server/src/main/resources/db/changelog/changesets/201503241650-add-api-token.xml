@@ -14,4 +14,12 @@
 
     </changeSet>
 
+    <changeSet id="2" author="unknown">
+
+        <addColumn tableName="client">
+            <column name="api_use_times" type="int"/>
+        </addColumn>
+
+    </changeSet>
+
 </databaseChangeLog>

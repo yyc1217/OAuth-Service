@@ -8,7 +8,7 @@ INSERT INTO client ( id, name, secret, api_token, url, callback, description, ow
   ( 2, 'APP2', 'SECRET2', 'TOKEN2', 'http://example.com', 'http://example.com', '2222', 2 ),
   ( 3, 'APP3', '$2a$10$Sm07H4pIys2Ae45rdO5rJuiEe/swFKoJneZLg.bU9HjFsBBZktwua', '$2a$10$QIWTQ5g9A5EiQOOGHlRDm.C4GBjlStg/Fzgj9h3xfYBqtyxSxKWDq', 'http://example.com', 'http://example.com', '3333', 2 );
 -- SECRET
--- TOKEN
+-- Mzo6OlRPS0VO
 
 INSERT INTO refresh_token ( id, token, access_token_id, client_id, user_id, date_created, last_updated, date_expired ) VALUES
   ( 1, 'TOKEN1', 1, 1, 1, '2050-12-25', '2050-12-25', '2100-12-25' ),

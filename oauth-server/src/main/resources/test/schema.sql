@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS client
   callback VARCHAR(255),
   description VARCHAR(255),
   api_token VARCHAR(255),
+  api_use_times INT DEFAULT 0,
   name VARCHAR(255),
   secret VARCHAR(255),
   url VARCHAR(255),
