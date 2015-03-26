@@ -14,7 +14,7 @@ public class ApplicationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle( HttpServletRequest request, HttpServletResponse response, Object handler ) throws Exception {
         logger.info(
-                String.format( "%s: %s :%s",
+                String.format( "%s: %s, FROM: %s",
                         request.getMethod(),
                         getRequestPath( request ),
                         request.getRemoteAddr()
