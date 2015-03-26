@@ -50,7 +50,7 @@ class RefreshTokenExchangeService implements TokenExchangeService {
 
         logger.info(
                 String.format(
-                        "EXCHANGE REFRESH:%s CLIENT:%s",
+                        "OAUTH EXCHANGE, REFRESH: %s, CLIENT: %s",
                         StringHelper.first( refreshToken, 10 ), StringHelper.first( clientID, 10 )
                 )
         );

@@ -58,7 +58,7 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
 
         logger.info(
                 String.format(
-                        "EXCHANGE CODE:%s CLIENT:%s",
+                        "OAUTH EXCHANGE, CODE: %s, CLIENT: %s",
                         StringHelper.first( authCode, 10 ), StringHelper.first( clientID, 10 )
                 )
         )
