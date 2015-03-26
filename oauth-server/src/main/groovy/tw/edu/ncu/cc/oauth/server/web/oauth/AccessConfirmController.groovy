@@ -2,6 +2,8 @@ package tw.edu.ncu.cc.oauth.server.web.oauth
 
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
@@ -31,12 +33,14 @@ public final class AccessConfirmController {
     def PermissionService permissionService
 
     @Autowired
-    def AuthorizationCodeService authorizationCodeService;
+    def AuthorizationCodeService authorizationCodeService
 
     @Value( '${custom.oauth.authCode.expire-seconds}' )
     def long authorizationCodeExpireSeconds
 
-    private SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+    private Logger logger = LoggerFactory.getLogger( this.getClass() )
+
+    private SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler()
 
     @RequestMapping( value = "oauth/confirm", method = RequestMethod.POST )
     public String confirm( @ModelAttribute( "state" )  String state,
@@ -44,6 +48,8 @@ public final class AccessConfirmController {
                            @ModelAttribute( "client" ) Client client,
                            @RequestParam( "approval" ) boolean isAgree,
                            HttpServletRequest request, Authentication authentication ) throws URISyntaxException, OAuthSystemException {
+
+        logger.info( String.format( "ACCESS CONFIRM, USER: %s, AGREE: %s", authentication.name, isAgree ) )
 
         logoutHandler.logout( request, null, null );
 

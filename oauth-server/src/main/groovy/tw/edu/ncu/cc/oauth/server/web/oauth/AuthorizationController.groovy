@@ -4,6 +4,8 @@ import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -31,6 +33,8 @@ public final class AuthorizationController {
     @Autowired
     def PermissionService permissionService
 
+    private Logger logger = LoggerFactory.getLogger( this.getClass() )
+
     @RequestMapping( value = "oauth/authorize", method = RequestMethod.GET )
     public String authorize( HttpServletRequest  request,
                              HttpServletResponse response,
@@ -39,6 +43,15 @@ public final class AuthorizationController {
         try {
 
             OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest( request );
+
+            logger.info(
+                    String.format(
+                            "ACCESS REQUEST, USER: %s, CLIENT: %s, SCOPE: %s ",
+                            authentication.name,
+                            oauthRequest.clientId,
+                            oauthRequest.scopes.toListString()
+                    )
+            )
 
             validateOauthRequest( oauthRequest );
 
@@ -106,9 +119,9 @@ public final class AuthorizationController {
     }
 
     private Set< Permission > convertToPermissions( Set< String > scope ) {
-        return scope.inject( [] as Set< Permission >, { permissions, permissionName ->
+        scope.inject( [] as Set< Permission > ) { permissions, permissionName ->
             permissions << permissionService.readByName( permissionName )
-        } )
+        } as Set<Permission>
     }
 
 }
