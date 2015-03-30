@@ -18,9 +18,6 @@ repositories{
     flatDir {
         dirs '../lib'
     }
-    maven {
-        url "http://repo.springsource.org/libs-milestone/"
-    }
 }
 
 dependencies{
@@ -29,9 +26,9 @@ dependencies{
     compile name: 'manage-openid-0.1.0-SNAPSHOT'
     compile name: 'hashids-1.0.1-SNAPSHOT'
 
-    compile 'org.springframework.security:spring-security-config:4.0.0.RC2' ,
-            'org.springframework.security:spring-security-taglibs:4.0.0.RC2',
-            'org.springframework.security:spring-security-test:4.0.0.RC2',
+    compile 'org.springframework.security:spring-security-config:4.0.0.RELEASE' ,
+            'org.springframework.security:spring-security-taglibs:4.0.0.RELEASE',
+            'org.springframework.security:spring-security-test:4.0.0.RELEASE',
             'org.springframework:spring-context-support:4.1.5.RELEASE',
             'org.springframework.boot:spring-boot-starter-test:1.2.2.RELEASE',
             'org.springframework.boot:spring-boot-starter-security:1.2.2.RELEASE',
