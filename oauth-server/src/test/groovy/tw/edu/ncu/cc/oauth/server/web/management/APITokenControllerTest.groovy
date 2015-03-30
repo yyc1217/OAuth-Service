@@ -20,7 +20,7 @@ class APITokenControllerTest extends IntegrationSpecification {
                     ).andReturn()
             )
         then:
-            response.use_times.isNumber()
+            response.use_times >= 0
     }
 
 }

@@ -10,7 +10,7 @@ import spock.lang.Specification
 import tw.edu.ncu.cc.oauth.resource.config.RemoteConfig
 
 
-class TokenConfirmServiceImplTest extends Specification {
+class TokenConfirmServiceImplTest2 extends Specification {
 
     @Shared @ClassRule
     ServerResource serverResource = new ServerResource( 8898 )
@@ -21,7 +21,7 @@ class TokenConfirmServiceImplTest extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/token/string/token1" )
+                        .withPath( "/management/v1/api_token/token1" )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 200 )
@@ -29,9 +29,7 @@ class TokenConfirmServiceImplTest extends Specification {
                         .withBody(
                         '''
                         {
-                            "id" : "1",
-                            "user" : "101502549",
-                            "scope" : [ "READ", "WRITE" ],
+                            "use_times" : 10,
                             "last_updated" : "2014-12-15"
                         }
                         '''
@@ -40,28 +38,42 @@ class TokenConfirmServiceImplTest extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/token/token2/scope" )
+                        .withPath( "/management/v1/api_token/token2" )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 404 )
         )
+        serverResource.mockServer().when(
+                HttpRequest.request()
+                        .withMethod( "GET" )
+                        .withPath( "/management/v1/api_token/token3" )
+        ).respond(
+                HttpResponse.response()
+                        .withStatusCode( 403 )
+        )
     }
 
     def setup() {
-        tokenConfirmService = new TokenConfirmServiceImpl()
-        tokenConfirmService.setConfig( new RemoteConfig(
-                addrPrefix: "http://localhost:${serverResource.port()}/token/string/"
-        ) )
+        tokenConfirmService = new TokenConfirmServiceImpl(
+                new RemoteConfig(
+                        serverPath: "http://localhost:" + serverResource.port()
+                )
+        )
     }
 
-    def "it can check token scope from remote server 1"() {
+    def "it can get api token from remote server 1"() {
         expect:
-            tokenConfirmService.readToken( "token1" ).scope == [ "READ", "WRITE" ]
+            tokenConfirmService.readApiToken( "token1" ).use_times == 10
     }
 
-    def "it can check token scope from remote server 2"() {
+    def "it can get api token from remote server 2"() {
         expect:
-            tokenConfirmService.readToken( "token2" ) == null
+            tokenConfirmService.readApiToken( "token2" ) == null
+    }
+
+    def "it should get null if api token reach use limit"() {
+        expect:
+            tokenConfirmService.readApiToken( "token3" ) == null
     }
 
 }

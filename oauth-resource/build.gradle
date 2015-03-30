@@ -1,20 +1,14 @@
 
 description = "resource server tools for ncu oauth service"
 
-repositories{
-    maven {
-        url "http://repo.springsource.org/libs-milestone/"
-    }
-}
-
 dependencies{
 
     compile project(':oauth-data')
 
     compile 'org.springframework:spring-test:4.1.1.RELEASE',
             'org.springframework:spring-web:4.1.1.RELEASE',
-            'org.springframework.security:spring-security-core:4.0.0.M2',
-            'org.springframework.security:spring-security-test:4.0.0.M2'
+            'org.springframework.security:spring-security-core:4.0.0.RELEASE',
+            'org.springframework.security:spring-security-test:4.0.0.RELEASE'
 
     compile 'javax.servlet:javax.servlet-api:3.1.0'
 
