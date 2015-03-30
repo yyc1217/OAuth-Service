@@ -25,3 +25,5 @@ custom:
         defaultSalt: tDVHRGFRsWB1fofGcT9MbuWPLsgwVE6Q
   openid:
     config-path: test/openid.properties
+  api:
+    limit-times: 25000

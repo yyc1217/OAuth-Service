@@ -1,7 +1,9 @@
 package tw.edu.ncu.cc.oauth.server.web.management
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.convert.ConversionService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,19 +20,27 @@ import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 class APITokenController {
 
     @Autowired
-    def ConversionService conversionService;
+    def ConversionService conversionService
 
     @Autowired
-    def ApiTokenService apiTokenService;
+    def ApiTokenService apiTokenService
+
+    @Value( '${custom.api.limit-times}' )
+    def long api_limit_times
 
     @RequestMapping( value = "{token}", method = RequestMethod.GET )
     public ResponseEntity getToken( @PathVariable( "token" ) final String token ) {
         respondWith(
                 resource()
                     .pipe {
-                    return conversionService.convert(
+                    ApiTokenObject apiTokenObject = conversionService.convert(
                             apiTokenService.readAndUseByRealToken( token ), ApiTokenObject.class
-                    );
+                    )
+                    if( apiTokenObject != null && apiTokenObject.use_times > api_limit_times ) {
+                        return new ResponseEntity<>( "reach limit:" + api_limit_times, HttpStatus.FORBIDDEN )
+                    } else {
+                        return apiTokenObject
+                    }
                 }
         )
     }
