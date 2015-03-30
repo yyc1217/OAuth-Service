@@ -1,7 +1,6 @@
-package tw.edu.ncu.cc.oauth.resource.filter;
+package tw.edu.ncu.cc.oauth.resource.filter
 
-import javax.servlet.*;
-import java.io.IOException;
+import javax.servlet.*
 
 public abstract class AbstractFilter implements Filter {
 
