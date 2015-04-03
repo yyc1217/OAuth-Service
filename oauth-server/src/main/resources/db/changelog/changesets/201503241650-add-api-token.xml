@@ -9,16 +9,30 @@
     <changeSet id="1" author="unknown">
 
         <addColumn tableName="client">
-            <column name="api_token" type="varchar(255)"/>
+            <column name="api_use_times" type="int"/>
         </addColumn>
 
     </changeSet>
 
     <changeSet id="2" author="unknown">
 
-        <addColumn tableName="client">
-            <column name="api_use_times" type="int"/>
-        </addColumn>
+        <createTable tableName="api_token">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int"/>
+            <column name="date_created" type="datetime"/>
+            <column name="last_updated" type="datetime"/>
+            <column name="date_expired" type="datetime"/>
+            <column name="token" type="varchar(255)"/>
+            <column name="client_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="api_token" baseColumnNames="client_id"
+                                 referencedTableName="client" referencedColumnNames="id"
+                                 constraintName="fk_lb_vl4E3AHqCX" />
 
     </changeSet>
 
