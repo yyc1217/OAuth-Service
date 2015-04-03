@@ -14,7 +14,6 @@ class ClientTest extends SpringSpecification {
             client.description == '1111'
             client.owner.name == 'ADMIN1'
             client.secret == 'SECRET1'
-            client.apiToken == 'TOKEN1'
     }
 
 }
