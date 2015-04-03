@@ -21,6 +21,8 @@ custom:
       expire-seconds: 600
     accessToken:
       expire-seconds: 600
+    apiToken:
+      expire-seconds: 600
     security:
         defaultSalt: tDVHRGFRsWB1fofGcT9MbuWPLsgwVE6Q
   openid:

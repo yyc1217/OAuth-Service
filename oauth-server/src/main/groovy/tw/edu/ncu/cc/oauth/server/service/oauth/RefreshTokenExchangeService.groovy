@@ -50,12 +50,12 @@ class RefreshTokenExchangeService implements TokenExchangeService {
 
         logger.info(
                 String.format(
-                        "OAUTH EXCHANGE, REFRESH: %s, CLIENT: %s",
+                        "OAUTH EXCHANGE REFRESHTOKEN, REFRESH: %s, CLIENT: %s",
                         StringHelper.first( refreshToken, 10 ), StringHelper.first( clientID, 10 )
                 )
         );
 
-        if ( ! clientService.isSerialIdSecretValid( clientID, clientSecret ) ) {
+        if ( ! clientService.isCredentialValid( clientID, clientSecret ) ) {
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.INVALID_CLIENT, "INVALID CLIENT"
             );

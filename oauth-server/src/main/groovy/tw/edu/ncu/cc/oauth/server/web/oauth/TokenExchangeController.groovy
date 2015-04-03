@@ -17,11 +17,9 @@ import tw.edu.ncu.cc.oauth.server.service.oauth.TokenExchangeService
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 
-import static org.apache.oltu.oauth2.common.message.types.GrantType.AUTHORIZATION_CODE
-import static org.apache.oltu.oauth2.common.message.types.GrantType.REFRESH_TOKEN
+import static org.apache.oltu.oauth2.common.message.types.GrantType.*
 import static org.springframework.http.HttpHeaders.CACHE_CONTROL
-import static org.springframework.http.HttpHeaders.PRAGMA;
-
+import static org.springframework.http.HttpHeaders.PRAGMA
 
 @RestController
 public class TokenExchangeController {
@@ -31,11 +29,17 @@ public class TokenExchangeController {
     @Value( '${custom.oauth.accessToken.expire-seconds}' )
     def long accessTokenExpireSeconds
 
+    @Value( '${custom.oauth.apiToken.expire-seconds}' )
+    def long apiTokenExpireSeconds
+
     @Resource( name = "RefreshTokenExchangeService" )
     def TokenExchangeService refreshTokenService;
 
     @Resource( name = "AuthCodeExchangeService" )
     def TokenExchangeService authorizationCodeService;
+
+    @Resource( name = "ApiTokenExchangeService" )
+    def TokenExchangeService apiTokenService
 
     public TokenExchangeController() {
         headers = new HttpHeaders();
@@ -46,23 +50,19 @@ public class TokenExchangeController {
     @RequestMapping( value = "oauth/token", method = RequestMethod.POST )
     public ResponseEntity exchangeToken( HttpServletRequest httpRequest ) throws IOException {
         try {
-            return new ResponseEntity<>(
-                    buildSuccessMessage(
-                            buildOAuthTokenRequest( httpRequest )
-                    ), headers, HttpStatus.OK
-            );
+            buildSuccessResponse( httpRequest )
         } catch ( OAuthSystemException ignore ) {
-            return new ResponseEntity<>(
-                    buildErrorMessage( OAuthProblemException.error(
-                        OAuthError.CodeResponse.SERVER_ERROR )
-                    ), headers, HttpStatus.BAD_REQUEST
-            );
+            buildServerError()
         } catch ( OAuthProblemException e ) {
-            return new ResponseEntity<>(
-                    buildErrorMessage( e )
-                    , headers, HttpStatus.BAD_REQUEST
-            );
+            buildFailResponse( e )
         }
+    }
+
+    private def buildSuccessResponse( HttpServletRequest httpRequest ) throws OAuthProblemException, OAuthSystemException {
+        OAuthTokenRequest tokenRequest = buildOAuthTokenRequest( httpRequest )
+        return new ResponseEntity<>(
+                decideAndBuildMessage( tokenRequest ), headers, HttpStatus.OK
+        );
     }
 
     private static OAuthTokenRequest buildOAuthTokenRequest( HttpServletRequest httpRequest ) throws OAuthProblemException, OAuthSystemException {
@@ -70,25 +70,45 @@ public class TokenExchangeController {
         return new OAuthTokenRequest( stubHttpRequest );
     }
 
-    private String buildSuccessMessage( OAuthTokenRequest tokenRequest ) throws OAuthProblemException, OAuthSystemException {
-        return decideTokenService( tokenRequest )
-                .buildResonseMessage( tokenRequest, accessTokenExpireSeconds )
-    }
+    private String decideAndBuildMessage( OAuthTokenRequest tokenRequest ) throws OAuthProblemException, OAuthSystemException {
+        String grantType = tokenRequest.getGrantType()
 
-    private TokenExchangeService decideTokenService( OAuthTokenRequest tokenRequest ) throws OAuthProblemException {
-        String grantType = tokenRequest.getGrantType();
-        if( grantType.equals(  AUTHORIZATION_CODE.toString() ) && authorizationCodeService != null ) {
-            return authorizationCodeService;
-        } else if( grantType.equals( REFRESH_TOKEN.toString() ) && refreshTokenService != null ) {
-            return refreshTokenService;
+        if( grantType ==  AUTHORIZATION_CODE as String  && authorizationCodeService != null ) {
+
+            authorizationCodeService.buildResonseMessage( tokenRequest, accessTokenExpireSeconds )
+
+        } else if( grantType ==  REFRESH_TOKEN as String && refreshTokenService != null ) {
+
+            refreshTokenService.buildResonseMessage( tokenRequest, accessTokenExpireSeconds )
+
+        } else if( grantType ==  CLIENT_CREDENTIALS as String && apiTokenService != null ) {
+
+            apiTokenService.buildResonseMessage( tokenRequest, apiTokenExpireSeconds )
         } else {
+
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.UNSUPPORTED_GRANT_TYPE
-            );
+            )
         }
     }
 
-    private static String buildErrorMessage( OAuthProblemException e ) throws IOException {
+    private def buildServerError() {
+        String body = buildErrorMessage( OAuthProblemException.error(
+                OAuthError.CodeResponse.SERVER_ERROR )
+        )
+        return new ResponseEntity<>(
+                body, headers, HttpStatus.BAD_REQUEST
+        );
+    }
+
+    private def buildFailResponse( OAuthProblemException e ) {
+        String body = buildErrorMessage( e )
+        return new ResponseEntity<>(
+                body, headers, HttpStatus.BAD_REQUEST
+        );
+    }
+
+    private static String buildErrorMessage( OAuthProblemException e ) {
         return String.format(
                 "{\"error\":\"%s\",\"error_description\":\"%s\"}",
                 e.getError(),

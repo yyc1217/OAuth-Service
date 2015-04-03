@@ -32,7 +32,7 @@ class APITokenController {
     public ResponseEntity getToken( @PathVariable( "token" ) final String token ) {
         respondWith(
                 resource()
-                    .pipe {
+                .pipe {
                     ApiTokenObject apiTokenObject = conversionService.convert(
                             apiTokenService.readAndUseByRealToken( token ), ApiTokenObject.class
                     )

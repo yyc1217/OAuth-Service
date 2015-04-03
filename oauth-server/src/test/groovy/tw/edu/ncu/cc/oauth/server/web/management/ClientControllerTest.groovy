@@ -52,7 +52,6 @@ class ClientControllerTest extends IntegrationSpecification {
             createResponse.callback == 'http://example.com'
             createResponse.owner == 'ADMIN1'
             createResponse.secret   != null
-            createResponse.apiToken != null
         when:
             server().perform(
                     put( targetURL + "/${createResponse.id}" )

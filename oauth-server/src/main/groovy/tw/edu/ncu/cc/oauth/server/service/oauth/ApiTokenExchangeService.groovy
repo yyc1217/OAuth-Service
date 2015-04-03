@@ -9,32 +9,23 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import tw.edu.ncu.cc.oauth.server.domain.AccessToken
-import tw.edu.ncu.cc.oauth.server.domain.RefreshToken
+import tw.edu.ncu.cc.oauth.server.domain.ApiToken
 import tw.edu.ncu.cc.oauth.server.helper.StringHelper
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
-import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
-import tw.edu.ncu.cc.oauth.server.service.domain.AuthorizationCodeService
+import tw.edu.ncu.cc.oauth.server.service.domain.ApiTokenService
 import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
-import tw.edu.ncu.cc.oauth.server.service.domain.RefreshTokenService
 
 import javax.servlet.http.HttpServletResponse
 
-@Service( "AuthCodeExchangeService" )
-class AuthorizationCodeExchangeService implements TokenExchangeService {
+@Service( "ApiTokenExchangeService" )
+class ApiTokenExchangeService implements TokenExchangeService {
 
     @Autowired
     def ClientService clientService
 
     @Autowired
-    def AccessTokenService accessTokenService
-
-    @Autowired
-    def RefreshTokenService refreshTokenService
-
-    @Autowired
-    def AuthorizationCodeService authCodeService
+    def ApiTokenService apiTokenService
 
     private Logger logger = LoggerFactory.getLogger( this.getClass() )
 
@@ -44,22 +35,20 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
 
         validateOauthRequest( request )
 
-        AccessToken accessToken   = prepareAccessToken( request, expireSeconds )
-        RefreshToken refreshToken = prepareRefreshToken( accessToken )
+        ApiToken apiToken = prepareApiToken( request, expireSeconds )
 
-        return buildResponseMessage( accessToken.token, refreshToken.token, expireSeconds )
+        return buildResponseMessage( apiToken.token, expireSeconds )
     }
 
     private void validateOauthRequest( OAuthTokenRequest request ) {
 
         String clientID     = request.getClientId()
         String clientSecret = request.getClientSecret()
-        String authCode     = request.getCode()
 
         logger.info(
                 String.format(
-                        "OAUTH EXCHANGE AUTHCODE, CODE: %s, CLIENT: %s",
-                        StringHelper.first( authCode, 10 ), StringHelper.first( clientID, 10 )
+                        "OAUTH EXCHANGE APITOKEN, CLIENT: %s",
+                        StringHelper.first( clientID, 10 )
                 )
         )
 
@@ -68,20 +57,14 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
                     OAuthError.TokenResponse.INVALID_CLIENT, "INVALID CLIENT"
             )
         }
-
-        if( ! authCodeService.isCodeUnexpiredWithClientId( authCode, clientID ) ) {
-            throw OAuthProblemException.error(
-                    OAuthError.TokenResponse.INVALID_GRANT, "INVALID AUTH CODE"
-            )
-        }
     }
 
-    private AccessToken prepareAccessToken( OAuthTokenRequest request, long expireSeconds ) {
-        accessTokenService.createByAuthorizationCode(
-                new AccessToken(
+    private ApiToken prepareApiToken( OAuthTokenRequest request, long expireSeconds ) {
+        apiTokenService.create(
+                new ApiToken(
+                        client: clientService.readBySerialId( request.getClientId() ),
                         dateExpired: dicideExpireDate( expireSeconds )
-                ),
-                authCodeService.readUnexpiredByRealCode( request.getCode(), [ 'client', 'scope', 'user' ] )
+                )
         )
     }
 
@@ -93,20 +76,10 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
         }
     }
 
-    private RefreshToken prepareRefreshToken( AccessToken accessToken ) {
-        refreshTokenService.createByAccessToken(
-            new RefreshToken(
-                    dateExpired: TimeBuilder.now().after( 120, TimeUnit.MONTH ).buildDate()
-            ),
-            accessToken
-        )
-    }
-
-    private static String buildResponseMessage( String accessToken, String refreshToken, long expireSeconds ) {
+    private static String buildResponseMessage( String apiToken, long expireSeconds ) {
         return org.apache.oltu.oauth2.as.response.OAuthASResponse
                 .tokenResponse( HttpServletResponse.SC_OK )
-                .setAccessToken( accessToken )
-                .setRefreshToken( refreshToken )
+                .setAccessToken( apiToken )
                 .setTokenType( "Bearer" )
                 .setExpiresIn( expireSeconds as String )
                 .buildJSONMessage()
