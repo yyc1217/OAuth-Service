@@ -11,7 +11,6 @@ interface ClientService {
     Client readBySerialId( String id )
     Client readBySerialId( String id, List includeField )
     Client refreshSecret( Client client )
-    Client refreshAPIToken( Client client )
-    boolean isSerialIdSecretValid( String serialId, String secret )
+    boolean isCredentialValid( String serialId, String secret )
 
 }

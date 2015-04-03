@@ -25,7 +25,6 @@ class ClientServiceImplTest extends SpringSpecification {
         then:
             client.name == "HelloWorld"
             client.owner.name == "ADMIN1"
-            client.apiToken != null
     }
 
     @Transactional
@@ -59,8 +58,8 @@ class ClientServiceImplTest extends SpringSpecification {
 
     def "it can validate the client id and secret"() {
         expect:
-            clientService.isSerialIdSecretValid( serialId( 3 ), "SECRET" )
-            ! clientService.isSerialIdSecretValid( serialId( 3 ), "SECR" )
+            clientService.isCredentialValid( serialId( 3 ), "SECRET" )
+            ! clientService.isCredentialValid( serialId( 3 ), "SECR" )
     }
 
     def "it can refresh client secret"() {
@@ -82,27 +81,6 @@ class ClientServiceImplTest extends SpringSpecification {
             clientService.refreshSecret( clientService.readBySerialId( clientSerialId ) )
         then:
             clientService.readBySerialId( clientSerialId ).secret != originSecret
-    }
-
-    def "it can refresh client api token"() {
-        given:
-            def client = clientService.create(
-                    new Client(
-                            name: "HelloWorld",
-                            description: "description",
-                            callback: "abc://123",
-                            owner: User.get( 1 ),
-                            url: "http://example.com"
-                    )
-            )
-        and:
-            def clientSerialId = serialId( client.id )
-        and:
-            def originAPIToken = clientService.readBySerialId( clientSerialId ).apiToken
-        when:
-            clientService.refreshAPIToken( clientService.readBySerialId( clientSerialId ) )
-        then:
-            clientService.readBySerialId( clientSerialId ).apiToken != originAPIToken
     }
 
 }
