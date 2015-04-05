@@ -12,29 +12,33 @@ class AccessTokenControllerTest extends IntegrationSpecification {
     def targetURL = "/management/v1/access_token"
 
     def "user can get access token info by id"() {
+        given:
+            def accessToken = get_accessToken( 1 )
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/1" )
+                            get( targetURL + "/" + accessToken.id )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
             )
         then:
-            response.user == "ADMIN1"
+            response.user == accessToken.user.name
     }
 
     def "user can get access token info by token"() {
+        given:
+            def accessToken = a_accessToken()
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/Mzo6OlRPS0VO" )
+                            get( targetURL + "/" + accessToken.token )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
             )
         then:
-            response.user == "ADMIN3"
+            response.user == accessToken.user.name
     }
 
     @Rollback

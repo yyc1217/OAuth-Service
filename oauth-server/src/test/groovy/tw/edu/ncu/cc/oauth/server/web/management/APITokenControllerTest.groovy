@@ -11,10 +11,12 @@ class APITokenControllerTest extends IntegrationSpecification {
     def targetURL = "/management/v1/api_token"
 
     def "user can get api token info by token"() {
+        given:
+            def apiToken = a_apiToken()
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/Mzo6OlRPS0VO" )
+                            get( targetURL + "/" + apiToken.token )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
