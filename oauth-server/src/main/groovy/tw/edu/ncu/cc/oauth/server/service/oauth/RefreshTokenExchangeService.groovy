@@ -4,14 +4,13 @@ import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import tw.edu.ncu.cc.oauth.server.domain.AccessToken
 import tw.edu.ncu.cc.oauth.server.helper.StringHelper
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
+import tw.edu.ncu.cc.oauth.server.service.common.LogService
 import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
 import tw.edu.ncu.cc.oauth.server.service.domain.RefreshTokenService
@@ -22,6 +21,9 @@ import javax.servlet.http.HttpServletResponse
 class RefreshTokenExchangeService implements TokenExchangeService {
 
     @Autowired
+    def LogService logService
+
+    @Autowired
     def ClientService clientService;
 
     @Autowired
@@ -29,8 +31,6 @@ class RefreshTokenExchangeService implements TokenExchangeService {
 
     @Autowired
     def AccessTokenService accessTokenService;
-
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     @Override
     String buildResonseMessage( OAuthTokenRequest request, long expireSeconds ) throws OAuthProblemException, OAuthSystemException {
@@ -48,12 +48,11 @@ class RefreshTokenExchangeService implements TokenExchangeService {
         String clientSecret = request.getClientSecret();
         String refreshToken = request.getRefreshToken();
 
-        logger.info(
-                String.format(
-                        "OAUTH EXCHANGE REFRESHTOKEN, REFRESH: %s, CLIENT: %s",
-                        StringHelper.first( refreshToken, 10 ), StringHelper.first( clientID, 10 )
-                )
-        );
+        logService.info(
+                "EXCHANGE REFRESHTOKEN",
+                "CLIENT:" + clientID,
+                "REFRESHTOKEN[10]:" + StringHelper.first( refreshToken, 10 )
+        )
 
         if ( ! clientService.isCredentialValid( clientID, clientSecret ) ) {
             throw OAuthProblemException.error(

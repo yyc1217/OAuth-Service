@@ -1,7 +1,5 @@
 package tw.edu.ncu.cc.oauth.server.service.security
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -10,6 +8,7 @@ import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import tw.edu.ncu.cc.manage.openid.OpenIDManager
+import tw.edu.ncu.cc.oauth.server.service.common.LogService
 import tw.edu.ncu.cc.oauth.server.service.domain.UserService
 
 import javax.security.auth.login.LoginException
@@ -20,12 +19,13 @@ import javax.servlet.http.HttpSession
 class OpenIdServiceImpl implements OpenIdService {
 
     @Autowired
+    def LogService logService
+
+    @Autowired
     def UserService userService;
 
     @Autowired
     def OpenIDManager openIDManager;
-
-    private Logger logger = LoggerFactory.getLogger( this.getClass() )
 
     @Override
     public String getLoginPath() {
@@ -39,7 +39,7 @@ class OpenIdServiceImpl implements OpenIdService {
             String userName = openIDManager.getIdentity( request );
             userService.createWithNameIfNotExist( userName );
             integrateWithSpringSecurity( request, userName );
-            logger.info( String.format( "LOGIN USER: %s", userName ) )
+            logService.info( "LOGIN", "USER:" + userName )
         } else {
             throw new LoginException( "openid response is incorrect" );
         }
