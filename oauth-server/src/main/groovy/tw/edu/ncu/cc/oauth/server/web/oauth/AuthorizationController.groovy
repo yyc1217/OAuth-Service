@@ -4,8 +4,6 @@ import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -17,6 +15,7 @@ import tw.edu.ncu.cc.oauth.server.domain.Client
 import tw.edu.ncu.cc.oauth.server.domain.Permission
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder
 import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
+import tw.edu.ncu.cc.oauth.server.service.common.LogService
 import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
 import tw.edu.ncu.cc.oauth.server.service.domain.PermissionService
 
@@ -28,12 +27,13 @@ import javax.servlet.http.HttpServletResponse
 public final class AuthorizationController {
 
     @Autowired
+    def LogService logService
+
+    @Autowired
     def ClientService clientService;
 
     @Autowired
     def PermissionService permissionService
-
-    private Logger logger = LoggerFactory.getLogger( this.getClass() )
 
     @RequestMapping( value = "oauth/authorize", method = RequestMethod.GET )
     public String authorize( HttpServletRequest  request,
@@ -44,13 +44,10 @@ public final class AuthorizationController {
 
             OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest( request );
 
-            logger.info(
-                    String.format(
-                            "ACCESS REQUEST, USER: %s, CLIENT: %s, SCOPE: %s ",
-                            authentication.name,
-                            oauthRequest.clientId,
-                            oauthRequest.scopes.toListString()
-                    )
+            logService.info(
+                    "OAUTH REQUEST",
+                    "USER:" + authentication.name,
+                    "SCOPE:" + oauthRequest.scopes.toListString() + ", CLIENT:" + oauthRequest.clientId,
             )
 
             validateOauthRequest( oauthRequest );

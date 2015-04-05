@@ -2,8 +2,6 @@ package tw.edu.ncu.cc.oauth.server.web.oauth
 
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
@@ -16,6 +14,7 @@ import tw.edu.ncu.cc.oauth.server.domain.Permission
 import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
+import tw.edu.ncu.cc.oauth.server.service.common.LogService
 import tw.edu.ncu.cc.oauth.server.service.domain.AuthorizationCodeService
 import tw.edu.ncu.cc.oauth.server.service.domain.PermissionService
 import tw.edu.ncu.cc.oauth.server.service.domain.UserService
@@ -25,6 +24,9 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 @SessionAttributes( [ "state", "scope", "client" ] )
 public final class AccessConfirmController {
+
+    @Autowired
+    def LogService logService
 
     @Autowired
     def UserService userService
@@ -38,8 +40,6 @@ public final class AccessConfirmController {
     @Value( '${custom.oauth.authCode.expire-seconds}' )
     def long authorizationCodeExpireSeconds
 
-    private Logger logger = LoggerFactory.getLogger( this.getClass() )
-
     private SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler()
 
     @RequestMapping( value = "oauth/confirm", method = RequestMethod.POST )
@@ -49,7 +49,11 @@ public final class AccessConfirmController {
                            @RequestParam( "approval" ) boolean isAgree,
                            HttpServletRequest request, Authentication authentication ) throws URISyntaxException, OAuthSystemException {
 
-        logger.info( String.format( "ACCESS CONFIRM, USER: %s, AGREE: %s", authentication.name, isAgree ) )
+        logService.info(
+                "OAUTH CONFIRM",
+                "USER:" + authentication.name,
+                "AGREE:" + isAgree
+        )
 
         logoutHandler.logout( request, null, null );
 
