@@ -16,26 +16,28 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
     @Autowired
     AuthorizationCodeService authorizationCodeService
 
-    def "it can create refresh token from attributes of access token"() {
+    def "it can create refresh token from access token"() {
+        given:
+            def createdAccessToken = accessTokenService.create( new_accessToken() )
         when:
-            def refreshToken = refreshTokenService.createByAccessToken(
+            def createdRefreshToken = refreshTokenService.createByAccessToken(
                     new RefreshToken(
                             dateExpired: laterTime()
                     ),
-                    accessTokenService.readUnexpiredById( "1", [ 'client', 'user', 'scope' ] ) //TODO VALUE IS CHANGED BY SOME OTHER TEST
+                    createdAccessToken
             )
         and:
-            def refreshTokenDB = refreshTokenService.readUnexpiredById( refreshToken.id as String, [ 'client', 'user', 'scope', 'accessToken' ] )
+            def managedRefreshToken = refreshTokenService.readUnexpiredById( createdRefreshToken.id as String, [ 'client', 'user', 'scope', 'accessToken' ] )
         then:
-            refreshTokenDB.user.name == 'ADMIN1'
-            refreshTokenDB.client.name == 'APP1'
-            refreshTokenDB.accessToken.id == 1
-            refreshTokenDB.scope.size() > 0
+            managedRefreshToken.accessToken.id == createdAccessToken.id
+            managedRefreshToken.user.name      == createdAccessToken.user.name
+            managedRefreshToken.client.name    == createdAccessToken.client.name
+            managedRefreshToken.scope.size()   == createdAccessToken.scope.size()
     }
 
     def "it can read unexpired refresh token by real code"() {
         expect:
-            refreshTokenService.readUnexpiredByRealToken( "Mzo6OlRPS0VO" ) != null
+            refreshTokenService.readUnexpiredByRealToken( a_refreshToken().token ) != null
             refreshTokenService.readUnexpiredByRealToken( "NOTEXIST" ) == null
     }
 
@@ -47,25 +49,28 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
 
     def "it can revoke refresh token"() {
         given:
-            def refreshToken = refreshTokenService.createByAccessToken(
+            def createdAccessToken  = accessTokenService.create( new_accessToken() )
+            def createdRefreshToken = refreshTokenService.createByAccessToken(
                     new RefreshToken(
                             dateExpired: laterTime()
                     ),
-                    accessTokenService.readUnexpiredById( "1", [ 'client', 'user', 'scope' ] )
+                    createdAccessToken
             )
-        when:
-            def refreshTokenId = refreshToken.id as String
-        then:
+        and:
+            def refreshTokenId = createdRefreshToken.id as String
+        expect:
             refreshTokenService.readUnexpiredById( refreshTokenId ) != null
-        then:
+        when:
             refreshTokenService.revoke( refreshTokenService.readUnexpiredById( refreshTokenId ) ) != null
         then:
             refreshTokenService.readUnexpiredById( refreshTokenId ) == null
     }
 
     def "it can check if refresh token is unexpired and binded with specified client"() {
+        given:
+            def refreshToken = a_refreshToken()
         expect:
-            refreshTokenService.isTokenUnexpiredWithClientId( 'Mzo6OlRPS0VO', serialId( 3 ) )
+            refreshTokenService.isTokenUnexpiredWithClientId( refreshToken.token, serialId( refreshToken.id ) )
             ! refreshTokenService.isTokenUnexpiredWithClientId( 'abc', serialId( 3 ) )
     }
 

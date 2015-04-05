@@ -14,13 +14,17 @@ class PermissionServiceImplTest extends SpringSpecification {
     }
 
     def "it can read permission by id"() {
+        given:
+            def permission = a_permission()
         expect:
-            permissionService.readById( 1 ).getName() == "ADMIN"
+            permissionService.readById( permission.id ).name == permission.name
     }
 
     def "it can read permission by name"() {
+        given:
+            def permission = a_permission()
         expect:
-            permissionService.readByName( "ADMIN" ).id == 1
+            permissionService.readByName( permission.name ).id == permission.id
     }
 
 }
