@@ -1,8 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.exception.handler
 
 import org.grails.datastore.mapping.validation.ValidationException
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -11,11 +10,13 @@ import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import tw.edu.ncu.cc.oauth.data.v1.message.ErrorCode
+import tw.edu.ncu.cc.oauth.server.service.common.LogService
 
 @ControllerAdvice
 public class ApplicationExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    @Autowired
+    def LogService logService
 
     @ExceptionHandler( [ ValidationException ] )
     def ResponseEntity validationError( ValidationException e ) {
@@ -46,7 +47,7 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler( Exception )
     def ResponseEntity exceptionHandler( Exception exception ) {
-        logger.error( "UNEXPECTED ERROR:", exception );
+        logService.error( "UNEXPECTED ERROR:", exception );
         return new ResponseEntity<>(
                 new tw.edu.ncu.cc.oauth.data.v1.message.Error(
                         ErrorCode.SERVER_ERROR, exception.message
