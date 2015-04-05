@@ -17,87 +17,79 @@ class AccessTokenServiceImplTest extends SpringSpecification {
 
     def "it can create access token"() {
         given:
-            def accessToken = new AccessToken(
-                    client: Client.get( 1 ),
-                    user: User.get( 1 ),
-                    dateExpired: laterTime(),
-                    scope: [ Permission.get( 1 ) ]
-            )
+            def accessToken = new_accessToken()
         when:
-            def token = accessTokenService.readUnexpiredById(
-                    accessTokenService.create( accessToken ).id as String, [ 'client', 'user', 'scope' ]
+            def createdAccessToken = accessTokenService.create( accessToken )
+        and:
+            def managedAccessToken = accessTokenService.readUnexpiredById(
+                    createdAccessToken.id as String, [ 'client', 'user', 'scope' ]
             )
         then:
-            token.client.name == 'APP1'
-            token.user.name == 'ADMIN1'
-            token.scope.size() == 1
+            createdAccessToken.client.name  == accessToken.client.name
+            createdAccessToken.user.name    == accessToken.user.name
+            createdAccessToken.scope.size() == accessToken.scope.size()
+        and:
+            managedAccessToken.client.name  == accessToken.client.name
+            managedAccessToken.user.name    == accessToken.user.name
+            managedAccessToken.scope.size() == accessToken.scope.size()
+        and:
+            createdAccessToken.token != managedAccessToken.token
     }
 
     def "it can create access token from authorization code"() {
         given:
-            def authorizationCode = authorizationCodeService.create(
-                    new AuthorizationCode(
-                        client: Client.get( 1 ),
-                        user: User.get( 1 ),
-                        scope: [ Permission.get( 1 ) ],
-                        dateExpired: laterTime()
-                    )
-            )
+            def authorizationCode = new_authorizationCode()
+        and:
+            def createdAuthorizationCode = authorizationCodeService.create( authorizationCode )
         when:
-            def token = accessTokenService.createByAuthorizationCode(
+            def createdAccessToken = accessTokenService.createByAuthorizationCode(
                     new AccessToken(
                         dateExpired: laterTime()
                     ),
                     authorizationCode
             )
         then:
-            authorizationCodeService.readUnexpiredByRealCode( authorizationCode.code ) == null
+            authorizationCode_is_revoked( createdAuthorizationCode )
         and:
-            AuthorizationCode.include( [ 'scope' ] ).get( authorizationCode.id ).scope.size() == 1
-        and:
-            token.user.name == 'ADMIN1'
-            token.client.name == 'APP1'
-            token.scope.size() == 1
+            createdAccessToken.user.name    == authorizationCode.user.name
+            createdAccessToken.client.name  == authorizationCode.client.name
+            createdAccessToken.scope.size() == authorizationCode.scope.size()
     }
 
     def "it can create access token from refresh token"() {
         given:
-            def accessTokenOfRefreshToken = accessTokenService.create(
-                    new AccessToken(
-                            client: Client.get( 1 ),
-                            user: User.get( 1 ),
-                            scope: [ Permission.get( 1 ) ],
-                            dateExpired: laterTime()
-                    )
-            )
+            def accessToken = new_accessToken()
+            def createdAccessToken1 = accessTokenService.create( accessToken )
             def refreshToken = refreshTokenService.createByAccessToken(
                     new RefreshToken(
                             dateExpired: laterTime()
                     ) ,
-                    accessTokenOfRefreshToken
+                    createdAccessToken1
             )
         when:
-            def accessToken = accessTokenService.createByRefreshToken(
+            def createdAccessToken2 = accessTokenService.createByRefreshToken(
                     new AccessToken(
                         dateExpired: laterTime()
                     ),
                     refreshToken
             )
         then:
-            refreshTokenService.readUnexpiredById( refreshToken.id as String, [ 'accessToken' ] ).accessToken.id != accessTokenOfRefreshToken.id
+            accessToken_of_refreshToken_inDB_notEquals_to_the_accessToken( refreshToken, createdAccessToken1 )
         and:
-            accessToken.user.name == 'ADMIN1'
-            accessToken.client.name == 'APP1'
-            accessToken.scope.size() == 1
+            createdAccessToken2.user.name    == refreshToken.user.name
+            createdAccessToken2.client.name  == refreshToken.client.name
+            createdAccessToken2.scope.size() == refreshToken.scope.size()
     }
 
     def "it can read unexpired access token by real code"() {
+        given:
+            def accessToken = a_accessToken()
         expect:
-            accessTokenService.readAndUseUnexpiredByRealToken( "Mzo6OlRPS0VO" ) != null
+            accessTokenService.readAndUseUnexpiredByRealToken( accessToken.token ) != null
             accessTokenService.readAndUseUnexpiredByRealToken( "NOTEXIST" ) == null
         when:
-            def token1 = accessTokenService.readAndUseUnexpiredByRealToken( "Mzo6OlRPS0VO" )
-            def token2 = accessTokenService.readAndUseUnexpiredByRealToken( "Mzo6OlRPS0VO" )
+            def token1 = accessTokenService.readAndUseUnexpiredByRealToken( accessToken.token )
+            def token2 = accessTokenService.readAndUseUnexpiredByRealToken( accessToken.token )
         then:
             token1.lastUpdated != token2.lastUpdated
     }
@@ -116,23 +108,26 @@ class AccessTokenServiceImplTest extends SpringSpecification {
 
     def "it can revoke access token"() {
         given:
-            def accessToken = accessTokenService.create(
-                    new AccessToken(
-                            client: Client.get( 1 ),
-                            user: User.get( 1 ),
-                            scope: [ Permission.get( 1 ) ],
-                            dateExpired: laterTime()
-                    )
-            )
+            def createdAccessToken = accessTokenService.create( new_accessToken() )
+            def managedAccessToken = accessTokenService.readUnexpiredById( createdAccessToken.id as String )
+        expect:
+            ! accessToken_is_revoked( createdAccessToken )
         when:
-            def tokenId = accessToken.id as String
+            accessTokenService.revoke( managedAccessToken )
         then:
-            accessTokenService.readUnexpiredById( tokenId ) != null
-        then:
-            accessTokenService.revoke( accessTokenService.readUnexpiredById( tokenId ) ) != null
-        then:
-            accessTokenService.readUnexpiredById( tokenId ) == null
+            accessToken_is_revoked( createdAccessToken )
     }
 
+    private def authorizationCode_is_revoked( AuthorizationCode authorizationCode ) {
+        authorizationCodeService.readUnexpiredByRealCode( authorizationCode.code ) == null
+    }
+
+    private def accessToken_of_refreshToken_inDB_notEquals_to_the_accessToken( refreshToken, accessToken ) {
+        refreshTokenService.readUnexpiredById( refreshToken.id as String, [ 'accessToken' ] ).accessToken.id != accessToken.id
+    }
+
+    private def accessToken_is_revoked( AccessToken accessToken ) {
+        accessTokenService.readUnexpiredById( accessToken.id as String ) == null
+    }
 
 }

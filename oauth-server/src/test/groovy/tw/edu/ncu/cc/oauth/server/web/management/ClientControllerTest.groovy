@@ -2,6 +2,7 @@ package tw.edu.ncu.cc.oauth.server.web.management
 
 import org.springframework.http.MediaType
 import specification.IntegrationSpecification
+import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientObject
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -11,67 +12,48 @@ class ClientControllerTest extends IntegrationSpecification {
 
     def targetURL = "/management/v1/client"
 
-    def "it can handle get of Client"() {
+    def "user can get client by serial id"() {
         given:
-            def client = JSON(
+            def client = get_client( 1 )
+        when:
+            def clientResponse = JSON(
                     server().perform(
-                            get( targetURL + "/" + serialId( 1 ) )
+                            get( targetURL + "/" + serialId( client.id ) )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
             )
-        expect:
-            client.name == 'APP1'
-            client.url  == 'http://example.com'
-            client.callback == 'http://example.com'
-            client.description == '1111'
-            client.owner == 'ADMIN1'
+        then:
+            clientResponse.name        == client.name
+            clientResponse.url         == client.url
+            clientResponse.callback    == client.callback
+            clientResponse.description == client.description
+            clientResponse.owner       == client.owner.name
     }
 
-    def "it can handle create and update of Client"() {
+    def "user can create and update client"() {
         given:
-            def createResponse = JSON(
-                    server().perform(
-                            post( targetURL )
-                                    .contentType( MediaType.APPLICATION_JSON )
-                                    .content(
-                                    '''
-                                    {
-                                      "name" : "app",
-                                      "callback" : "http://example.com",
-                                      "owner" : "ADMIN1"
-                                    }
-                                    '''
-                            )
-                    ).andExpect(
-                            status().isOk()
-                    ).andReturn()
+            def clientObject = new ClientObject(
+                    name:     "app",
+                    callback: "http://example.com",
+                    owner:    "ADMIN1"
             )
+            def createdClientObject = created_a_client( clientObject )
         expect:
-            createResponse.name == 'app'
-            createResponse.callback == 'http://example.com'
-            createResponse.owner == 'ADMIN1'
-            createResponse.secret   != null
+            createdClientObject.name     == clientObject.name
+            createdClientObject.callback == clientObject.callback
+            createdClientObject.owner    == clientObject.owner
+            createdClientObject.secret   != null
         when:
-            server().perform(
-                    put( targetURL + "/${createResponse.id}" )
-                            .contentType( MediaType.APPLICATION_JSON )
-                            .content(
-                            '''
-                                    {
-                                      "name" : "NEWNAME",
-                                      "callback" : "http://example.com",
-                                      "owner" : "ADMIN1"
-                                    }
-                                    '''
-                    )
-            ).andExpect(
-                    status().isOk()
-            )
+            update_a_client( createdClientObject.id, new ClientObject(
+                    name:     "NEWNAME",
+                    callback: createdClientObject.callback,
+                    owner:    createdClientObject.owner
+            ) )
         and:
             def getResponse = JSON(
                     server().perform(
-                            get( targetURL + "/${createResponse.id}" )
+                            get( targetURL + "/${createdClientObject.id}" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -80,77 +62,94 @@ class ClientControllerTest extends IntegrationSpecification {
             getResponse.name == "NEWNAME"
     }
 
-    def "it can handle delete of Client"() {
+    def "user can delete client by serial id"() {
         given:
-            def createResponse = JSON(
-                    server().perform(
-                            post( targetURL )
-                                    .contentType( MediaType.APPLICATION_JSON )
-                                    .content(
-                                    '''
-                                    {
-                                      "name" : "app",
-                                      "callback" : "http://example.com",
-                                      "owner" : "ADMIN1"
-                                    }
-                                    '''
-                            )
-                    ).andExpect(
-                            status().isOk()
-                    ).andReturn()
-            )
+            def createdClientObject = created_a_client( new ClientObject(
+                    name:     "app",
+                    callback: "http://example.com",
+                    owner:    "ADMIN1"
+            ) )
         when:
             server().perform(
-                    delete( targetURL + "/${createResponse.id}" )
+                    delete( targetURL + "/${ createdClientObject.id }" )
             ).andExpect(
                     status().isOk()
             )
         then:
             server().perform(
-                    get( targetURL + "/${createResponse.id}" )
+                    get( targetURL + "/${ createdClientObject.id }" )
             ).andExpect(
                     status().isNotFound()
             )
     }
 
-    def "it can handle secret refresh of Client 1"() {
+    def "user can refresh secret of client by serial id 1"() {
         given:
-            def createResponse = JSON(
-                    server().perform(
-                            post( targetURL )
-                                    .contentType( MediaType.APPLICATION_JSON )
-                                    .content(
-                                    '''
-                                    {
-                                      "name" : "app",
-                                      "callback" : "http://example.com",
-                                      "owner" : "ADMIN1"
-                                    }
-                                    '''
-                            )
-                    ).andExpect(
-                            status().isOk()
-                    ).andReturn()
-            )
+            def createdClientObject = created_a_client( new ClientObject(
+                    name:     "app",
+                    callback: "http://example.com",
+                    owner:    "ADMIN1"
+            ) )
         when:
-            def getResponse = JSON(
+            def updatedClientObject = JSON(
                     server().perform(
-                            post( targetURL + "/${createResponse.id}/secret" )
+                            post( targetURL + "/${ createdClientObject.id }/secret" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
             )
         then:
-            getResponse.secret != createResponse.secret
+            updatedClientObject.secret != createdClientObject.secret
     }
 
-    def "it can handle secret refresh of Client 2"() {
+    def "user can refresh secret of client by serial id 2"() {
         expect:
             server().perform(
                     post( targetURL + "/123/secret" )
             ).andExpect(
                     status().isNotFound()
             )
+    }
+
+    private def created_a_client( ClientObject clientObject ) {
+        JSON(
+                server().perform(
+                        post( targetURL )
+                        .contentType( MediaType.APPLICATION_JSON )
+                        .content(
+                            """
+                                {
+                                  "name" :     "${ clientObject.name }",
+                                  "callback" : "${ clientObject.callback }",
+                                  "owner" :    "${ clientObject.owner }"
+                                }
+                            """
+                        )
+                ).andExpect(
+                        status().isOk()
+                ).andReturn()
+        )
+    }
+
+    private def update_a_client( id, ClientObject clientObject ) {
+        JSON(
+                server().perform(
+                        put( targetURL + "/${ id }" )
+                        .contentType( MediaType.APPLICATION_JSON )
+                        .content(
+                            """
+                                {
+                                  "name" :     "${ clientObject.name }",
+                                  "callback" : "${ clientObject.callback }",
+                                  "owner" :    "${ clientObject.owner }"
+                                }
+                            """
+                        )
+                ).andExpect(
+                        status().isOk()
+                ).andReturn()
+        )
+
     }
 
 }

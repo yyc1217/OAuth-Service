@@ -2,8 +2,6 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 
 import org.springframework.beans.factory.annotation.Autowired
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.domain.ApiToken
-import tw.edu.ncu.cc.oauth.server.domain.Client
 
 class ApiTokenServiceImplTest extends SpringSpecification {
 
@@ -11,9 +9,11 @@ class ApiTokenServiceImplTest extends SpringSpecification {
     ApiTokenService apiTokenService
 
     def "it can read client and use its api token with real api token 1"() {
+        given:
+            def apiToken = a_apiToken()
         when:
-            def useTimes1 =  apiTokenService.readAndUseByRealToken( "Mzo6OlRPS0VO" ).client.apiUseTimes
-            def useTimes2 =  apiTokenService.readAndUseByRealToken( "Mzo6OlRPS0VO" ).client.apiUseTimes
+            def useTimes1 =  apiTokenService.readAndUseByRealToken( apiToken.token ).client.apiUseTimes
+            def useTimes2 =  apiTokenService.readAndUseByRealToken( apiToken.token ).client.apiUseTimes
         then:
             useTimes1 != useTimes2
     }
@@ -24,15 +24,14 @@ class ApiTokenServiceImplTest extends SpringSpecification {
     }
 
     def "it can create api token"() {
+        given:
+            def apiToken = new_apiToken()
         when:
-            def response = apiTokenService.create( new ApiToken(
-                    client: Client.get( 1 ),
-                    dateExpired: laterTime()
-            ) )
+            def createdApiToken = apiTokenService.create( apiToken )
         and:
-            def apiToken = apiTokenService.readAndUseByRealToken( response.token )
+            def managedApiToken = apiTokenService.readAndUseByRealToken( createdApiToken.token )
         then:
-            apiToken.client.name == 'APP1'
+            managedApiToken.client.name == apiToken.client.name
     }
 
 }

@@ -3,84 +3,65 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.domain.User
 
 class ClientServiceImplTest extends SpringSpecification {
 
     @Autowired
     private ClientService clientService
 
-    def "it can create client with its api token"() {
+    def "it can create client"() {
+        given:
+            def client = new_client()
         when:
-            def client = clientService.create(
-                    new Client(
-                            name: "HelloWorld",
-                            description: "description",
-                            callback: "abc://123",
-                            owner: User.get( 1 ),
-                            url: "http://example.com"
-                    )
-            )
+            def createdClient = clientService.create( client )
         then:
-            client.name == "HelloWorld"
-            client.owner.name == "ADMIN1"
+            createdClient.name       == client.name
+            createdClient.owner.name == client.owner.name
     }
 
     @Transactional
     def "it can update exist client"() {
         given:
-            def client = clientService.readBySerialId( serialId( 1 ) )
+            def managedClient = clientService.readBySerialId( serialId( 1 ) )
         when:
-            client.name = 'newname'
+            managedClient.name = 'newname'
         and:
-            clientService.update( client )
+            clientService.update( managedClient )
         then:
             clientService.readBySerialId( serialId( 1 ) ).name == 'newname'
     }
 
     def "it can delete client"() {
         given:
-            def client = clientService.create(
-                    new Client(
-                            name: "HelloWorld",
-                            description: "description",
-                            callback: "abc://123",
-                            owner: User.get( 1 ),
-                            url: "http://example.com"
-                    )
-            )
+            def client = new_client()
+        and:
+            def createdClient = clientService.create( client )
         when:
-            clientService.delete( client )
+            clientService.delete( createdClient )
         then:
-            clientService.readBySerialId( serialId( client.id ) ) == null
+            clientService.readBySerialId( serialId( createdClient.id ) ) == null
     }
 
     def "it can validate the client id and secret"() {
+        given:
+            def client = a_client()
         expect:
-            clientService.isCredentialValid( serialId( 3 ), "SECRET" )
+            clientService.isCredentialValid( serialId( client.id ), client.secret )
             ! clientService.isCredentialValid( serialId( 3 ), "SECR" )
     }
 
     def "it can refresh client secret"() {
         given:
-            def client = clientService.create(
-                    new Client(
-                            name: "HelloWorld",
-                            description: "description",
-                            callback: "abc://123",
-                            owner: User.get( 1 ),
-                            url: "http://example.com"
-                    )
-            )
+            def client = new_client()
         and:
-            def clientSerialId = serialId( client.id )
+            def createdClient = clientService.create( client )
+            def createdClientSerialId = serialId( createdClient.id )
         and:
-            def originSecret = clientService.readBySerialId( clientSerialId ).secret
+            def originSecret = clientService.readBySerialId( createdClientSerialId ).secret
         when:
-            clientService.refreshSecret( clientService.readBySerialId( clientSerialId ) )
+            clientService.refreshSecret( clientService.readBySerialId( createdClientSerialId ) )
         then:
-            clientService.readBySerialId( clientSerialId ).secret != originSecret
+            clientService.readBySerialId( createdClientSerialId ).secret != originSecret
     }
 
 }
