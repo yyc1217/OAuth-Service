@@ -1,6 +1,5 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
-import helper.BasicAuthHelper
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.Rollback
 import specification.IntegrationSpecification
@@ -8,7 +7,7 @@ import specification.IntegrationSpecification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class TokenExchangeControllerApiTokenTest extends IntegrationSpecification implements BasicAuthHelper {
+class TokenExchangeControllerApiTokenTest extends IntegrationSpecification {
 
     def targetURL = "/oauth/token"
 
@@ -70,6 +69,10 @@ class TokenExchangeControllerApiTokenTest extends IntegrationSpecification imple
             )
         then:
             response.access_token != null
+    }
+
+    def basicAuth( String id, String secret ) {
+        "Basic " + ( id + ":" + secret ).bytes.encodeBase64()
     }
 
 }
