@@ -4,15 +4,13 @@ import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.domain.ApiToken
-import tw.edu.ncu.cc.oauth.server.helper.StringHelper
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
+import tw.edu.ncu.cc.oauth.server.service.common.LogService
 import tw.edu.ncu.cc.oauth.server.service.domain.ApiTokenService
 import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
 
@@ -22,12 +20,13 @@ import javax.servlet.http.HttpServletResponse
 class ApiTokenExchangeService implements TokenExchangeService {
 
     @Autowired
+    def LogService logService
+
+    @Autowired
     def ClientService clientService
 
     @Autowired
     def ApiTokenService apiTokenService
-
-    private Logger logger = LoggerFactory.getLogger( this.getClass() )
 
     @Override
     @Transactional
@@ -45,11 +44,9 @@ class ApiTokenExchangeService implements TokenExchangeService {
         String clientID     = request.getClientId()
         String clientSecret = request.getClientSecret()
 
-        logger.info(
-                String.format(
-                        "OAUTH EXCHANGE APITOKEN, CLIENT: %s",
-                        StringHelper.first( clientID, 10 )
-                )
+        logService.info(
+                "EXCHANGE APITOKEN",
+                "CLIENT:" + clientID
         )
 
         if ( ! clientService.isCredentialValid( clientID, clientSecret ) ) {

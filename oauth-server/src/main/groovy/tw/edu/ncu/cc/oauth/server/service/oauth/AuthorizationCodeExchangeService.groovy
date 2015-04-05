@@ -4,8 +4,6 @@ import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,6 +12,7 @@ import tw.edu.ncu.cc.oauth.server.domain.RefreshToken
 import tw.edu.ncu.cc.oauth.server.helper.StringHelper
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
+import tw.edu.ncu.cc.oauth.server.service.common.LogService
 import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.service.domain.AuthorizationCodeService
 import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
@@ -23,6 +22,9 @@ import javax.servlet.http.HttpServletResponse
 
 @Service( "AuthCodeExchangeService" )
 class AuthorizationCodeExchangeService implements TokenExchangeService {
+
+    @Autowired
+    def LogService logService
 
     @Autowired
     def ClientService clientService
@@ -35,8 +37,6 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
 
     @Autowired
     def AuthorizationCodeService authCodeService
-
-    private Logger logger = LoggerFactory.getLogger( this.getClass() )
 
     @Override
     @Transactional
@@ -56,11 +56,10 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
         String clientSecret = request.getClientSecret()
         String authCode     = request.getCode()
 
-        logger.info(
-                String.format(
-                        "OAUTH EXCHANGE AUTHCODE, CODE: %s, CLIENT: %s",
-                        StringHelper.first( authCode, 10 ), StringHelper.first( clientID, 10 )
-                )
+        logService.info(
+                "EXCHANGE AUTHCODE",
+                "CLIENT:" + clientID,
+                "CODE[10]:" + StringHelper.first( authCode, 10 )
         )
 
         if ( ! clientService.isCredentialValid( clientID, clientSecret ) ) {
