@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ClientControllerTest extends IntegrationSpecification {
 
-    def targetURL = "/management/v1/client"
+    def targetURL = "/management/v1/clients"
 
     def "user can get client by serial id"() {
         given:

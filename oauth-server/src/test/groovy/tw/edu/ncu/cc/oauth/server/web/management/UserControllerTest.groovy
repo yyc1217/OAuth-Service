@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserControllerTest extends IntegrationSpecification {
 
-    def targetURL = "/management/v1/user"
+    def targetURL = "/management/v1/users"
 
     def "user can get user's tokens 1"() {
         when:

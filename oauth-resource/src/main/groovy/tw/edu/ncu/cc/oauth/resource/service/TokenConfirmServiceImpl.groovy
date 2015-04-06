@@ -1,6 +1,6 @@
 package tw.edu.ncu.cc.oauth.resource.service
 
-import org.springframework.http.HttpStatus
+import org.springframework.http.*
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
@@ -19,9 +19,9 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
 
     @Override
     public AccessTokenObject readAccessToken( String accessToken ) {
-        String resourceAddress = config.serverPath + config.accessTokenPath + "/" + accessToken;
+        String resourceAddress = config.serverPath + config.accessTokenPath;
         try {
-            return restTemplate.getForEntity( resourceAddress, AccessTokenObject.class ).getBody();
+            getTokenWithType( resourceAddress, accessToken, AccessTokenObject.class ).getBody();
         } catch ( HttpClientErrorException e ) {
             if( e.statusCode.equals( HttpStatus.NOT_FOUND ) ) {
                 return null;
@@ -33,9 +33,9 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
 
     @Override
     ApiTokenObject readApiToken( String apiToken ) {
-        String remoteAddr = config.serverPath + config.apiTokenPath + "/" + apiToken;
+        String remoteAddr = config.serverPath + config.apiTokenPath;
         try {
-            return restTemplate.getForEntity( remoteAddr, ApiTokenObject.class ).getBody();
+            getTokenWithType( remoteAddr, apiToken, ApiTokenObject.class ).getBody();
         } catch ( HttpClientErrorException e ) {
             if( e.statusCode.equals( HttpStatus.NOT_FOUND ) || e.statusCode.equals( HttpStatus.FORBIDDEN ) ) {
                 return null;
@@ -43,6 +43,17 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
                 throw e;
             }
         }
+    }
+
+    private <T> ResponseEntity<T> getTokenWithType( String url, String token, Class<T> responseType ) {
+        HttpEntity entity = new HttpEntity( prepareTokenHeader( token ) )
+        restTemplate.exchange( url, HttpMethod.GET, entity, responseType )
+    }
+
+    private static HttpHeaders prepareTokenHeader( String token ) {
+        HttpHeaders headers = new HttpHeaders()
+        headers.add( "token", token )
+        headers
     }
 
 }

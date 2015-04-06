@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AccessTokenControllerTest extends IntegrationSpecification {
 
-    def targetURL = "/management/v1/access_token"
+    def targetURL = "/management/v1/access_tokens"
 
     def "user can get access token info by id"() {
         given:
@@ -32,7 +32,7 @@ class AccessTokenControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/" + accessToken.token )
+                            get( targetURL ).header( "token", accessToken.token )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()

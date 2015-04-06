@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.convert.ConversionService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
@@ -16,7 +16,7 @@ import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 
 @RestController
-@RequestMapping( value = "management/v1/api_token" )
+@RequestMapping( value = "management/v1/api_tokens" )
 class APITokenController {
 
     @Autowired
@@ -28,8 +28,8 @@ class APITokenController {
     @Value( '${custom.api.limit-times}' )
     def long api_limit_times
 
-    @RequestMapping( value = "{token}", method = RequestMethod.GET )
-    public ResponseEntity getToken( @PathVariable( "token" ) final String token ) {
+    @RequestMapping( method = RequestMethod.GET )
+    public ResponseEntity getTokenByToken( @RequestHeader( "token" ) final String token ) {
         respondWith(
                 resource()
                 .pipe {
