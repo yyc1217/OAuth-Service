@@ -32,7 +32,7 @@ class AccessTokenControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/" + accessToken.token )
+                            get( targetURL ).header( "token", accessToken.token )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
