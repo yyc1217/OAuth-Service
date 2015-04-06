@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class APITokenControllerTest extends IntegrationSpecification {
 
-    def targetURL = "/management/v1/api_token"
+    def targetURL = "/management/v1/api_tokens"
 
     def "user can get api token info by token"() {
         given:

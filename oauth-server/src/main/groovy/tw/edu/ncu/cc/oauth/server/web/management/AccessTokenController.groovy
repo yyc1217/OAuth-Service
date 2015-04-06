@@ -13,7 +13,7 @@ import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 
 @RestController
-@RequestMapping( value = "management/v1/access_token" )
+@RequestMapping( value = "management/v1/access_tokens" )
 public class AccessTokenController {
 
     @Autowired

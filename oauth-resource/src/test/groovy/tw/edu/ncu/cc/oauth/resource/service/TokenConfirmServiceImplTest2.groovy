@@ -23,7 +23,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/management/v1/api_token" )
+                        .withPath( "/management/v1/api_tokens" )
                         .withHeaders(
                             header( "token", "token1" )
                         )
@@ -43,7 +43,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/management/v1/api_token" )
+                        .withPath( "/management/v1/api_tokens" )
                         .withHeaders(
                             header( "token", "token2" )
                         )
@@ -54,7 +54,10 @@ class TokenConfirmServiceImplTest2 extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/management/v1/api_token/token3" )
+                        .withPath( "/management/v1/api_tokens" )
+                        .withHeaders(
+                            header( "token", "token3" )
+                        )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 403 )
