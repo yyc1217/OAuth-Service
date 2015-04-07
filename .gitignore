@@ -15,4 +15,6 @@ hs_err_pid*
 # application environment independent files
 
 application-production.yml
-production/
+
+oauth-server/src/main/resources/production/openid.properties
+oauth-server/src/main/resources/production/ehcache.xml
