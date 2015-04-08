@@ -6,6 +6,7 @@ import org.springframework.core.convert.TypeDescriptor
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
@@ -15,6 +16,7 @@ import tw.edu.ncu.cc.oauth.server.domain.Client
 import tw.edu.ncu.cc.oauth.server.domain.User
 import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.service.domain.UserService
+import tw.edu.ncu.cc.oauth.server.validator.UserValidator
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -32,8 +34,13 @@ public class UserController {
     @Autowired
     def ConversionService conversionService;
 
+    @InitBinder
+    public static void initBinder( WebDataBinder binder ) {
+        binder.addValidators( new UserValidator() );
+    }
+
     @SuppressWarnings( "unchecked" )
-    @RequestMapping( value = "{userName}/tokens", method = RequestMethod.GET )
+    @RequestMapping( value = "{userName}/access_tokens", method = RequestMethod.GET )
     public ResponseEntity getUserTokens( @PathVariable( "userName" ) final String userName ) {
         respondWith(
             resource()
@@ -50,7 +57,7 @@ public class UserController {
     }
 
     @SuppressWarnings( "unchecked" )
-    @RequestMapping( value = "{userName}/applications", method = RequestMethod.GET )
+    @RequestMapping( value = "{userName}/clients", method = RequestMethod.GET )
     public ResponseEntity getUserApplications( @PathVariable( "userName" ) final String userName ) {
         respondWith(
             resource()
