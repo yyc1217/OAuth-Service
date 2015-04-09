@@ -59,4 +59,9 @@ class ClientServiceImpl implements ClientService {
         }
     }
 
+    @Override
+    void resetAllApiUseTimes() {
+        Client.executeUpdate( "update Client set apiUseTimes = 0" )
+    }
+
 }

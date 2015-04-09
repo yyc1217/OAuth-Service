@@ -1,13 +1,17 @@
 package tw.edu.ncu.cc.oauth.server.service.domain
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
 
 class ClientServiceImplTest extends SpringSpecification {
 
     @Autowired
-    private ClientService clientService
+    ClientService clientService
+
+    @Autowired
+    ApiTokenService apiTokenService
 
     def "it can create client"() {
         given:
@@ -62,6 +66,19 @@ class ClientServiceImplTest extends SpringSpecification {
             clientService.refreshSecret( clientService.readBySerialId( createdClientSerialId ) )
         then:
             clientService.readBySerialId( createdClientSerialId ).secret != originSecret
+    }
+
+    @Rollback
+    def "it can reset all api token use times"() {
+        given:
+            def apiToken = a_apiToken()
+        when:
+            apiTokenService.readAndUseByRealToken( apiToken.token ).client.apiUseTimes
+            apiTokenService.readAndUseByRealToken( apiToken.token ).client.apiUseTimes
+        and:
+            clientService.resetAllApiUseTimes()
+        then:
+            apiTokenService.readAndUseByRealToken( apiToken.token ).client.apiUseTimes == 1
     }
 
 }
