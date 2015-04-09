@@ -7,12 +7,11 @@ import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpSession
 
+import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.getAPI_TOKEN_HEADER
 
 class TokenAccessDecisionFilterTestWithoutOauth extends Specification {
 
-    def HttpSession session
     def FilterChain filterChain
     def HttpServletRequest  request
     def HttpServletResponse response
@@ -20,7 +19,6 @@ class TokenAccessDecisionFilterTestWithoutOauth extends Specification {
     def TokenAccessDecisionFilter tokenAccessDecisionFilter
 
     def setup() {
-        session = Mock( HttpSession )
         filterChain = Mock( FilterChain )
         request  = Mock( HttpServletRequest )
         response = Mock( HttpServletResponse )
@@ -32,7 +30,7 @@ class TokenAccessDecisionFilterTestWithoutOauth extends Specification {
 
     def "it should response with 400 directly if no api token appended"() {
         given:
-            request.getHeader( "X-NCU-API-TOKEN" ) >> null
+            request.getHeader( API_TOKEN_HEADER ) >> null
         when:
             tokenAccessDecisionFilter.doFilter( request, response, filterChain )
         then:
@@ -43,7 +41,7 @@ class TokenAccessDecisionFilterTestWithoutOauth extends Specification {
 
     def "it should response 401 if directly if api token provided but invalid"() {
         given:
-            request.getHeader( "X-NCU-API-TOKEN" ) >> "TOKEN1"
+            request.getHeader( API_TOKEN_HEADER ) >> "TOKEN1"
         and:
             tokenConfirmService.readApiToken( "TOKEN2" ) >> new ApiTokenObject()
         when:
@@ -56,15 +54,12 @@ class TokenAccessDecisionFilterTestWithoutOauth extends Specification {
 
     def "it should hold api token in session if valid"() {
         given:
-            request.getSession() >> session
-            request.getHeader( "X-NCU-API-TOKEN" ) >> "TOKEN"
+            request.getHeader( API_TOKEN_HEADER ) >> "TOKEN"
         and:
             tokenConfirmService.readApiToken( "TOKEN" ) >> new ApiTokenObject()
         when:
             tokenAccessDecisionFilter.doFilter( request, response, filterChain )
         then:
-            1 * session.setAttribute( "api_token", _ as ApiTokenObject )
-        and:
             1 * filterChain.doFilter( _ as HttpServletRequest, _ as HttpServletResponse )
     }
 
