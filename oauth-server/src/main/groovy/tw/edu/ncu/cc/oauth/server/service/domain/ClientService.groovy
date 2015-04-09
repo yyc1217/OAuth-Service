@@ -13,4 +13,6 @@ interface ClientService {
     Client refreshSecret( Client client )
     boolean isCredentialValid( String serialId, String secret )
 
+    void resetAllApiUseTimes()
+
 }
