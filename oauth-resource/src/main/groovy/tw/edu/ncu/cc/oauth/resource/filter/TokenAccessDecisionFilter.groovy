@@ -5,7 +5,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextHolder
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
 import tw.edu.ncu.cc.oauth.resource.exception.InvalidRequestException
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 
@@ -15,6 +14,8 @@ import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+
+import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.*
 
 public class TokenAccessDecisionFilter extends AbstractFilter {
 
@@ -58,18 +59,18 @@ public class TokenAccessDecisionFilter extends AbstractFilter {
     }
 
     private static boolean isApiRequest( HttpServletRequest request ) {
-        return request.getHeader( "X-NCU-API-TOKEN" ) != null
+        return request.getHeader( API_TOKEN_HEADER ) != null
     }
 
     private boolean isValidAndBindApiRequest( HttpServletRequest request ) {
-        ApiTokenObject apiTokenObject = tokenConfirmService.readApiToken( request.getHeader( "X-NCU-API-TOKEN" ) )
-        request.getSession()?.setAttribute( "api_token", apiTokenObject )
-        return apiTokenObject != null
+        return tokenConfirmService.readApiToken(
+                request.getHeader( API_TOKEN_HEADER )
+        ) != null
     }
 
     private static boolean isOAuthRequest( HttpServletRequest request ) {
-        String authorization = request.getHeader( "Authorization" )
-        return authorization != null && authorization.startsWith( "Bearer" )
+        String authorization = request.getHeader( OAUTH_TOKEN_HEADER )
+        return authorization != null && authorization.startsWith( OAUTH_TOKEN_PREFIX )
     }
 
     private void trybindOauthAuthentication( HttpServletRequest request ) {
@@ -85,8 +86,8 @@ public class TokenAccessDecisionFilter extends AbstractFilter {
     }
 
     private static String readAccessToken( HttpServletRequest request ) {
-        String authorization = request.getHeader( "Authorization" )
-        return authorization.trim().substring( "Bearer".length() ).trim()
+        String authorization = request.getHeader( OAUTH_TOKEN_HEADER )
+        return authorization.trim().substring( OAUTH_TOKEN_PREFIX.length() ).trim()
     }
 
 }
