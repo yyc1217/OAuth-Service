@@ -7,8 +7,8 @@ class RequestConfigTest extends Specification {
 
     def "it has embedded values"() {
         expect:
-            RequestConfig.OAUTH_TOKEN_PREFIX == "Bearer"
-            RequestConfig.OAUTH_TOKEN_HEADER == "Authorization"
+            RequestConfig.ACCESS_TOKEN_PREFIX == "Bearer"
+            RequestConfig.ACCESS_TOKEN_HEADER == "Authorization"
             RequestConfig.API_TOKEN_HEADER   == "X-NCU-API-TOKEN"
     }
 
