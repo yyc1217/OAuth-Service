@@ -6,20 +6,22 @@
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
         http://www.springframework.org/schema/security
-        http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+        http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
     <security:http pattern="/resource/**" security="none"/>
 
-    <security:http pattern="/oauth/token/**" create-session="never" entry-point-ref="stubEntry"/>
+    <security:http pattern="/oauth/token/**" create-session="never" entry-point-ref="stubEntry">
+        <security:csrf disabled="true"/>
+    </security:http>
 
     <security:http use-expressions="true" >
 
         <security:intercept-url pattern="/oauth/authorize" access="hasRole('ROLE_USER')"/>
-        <security:intercept-url pattern="/login" access="permitAll"/>
+        <security:intercept-url pattern="/login_page" access="permitAll"/>
         <security:intercept-url pattern="/login_confirm" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isAuthenticated()"/>
 
-        <security:form-login login-page="/login"/>
+        <security:form-login login-page="/login_page"/>
         <security:csrf/>
 
     </security:http>
