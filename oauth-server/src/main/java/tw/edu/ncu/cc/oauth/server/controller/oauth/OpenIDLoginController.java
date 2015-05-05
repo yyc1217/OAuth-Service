@@ -22,7 +22,7 @@ public class OpenIDLoginController {
         this.openIDService = openIDService;
     }
 
-    @RequestMapping( value = "login", method = RequestMethod.GET )
+    @RequestMapping( value = "login_page", method = RequestMethod.GET )
     public void login( HttpServletResponse response ) throws IOException {
         response.sendRedirect( openIDService.getLoginPath() );
     }
