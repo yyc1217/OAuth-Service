@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.security
+package tw.edu.ncu.cc.oauth.server.concepts.security
 
 import org.hashids.Hashids
 import org.springframework.beans.factory.annotation.Autowired

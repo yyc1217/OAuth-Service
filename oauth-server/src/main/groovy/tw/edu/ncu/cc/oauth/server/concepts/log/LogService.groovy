@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.common
+package tw.edu.ncu.cc.oauth.server.concepts.log
 
 
 interface LogService {

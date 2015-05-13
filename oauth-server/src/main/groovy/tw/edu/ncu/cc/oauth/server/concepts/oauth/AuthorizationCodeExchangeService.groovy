@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.oauth
+package tw.edu.ncu.cc.oauth.server.concepts.oauth
 
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
@@ -7,16 +7,17 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import tw.edu.ncu.cc.oauth.server.domain.AccessToken
-import tw.edu.ncu.cc.oauth.server.domain.RefreshToken
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCodeService
+import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCode_
+import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
+import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
+import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken
+import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshTokenService
 import tw.edu.ncu.cc.oauth.server.helper.StringHelper
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
-import tw.edu.ncu.cc.oauth.server.service.common.LogService
-import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
-import tw.edu.ncu.cc.oauth.server.service.domain.AuthorizationCodeService
-import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
-import tw.edu.ncu.cc.oauth.server.service.domain.RefreshTokenService
 
 import javax.servlet.http.HttpServletResponse
 
@@ -47,7 +48,7 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
         AccessToken accessToken   = prepareAccessToken( request, expireSeconds )
         RefreshToken refreshToken = prepareRefreshToken( accessToken )
 
-        return buildResponseMessage( accessToken.token, refreshToken.token, expireSeconds )
+        return buildResponseMessage( accessToken.encryptedToken, refreshToken.encryptedToken, expireSeconds )
     }
 
     private void validateOauthRequest( OAuthTokenRequest request ) {
@@ -68,7 +69,7 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
             )
         }
 
-        if( ! authCodeService.isCodeUnexpiredWithClientId( authCode, clientID ) ) {
+        if( ! authCodeService.isUnexpiredCodeMatchesClientId( authCode, clientID ) ) {
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.INVALID_GRANT, "INVALID AUTH CODE"
             )
@@ -80,7 +81,7 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
                 new AccessToken(
                         dateExpired: dicideExpireDate( expireSeconds )
                 ),
-                authCodeService.readUnexpiredByRealCode( request.getCode(), [ 'client', 'scope', 'user' ] )
+                authCodeService.readUnexpiredByCode( request.getCode(), AuthorizationCode_.scope )
         )
     }
 

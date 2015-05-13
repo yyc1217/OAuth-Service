@@ -1,9 +1,10 @@
 package tw.edu.ncu.cc.oauth.server.service.domain
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
+import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
 
 class ClientServiceImplTest extends SpringSpecification {
 
@@ -13,6 +14,7 @@ class ClientServiceImplTest extends SpringSpecification {
     @Autowired
     ApiTokenService apiTokenService
 
+    @Transactional
     def "it can create client"() {
         given:
             def client = new_client()
@@ -26,15 +28,16 @@ class ClientServiceImplTest extends SpringSpecification {
     @Transactional
     def "it can update exist client"() {
         given:
-            def managedClient = clientService.readBySerialId( serialId( 1 ) )
+            def managedClient = clientService.findUndeletedBySerialId( serialId( 1 ) )
         when:
             managedClient.name = 'newname'
         and:
             clientService.update( managedClient )
         then:
-            clientService.readBySerialId( serialId( 1 ) ).name == 'newname'
+            clientService.findUndeletedBySerialId( serialId( 1 ) ).name == 'newname'
     }
 
+    @Transactional
     def "it can delete client"() {
         given:
             def client = new_client()
@@ -43,17 +46,18 @@ class ClientServiceImplTest extends SpringSpecification {
         when:
             clientService.delete( createdClient )
         then:
-            clientService.readBySerialId( serialId( createdClient.id ) ) == null
+            clientService.findUndeletedBySerialId( serialId( createdClient.id ) ) == null
     }
 
     def "it can validate the client id and secret"() {
         given:
             def client = a_client()
         expect:
-            clientService.isCredentialValid( serialId( client.id ), client.secret )
+            clientService.isCredentialValid( serialId( client.id ), client.encryptedSecret )
             ! clientService.isCredentialValid( serialId( 3 ), "SECR" )
     }
 
+    @Transactional
     def "it can refresh client secret"() {
         given:
             def client = new_client()
@@ -61,24 +65,11 @@ class ClientServiceImplTest extends SpringSpecification {
             def createdClient = clientService.create( client )
             def createdClientSerialId = serialId( createdClient.id )
         and:
-            def originSecret = clientService.readBySerialId( createdClientSerialId ).secret
+            def originEncryptedSecret = clientService.findUndeletedBySerialId( createdClientSerialId ).encryptedSecret
         when:
-            clientService.refreshSecret( clientService.readBySerialId( createdClientSerialId ) )
+            clientService.refreshSecret( clientService.findUndeletedBySerialId( createdClientSerialId ) )
         then:
-            clientService.readBySerialId( createdClientSerialId ).secret != originSecret
-    }
-
-    @Rollback
-    def "it can reset all api token use times"() {
-        given:
-            def apiToken = a_apiToken()
-        when:
-            apiTokenService.readAndUseByRealToken( apiToken.token ).client.apiUseTimes
-            apiTokenService.readAndUseByRealToken( apiToken.token ).client.apiUseTimes
-        and:
-            clientService.resetAllApiUseTimes()
-        then:
-            apiTokenService.readAndUseByRealToken( apiToken.token ).client.apiUseTimes == 1
+            clientService.findUndeletedBySerialId( createdClientSerialId ).encryptedSecret != originEncryptedSecret
     }
 
 }

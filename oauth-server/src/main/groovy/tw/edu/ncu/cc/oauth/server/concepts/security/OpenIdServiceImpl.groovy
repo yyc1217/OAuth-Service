@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.security
+package tw.edu.ncu.cc.oauth.server.concepts.security
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -8,8 +8,8 @@ import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import tw.edu.ncu.cc.manage.openid.OpenIDManager
-import tw.edu.ncu.cc.oauth.server.service.common.LogService
-import tw.edu.ncu.cc.oauth.server.service.domain.UserService
+import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
+import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
 
 import javax.security.auth.login.LoginException
 import javax.servlet.http.HttpServletRequest
@@ -37,7 +37,7 @@ class OpenIdServiceImpl implements OpenIdService {
 
         if( openIDManager.isValid( request ) ) {
             String userName = openIDManager.getIdentity( request );
-            userService.createWithNameIfNotExist( userName );
+            userService.createByNameIfNotExist( userName );
             integrateWithSpringSecurity( request, userName );
             logService.info( "LOGIN", "USER:" + userName )
         } else {

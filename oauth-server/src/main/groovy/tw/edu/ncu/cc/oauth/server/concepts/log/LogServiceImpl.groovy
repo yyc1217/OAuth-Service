@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.common
+package tw.edu.ncu.cc.oauth.server.concepts.log
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,7 +21,7 @@ class LogServiceImpl implements LogService {
 
     @Override
     def error( String extra, Throwable throwable ) {
-        logger.info( extra, throwable )
+        logger.error( extra, throwable )
     }
 
     @Override

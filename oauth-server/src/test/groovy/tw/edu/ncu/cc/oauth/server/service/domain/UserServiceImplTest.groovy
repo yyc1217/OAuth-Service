@@ -1,35 +1,30 @@
 package tw.edu.ncu.cc.oauth.server.service.domain
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
+import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
 
 class UserServiceImplTest extends SpringSpecification {
 
     @Autowired
     private UserService userService
 
+    @Transactional
     def "it can create UserEntity"() {
         when:
-            userService.createWithName( "NEW_USER" )
+            userService.createByName( "NEW_USER" )
         then:
-            userService.readByName( "NEW_USER" ) != null
+            userService.findByName( "NEW_USER" ) != null
     }
 
+    @Transactional
     def "it can create user if not exist"() {
         when:
-            userService.createWithNameIfNotExist( "SAMEUSER" )
-            userService.createWithNameIfNotExist( "SAMEUSER" )
+            userService.createByNameIfNotExist( "SAMEUSER" )
+            userService.createByNameIfNotExist( "SAMEUSER" )
         then:
-            userService.readByName( "SAMEUSER" ) != null
-    }
-
-    def "it can read user with it's relational attributes"() {
-        when:
-            def user = userService.readByName( "ADMIN1", [ 'clients', 'accessTokens', 'codes' ] )
-        then:
-            user.clients.find { it.name == 'APP1' } != null
-            user.accessTokens.find { it.token == 'TOKEN1' } != null
-            user.codes.find { it.code == 'CODE1' } != null
+            userService.findByName( "SAMEUSER" ) != null
     }
 
 }

@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.oauth
+package tw.edu.ncu.cc.oauth.server.concepts.oauth
 
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException

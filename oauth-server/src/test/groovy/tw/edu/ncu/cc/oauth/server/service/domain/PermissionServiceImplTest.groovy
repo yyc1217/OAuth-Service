@@ -2,6 +2,7 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 
 import org.springframework.beans.factory.annotation.Autowired
 import specification.SpringSpecification
+import tw.edu.ncu.cc.oauth.server.concepts.permission.PermissionService
 
 class PermissionServiceImplTest extends SpringSpecification {
 
@@ -10,21 +11,21 @@ class PermissionServiceImplTest extends SpringSpecification {
 
     def "it can read all permissions"() {
         expect:
-            permissionService.readAll().size() == 3
+            permissionService.findAll().size() == 3
     }
 
     def "it can read permission by id"() {
         given:
             def permission = a_permission()
         expect:
-            permissionService.readById( permission.id ).name == permission.name
+            permissionService.findById( permission.id ).name == permission.name
     }
 
     def "it can read permission by name"() {
         given:
             def permission = a_permission()
         expect:
-            permissionService.readByName( permission.name ).id == permission.id
+            permissionService.findByName( permission.name ).id == permission.id
     }
 
 }

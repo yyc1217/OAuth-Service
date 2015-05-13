@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.security
+package tw.edu.ncu.cc.oauth.server.concepts.security
 
 import javax.security.auth.login.LoginException
 import javax.servlet.http.HttpServletRequest

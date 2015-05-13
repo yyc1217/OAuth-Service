@@ -1,18 +1,15 @@
-package tw.edu.ncu.cc.oauth.server.service.domain
+package tw.edu.ncu.cc.oauth.server.concepts.client
 
-import tw.edu.ncu.cc.oauth.server.domain.Client
-
+import javax.persistence.metamodel.Attribute
 
 interface ClientService {
 
     Client create( Client client )
     Client update( Client client )
     Client delete( Client client )
-    Client readBySerialId( String id )
-    Client readBySerialId( String id, List includeField )
     Client refreshSecret( Client client )
+    Client findUndeletedBySerialId( String id )
+    Client findUndeletedBySerialId( String id, Attribute...attributes )
     boolean isCredentialValid( String serialId, String secret )
-
-    void resetAllApiUseTimes()
 
 }

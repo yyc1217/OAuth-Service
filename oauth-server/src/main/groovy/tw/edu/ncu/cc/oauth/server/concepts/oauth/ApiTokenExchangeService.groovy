@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.oauth
+package tw.edu.ncu.cc.oauth.server.concepts.oauth
 
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
@@ -7,12 +7,12 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import tw.edu.ncu.cc.oauth.server.domain.ApiToken
+import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiToken
+import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
+import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
-import tw.edu.ncu.cc.oauth.server.service.common.LogService
-import tw.edu.ncu.cc.oauth.server.service.domain.ApiTokenService
-import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
 
 import javax.servlet.http.HttpServletResponse
 
@@ -36,7 +36,7 @@ class ApiTokenExchangeService implements TokenExchangeService {
 
         ApiToken apiToken = prepareApiToken( request, expireSeconds )
 
-        return buildResponseMessage( apiToken.token, expireSeconds )
+        return buildResponseMessage( apiToken.encryptedToken, expireSeconds )
     }
 
     private void validateOauthRequest( OAuthTokenRequest request ) {
@@ -59,7 +59,7 @@ class ApiTokenExchangeService implements TokenExchangeService {
     private ApiToken prepareApiToken( OAuthTokenRequest request, long expireSeconds ) {
         apiTokenService.create(
                 new ApiToken(
-                        client: clientService.readBySerialId( request.getClientId() ),
+                        client: clientService.findUndeletedBySerialId( request.getClientId() ),
                         dateExpired: dicideExpireDate( expireSeconds )
                 )
         )

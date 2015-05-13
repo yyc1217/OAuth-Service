@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.oauth
+package tw.edu.ncu.cc.oauth.server.concepts.oauth
 
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
@@ -6,14 +6,15 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import tw.edu.ncu.cc.oauth.server.domain.AccessToken
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
+import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
+import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken_
 import tw.edu.ncu.cc.oauth.server.helper.StringHelper
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
-import tw.edu.ncu.cc.oauth.server.service.common.LogService
-import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
-import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
-import tw.edu.ncu.cc.oauth.server.service.domain.RefreshTokenService
 
 import javax.servlet.http.HttpServletResponse
 
@@ -39,7 +40,7 @@ class RefreshTokenExchangeService implements TokenExchangeService {
 
         AccessToken accessToken = prepareAccessToken( request, expireSeconds );
 
-        return buildResponseMessage( accessToken.token, expireSeconds );
+        return buildResponseMessage( accessToken.encryptedToken, expireSeconds );
     }
 
     private void validateOauthRequest( OAuthTokenRequest request ) {
@@ -60,7 +61,7 @@ class RefreshTokenExchangeService implements TokenExchangeService {
             );
         }
 
-        if( ! refreshTokenService.isTokenUnexpiredWithClientId( refreshToken , clientID ) ) {
+        if( ! refreshTokenService.isUnexpiredTokenMatchesClientId( refreshToken , clientID ) ) {
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.INVALID_GRANT, "INVALID REFRESH TOKEN"
             );
@@ -72,7 +73,7 @@ class RefreshTokenExchangeService implements TokenExchangeService {
                 new AccessToken(
                         dateExpired: dicideExpireDate( expireSeconds )
                 ),
-                refreshTokenService.readUnexpiredByRealToken( request.getRefreshToken(), [ 'client', 'scope', 'user', 'accessToken' ] )
+                refreshTokenService.readUnexpiredByToken( request.getRefreshToken(), RefreshToken_.scope )
         )
     }
 

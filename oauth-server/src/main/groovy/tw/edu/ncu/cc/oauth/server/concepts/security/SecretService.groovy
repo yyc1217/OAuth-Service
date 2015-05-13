@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.service.security
+package tw.edu.ncu.cc.oauth.server.concepts.security
 
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 
