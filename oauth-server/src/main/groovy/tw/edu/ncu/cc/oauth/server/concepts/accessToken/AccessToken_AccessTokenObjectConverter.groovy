@@ -1,9 +1,8 @@
-package tw.edu.ncu.cc.oauth.server.converter
+package tw.edu.ncu.cc.oauth.server.concepts.accessToken
 
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
-import tw.edu.ncu.cc.oauth.server.domain.AccessToken
 import tw.edu.ncu.cc.oauth.server.helper.ScopeHelper
 
 @Component

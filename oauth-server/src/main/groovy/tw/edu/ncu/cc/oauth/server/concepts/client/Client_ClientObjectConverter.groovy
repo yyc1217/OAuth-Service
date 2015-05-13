@@ -1,9 +1,8 @@
-package tw.edu.ncu.cc.oauth.server.converter
+package tw.edu.ncu.cc.oauth.server.concepts.client
 
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientObject
-import tw.edu.ncu.cc.oauth.server.domain.Client
 
 @Component
 class Client_ClientObjectConverter implements Converter< Client, ClientObject >{

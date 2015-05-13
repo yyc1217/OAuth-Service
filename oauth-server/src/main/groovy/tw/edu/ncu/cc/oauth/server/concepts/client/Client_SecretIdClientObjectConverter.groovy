@@ -1,11 +1,10 @@
-package tw.edu.ncu.cc.oauth.server.converter
+package tw.edu.ncu.cc.oauth.server.concepts.client
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.data.v1.management.client.SecretIdClientObject
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.service.security.SecretService
+import tw.edu.ncu.cc.oauth.server.concepts.security.SecretService
 
 @Component
 class Client_SecretIdClientObjectConverter implements Converter< Client, SecretIdClientObject >{
