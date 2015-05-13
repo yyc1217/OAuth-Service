@@ -1,7 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.helper
 
 import spock.lang.Specification
-import tw.edu.ncu.cc.oauth.server.domain.Permission
+import tw.edu.ncu.cc.oauth.server.concepts.permission.Permission
 
 
 class ScopeHelperTest extends Specification {
