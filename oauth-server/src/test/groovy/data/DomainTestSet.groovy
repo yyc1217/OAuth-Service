@@ -4,6 +4,7 @@ trait DomainTestSet implements
         AccessTokenTestData,
         AuthorizationCodeTestData,
         ClientTestData,
+        UserTestData,
         ApiTokenTestData,
         PermissionTestData,
         RefreshTokenTestData  {

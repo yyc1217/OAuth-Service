@@ -1,14 +1,18 @@
 package data
 
-import tw.edu.ncu.cc.oauth.server.domain.Permission
+import tw.edu.ncu.cc.oauth.server.concepts.permission.Permission
 
 trait PermissionTestData extends DomainTestData {
 
-    static Permission a_permission() {
+    Permission a_permission() {
         new Permission(
                 id: 1,
                 name: "ADMIN"
         )
+    }
+
+    Permission get_permission( int id ) {
+        getPermissions().findOne( id )
     }
 
 }
