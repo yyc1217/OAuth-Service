@@ -1,6 +1,5 @@
 package tw.edu.ncu.cc.oauth.server.exception.handler
 
-import org.grails.datastore.mapping.validation.ValidationException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -10,22 +9,13 @@ import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import tw.edu.ncu.cc.oauth.data.v1.message.ErrorCode
-import tw.edu.ncu.cc.oauth.server.service.common.LogService
+import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
 
 @ControllerAdvice
 public class ApplicationExceptionHandler {
 
     @Autowired
     def LogService logService
-
-    @ExceptionHandler( [ ValidationException ] )
-    def ResponseEntity validationError( ValidationException e ) {
-        return new ResponseEntity<>(
-                new tw.edu.ncu.cc.oauth.data.v1.message.Error(
-                        ErrorCode.INVALID_FIELD, "field validation error:" + e.message
-                ), HttpStatus.BAD_REQUEST
-        );
-    }
 
     @ExceptionHandler( [ HttpMessageNotReadableException.class, HttpMediaTypeNotSupportedException.class ] )
     def ResponseEntity invalidRequestBody() {
