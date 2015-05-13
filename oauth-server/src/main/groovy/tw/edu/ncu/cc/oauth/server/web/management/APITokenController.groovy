@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
-import tw.edu.ncu.cc.oauth.server.service.domain.ApiTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiTokenService
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -29,12 +29,12 @@ class APITokenController {
     def long api_limit_times
 
     @RequestMapping( method = RequestMethod.GET )
-    public ResponseEntity getTokenByToken( @RequestHeader( "token" ) final String token ) {
+    public ResponseEntity getTokenByToken( @RequestHeader( "token" ) final String token ) { //TODO UPDATE
         respondWith(
                 resource()
                 .pipe {
                     ApiTokenObject apiTokenObject = conversionService.convert(
-                            apiTokenService.readAndUseByRealToken( token ), ApiTokenObject.class
+                            apiTokenService.findUnexpiredByToken( token ), ApiTokenObject.class
                     )
                     if( apiTokenObject != null && apiTokenObject.use_times > api_limit_times ) {
                         return new ResponseEntity<>( "reach limit:" + api_limit_times, HttpStatus.FORBIDDEN )

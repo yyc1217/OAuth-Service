@@ -16,7 +16,7 @@ class APITokenControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL ) .header( "token", apiToken. token )
+                            get( targetURL ) .header( "token", apiToken.token )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()

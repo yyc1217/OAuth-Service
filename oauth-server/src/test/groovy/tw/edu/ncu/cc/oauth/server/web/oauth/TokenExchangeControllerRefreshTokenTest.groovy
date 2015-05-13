@@ -1,7 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
 import org.springframework.http.MediaType
-import org.springframework.test.annotation.Rollback
+import org.springframework.transaction.annotation.Transactional
 import specification.IntegrationSpecification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -39,7 +39,7 @@ class TokenExchangeControllerRefreshTokenTest extends IntegrationSpecification {
             )
     }
 
-    @Rollback
+    @Transactional
     def "it can exchange access token with refresh token"() {
         when:
             def response = JSON(

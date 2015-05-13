@@ -1,6 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.web.management
 
-import org.springframework.test.annotation.Rollback
+import org.springframework.transaction.annotation.Transactional
 import specification.IntegrationSpecification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -13,7 +13,7 @@ class AccessTokenControllerTest extends IntegrationSpecification {
 
     def "user can get access token info by id"() {
         given:
-            def accessToken = get_accessToken( 1 )
+            def accessToken = a_accessToken()
         when:
             def response = JSON(
                     server().perform(
@@ -41,17 +41,17 @@ class AccessTokenControllerTest extends IntegrationSpecification {
             response.user == accessToken.user.name
     }
 
-    @Rollback
+    @Transactional
     def "user can delete access token by id"() {
         when:
             server().perform(
-                    delete( targetURL + "/1" )
+                    delete( targetURL + "/3" )
             ).andExpect(
                     status().isOk()
             )
         then:
             server().perform(
-                    get( targetURL + "/1" )
+                    get( targetURL + "/3" )
             ).andExpect(
                     status().isNotFound()
             )

@@ -11,13 +11,13 @@ import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.SessionAttributes
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.domain.Permission
+import tw.edu.ncu.cc.oauth.server.concepts.client.Client
+import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
+import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
+import tw.edu.ncu.cc.oauth.server.concepts.permission.Permission
+import tw.edu.ncu.cc.oauth.server.concepts.permission.PermissionService
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder
 import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
-import tw.edu.ncu.cc.oauth.server.service.common.LogService
-import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
-import tw.edu.ncu.cc.oauth.server.service.domain.PermissionService
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -54,7 +54,7 @@ public final class AuthorizationController {
 
             model.addAttribute( "state", oauthRequest.getState() == null ? "" : oauthRequest.getState() );
             model.addAttribute( "scope", convertToPermissions( oauthRequest.getScopes() ) );
-            model.addAttribute( "client", clientService.readBySerialId( oauthRequest.getClientId() ) );
+            model.addAttribute( "client", clientService.findUndeletedBySerialId( oauthRequest.getClientId() ) );
             model.addAttribute( "user_id", authentication.getName() );
             model.addAttribute( "confirm_page", request.getContextPath() + "/oauth/confirm" );
 
@@ -86,7 +86,7 @@ public final class AuthorizationController {
         String clientState = oauthRequest.getState();
         String clientID    = oauthRequest.getClientId();
 
-        Client client = clientService.readBySerialId( clientID )
+        Client client = clientService.findUndeletedBySerialId( clientID )
         if( client == null ) {
             throw OAuthProblemBuilder
                     .error( OAuthError.CodeResponse.INVALID_REQUEST )
@@ -108,7 +108,7 @@ public final class AuthorizationController {
 
     private boolean isScopeExist( Set< String > scope ) {
         for( String permission : scope ) {
-            if( permissionService.readByName( permission ) == null ) {
+            if( permissionService.findByName( permission ) == null ) {
                 return false
             }
         }
@@ -117,7 +117,7 @@ public final class AuthorizationController {
 
     private Set< Permission > convertToPermissions( Set< String > scope ) {
         scope.inject( [] as Set< Permission > ) { permissions, permissionName ->
-            permissions << permissionService.readByName( permissionName )
+            permissions << permissionService.findByName( permissionName )
         } as Set<Permission>
     }
 

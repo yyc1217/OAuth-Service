@@ -1,8 +1,8 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
+import org.springframework.transaction.annotation.Transactional
 import specification.IntegrationSpecification
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.domain.Permission
+import tw.edu.ncu.cc.oauth.server.concepts.permission.Permission
 
 import static helper.CustomMockMvcResponseMatchers.url
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -17,8 +17,8 @@ class AccessConfirmControllerTest extends IntegrationSpecification {
     def "it should return 302 if user deny"() {
         given:
             def state = "abc123"
-            def scope = [ Permission.get( 1 ) ] as Set< Permission >
-            def client = Client.get( 1 )
+            def scope = [ get_permission( 1 ) ] as Set< Permission >
+            def client = get_client( 1 )
         expect:
             server().perform(
                     post( targetURL )
@@ -37,11 +37,12 @@ class AccessConfirmControllerTest extends IntegrationSpecification {
             )
     }
 
+    @Transactional
     def "it should return 302 if user agree"() {
         given:
             def state = "abc123"
-            def scope = [ Permission.get( 1 ) ]
-            def client = Client.get( 1 )
+            def scope = [ get_permission( 1 ) ]
+            def client = get_client( 1 )
         expect:
             server().perform(
                     post( targetURL )

@@ -1,7 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
 import org.springframework.http.MediaType
-import org.springframework.test.annotation.Rollback
+import org.springframework.transaction.annotation.Transactional
 import specification.IntegrationSpecification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -36,7 +36,7 @@ class TokenExchangeControllerApiTokenTest extends IntegrationSpecification {
             )
     }
 
-    @Rollback
+    @Transactional
     def "it can exchange api token with client credentials ( param version )"() {
         when:
             def response = JSON(
@@ -54,7 +54,7 @@ class TokenExchangeControllerApiTokenTest extends IntegrationSpecification {
             response.access_token != null
     }
 
-    @Rollback
+    @Transactional
     def "it can exchange api token with client credentials ( header version )"() {
         when:
             def response = JSON(

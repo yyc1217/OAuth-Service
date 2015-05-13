@@ -1,6 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.web.management
 
 import org.springframework.http.MediaType
+import org.springframework.transaction.annotation.Transactional
 import specification.IntegrationSpecification
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientObject
 
@@ -31,6 +32,7 @@ class ClientControllerTest extends IntegrationSpecification {
             clientResponse.owner       == client.owner.name
     }
 
+    @Transactional
     def "user can create and update client"() {
         given:
             def clientObject = new ClientObject(
@@ -62,6 +64,7 @@ class ClientControllerTest extends IntegrationSpecification {
             getResponse.name == "NEWNAME"
     }
 
+    @Transactional
     def "user can delete client by serial id"() {
         given:
             def createdClientObject = created_a_client( new ClientObject(
@@ -83,6 +86,7 @@ class ClientControllerTest extends IntegrationSpecification {
             )
     }
 
+    @Transactional
     def "user can refresh secret of client by serial id 1"() {
         given:
             def createdClientObject = created_a_client( new ClientObject(
@@ -102,6 +106,7 @@ class ClientControllerTest extends IntegrationSpecification {
             updatedClientObject.secret != createdClientObject.secret
     }
 
+    @Transactional
     def "user can refresh secret of client by serial id 2"() {
         expect:
             server().perform(
