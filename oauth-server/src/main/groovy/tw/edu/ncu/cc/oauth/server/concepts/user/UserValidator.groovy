@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.validator
+package tw.edu.ncu.cc.oauth.server.concepts.user
 
 import org.springframework.util.StringUtils
 import org.springframework.validation.Errors
