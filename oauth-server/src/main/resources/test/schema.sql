@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS access_token
   date_created DATETIME,
   last_updated DATETIME,
   date_expired DATETIME,
-  token VARCHAR(255),
+  encrypted_token VARCHAR(255),
   client_id INT NOT NULL,
   user_id INT NOT NULL
 );
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS refresh_token
   date_created DATETIME,
   last_updated DATETIME,
   date_expired DATETIME,
-  token VARCHAR(255),
+  encrypted_token VARCHAR(255),
   client_id INT NOT NULL,
   user_id INT NOT NULL,
   access_token_id INT NOT NULL
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS authorization_code
   date_created DATETIME,
   last_updated DATETIME,
   date_expired DATETIME,
-  code VARCHAR(255) ,
+  encrypted_code VARCHAR(255) ,
   client_id INT NOT NULL,
   user_id INT NOT NULL
 );
@@ -43,10 +43,10 @@ CREATE TABLE IF NOT EXISTS client
   last_updated DATETIME,
   callback VARCHAR(255),
   description VARCHAR(255),
-  api_use_times INT DEFAULT 0,
   name VARCHAR(255),
-  secret VARCHAR(255),
+  encrypted_secret VARCHAR(255),
   url VARCHAR(255),
+  deleted BOOLEAN DEFAULT FALSE ,
   owner_id INT NOT NULL
 );
 
@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS api_token
   date_created DATETIME,
   last_updated DATETIME,
   date_expired DATETIME,
-  token VARCHAR(255),
-  client_id INT NOT NULL
+  encrypted_token VARCHAR(255),
+  client_id INT NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS user
