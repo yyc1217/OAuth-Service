@@ -8,6 +8,7 @@ import tw.edu.ncu.cc.oauth.server.concepts.client.ClientRepository
 
 class ClientRepositoryTest extends SpringSpecification {
 
+
     @Autowired
     private ClientRepository clientRepository
 
