@@ -10,6 +10,7 @@
 
         <addColumn tableName="client">
             <column name="api_use_times" type="int"/>
+            <column name="deleted" type="boolean"/>
         </addColumn>
 
     </changeSet>
@@ -24,7 +25,7 @@
             <column name="date_created" type="datetime"/>
             <column name="last_updated" type="datetime"/>
             <column name="date_expired" type="datetime"/>
-            <column name="token" type="varchar(255)"/>
+            <column name="encrypted_token" type="varchar(255)"/>
             <column name="client_id" type="int">
                 <constraints nullable="false"/>
             </column>

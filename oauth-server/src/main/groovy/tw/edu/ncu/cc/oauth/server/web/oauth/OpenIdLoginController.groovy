@@ -5,7 +5,7 @@ import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import tw.edu.ncu.cc.oauth.server.service.security.OpenIdService
+import tw.edu.ncu.cc.oauth.server.concepts.security.OpenIdService
 
 import javax.security.auth.login.LoginException
 import javax.servlet.http.HttpServletRequest

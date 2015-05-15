@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.UserObject
-import tw.edu.ncu.cc.oauth.server.domain.AccessToken
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.domain.User
-import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
-import tw.edu.ncu.cc.oauth.server.service.domain.UserService
-import tw.edu.ncu.cc.oauth.server.validator.UserValidator
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken_
+import tw.edu.ncu.cc.oauth.server.concepts.client.Client
+import tw.edu.ncu.cc.oauth.server.concepts.user.User
+import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
+import tw.edu.ncu.cc.oauth.server.concepts.user.UserValidator
+import tw.edu.ncu.cc.oauth.server.concepts.user.User_
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -41,14 +43,14 @@ public class UserController {
 
     @SuppressWarnings( "unchecked" )
     @RequestMapping( value = "{userName}/access_tokens", method = RequestMethod.GET )
-    public ResponseEntity getUserTokens( @PathVariable( "userName" ) final String userName ) {
+    public ResponseEntity userPermittedAccessTokens( @PathVariable( "userName" ) final String userName ) {
         respondWith(
             resource()
             .pipe {
-                userService.readByName( userName )
+                userService.findByName( userName )
             }.pipe { User user ->
                 conversionService.convert(
-                        accessTokenService.readAllUnexpiredByUser( user, [ 'user', 'scope' ] ),
+                        accessTokenService.findAllUnexpiredByUser( user, AccessToken_.scope ),
                         TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( AccessToken.class ) ),
                         TypeDescriptor.array( TypeDescriptor.valueOf( AccessTokenObject.class ) )
                 );
@@ -58,11 +60,11 @@ public class UserController {
 
     @SuppressWarnings( "unchecked" )
     @RequestMapping( value = "{userName}/clients", method = RequestMethod.GET )
-    public ResponseEntity getUserApplications( @PathVariable( "userName" ) final String userName ) {
+    public ResponseEntity userOwnedClients( @PathVariable( "userName" ) final String userName ) {
         respondWith(
             resource()
             .pipe {
-                userService.readByName( userName, [ 'clients' ] )
+                userService.findByName( userName, User_.clients )
             }.pipe { User user ->
                 conversionService.convert(
                         user.clients,
@@ -80,7 +82,7 @@ public class UserController {
             .validate( validation )
             .pipe {
                 conversionService.convert(
-                        userService.createWithNameIfNotExist( userObject.getName() ), UserObject.class
+                        userService.createByNameIfNotExist( userObject.getName() ), UserObject.class
                 );
             }
         )

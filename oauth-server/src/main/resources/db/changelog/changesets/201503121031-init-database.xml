@@ -34,7 +34,7 @@
             <column name="callback" type="varchar(255)"/>
             <column name="description" type="text"/>
             <column name="name" type="varchar(255)"/>
-            <column name="secret" type="varchar(255)"/>
+            <column name="encrypted_secret" type="varchar(255)"/>
             <column name="url" type="varchar(255)"/>
             <column name="owner_id" type="int">
                 <constraints nullable="false"/>
@@ -73,7 +73,7 @@
             <column name="date_created" type="datetime"/>
             <column name="last_updated" type="datetime"/>
             <column name="date_expired" type="datetime"/>
-            <column name="code" type="varchar(255)"/>
+            <column name="encrypted_code" type="varchar(255)"/>
             <column name="client_id" type="int">
                 <constraints nullable="false"/>
             </column>
@@ -115,7 +115,7 @@
             <column name="date_created" type="datetime"/>
             <column name="last_updated" type="datetime"/>
             <column name="date_expired" type="datetime"/>
-            <column name="token" type="varchar(255)"/>
+            <column name="encrypted_token" type="varchar(255)"/>
             <column name="client_id" type="int">
                 <constraints nullable="false"/>
             </column>
@@ -158,7 +158,7 @@
             <column name="date_created" type="datetime"/>
             <column name="last_updated" type="datetime"/>
             <column name="date_expired" type="datetime"/>
-            <column name="token" type="varchar(255)"/>
+            <column name="encrypted_token" type="varchar(255)"/>
             <column name="client_id" type="int">
                 <constraints nullable="false"/>
             </column>

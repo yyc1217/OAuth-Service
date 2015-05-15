@@ -1,33 +1,36 @@
 package data
 
-import tw.edu.ncu.cc.oauth.server.domain.AccessToken
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.domain.Permission
-import tw.edu.ncu.cc.oauth.server.domain.User
+import org.springframework.transaction.annotation.Transactional
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
 
 trait AccessTokenTestData extends DomainTestData {
 
-    static AccessToken new_accessToken(){
+    AccessToken new_accessToken(){
         new AccessToken(
-                client: Client.get( 1 ),
-                user: User.get( 1 ),
-                scope: [ Permission.get( 1 ) ],
+                client: getClients().findOne( 1 ),
+                user: getUsers().findOne( 1 ),
+                scope: [ getPermissions().findOne( 1 ) ],
                 dateExpired: laterTime()
         )
     }
 
-    static AccessToken a_accessToken() {
+    AccessToken a_accessToken() {
         new AccessToken(
                 id: 3,
-                client: Client.get( 3 ),
-                user: User.get( 3 ),
-                scope: [ Permission.get( 1 ), Permission.get( 2 ) ],
+                client: getClients().findOne( 3 ),
+                user: getUsers().findOne( 3 ),
+                scope: [ getPermissions().findOne( 1 ), getPermissions().findOne( 2 ) ],
                 token: "Mzo6OlRPS0VO"
         )
     }
 
-    static AccessToken get_accessToken( long id ) {
-        AccessToken.include( [ 'client', 'user', 'scope' ] ).get( id )
+    @Transactional
+    AccessToken get_accessToken( int id ) {
+        def accesstoken = getAccessTokens().findOne( id )
+        accesstoken.getScope()
+        accesstoken.getClient()
+        accesstoken.getUser()
+        accesstoken
     }
 
 }

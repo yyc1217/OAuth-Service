@@ -1,5 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
+import org.springframework.transaction.annotation.Transactional
 import specification.IntegrationSpecification
 
 import static helper.CustomMockMvcResponseMatchers.url
@@ -12,6 +13,7 @@ class AuthorizationControllerTest extends IntegrationSpecification {
 
     def targetURL = "/oauth/authorize"
 
+    @Transactional
     def "it should return ok if params are correct"() {
         expect:
             server().perform(
@@ -38,6 +40,7 @@ class AuthorizationControllerTest extends IntegrationSpecification {
             )
     }
 
+    @Transactional
     def "it should work even state is not provided"() {
         expect:
             server().perform(

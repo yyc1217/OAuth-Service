@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.client.SecretIdClientObject
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.domain.User
-import tw.edu.ncu.cc.oauth.server.service.domain.ClientService
-import tw.edu.ncu.cc.oauth.server.validator.ClientValidator
+import tw.edu.ncu.cc.oauth.server.concepts.client.Client
+import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
+import tw.edu.ncu.cc.oauth.server.concepts.client.ClientValidator
+import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -21,6 +21,9 @@ import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 @RestController
 @RequestMapping( value = "management/v1/clients" )
 public class ClientController {
+
+    @Autowired
+    def UserService userService
 
     @Autowired
     def ClientService clientService;
@@ -45,7 +48,7 @@ public class ClientController {
                                 description: clientObject.description,
                                 url: clientObject.url,
                                 callback: clientObject.callback,
-                                owner: User.findByName( clientObject.owner )
+                                owner: userService.findByName( clientObject.owner )
                         ) ), SecretIdClientObject.class
                 );
             }
@@ -58,7 +61,7 @@ public class ClientController {
             resource()
             .pipe {
                 conversionService.convert(
-                        clientService.readBySerialId( appID, [ 'owner' ] ), IdClientObject.class
+                        clientService.findUndeletedBySerialId( appID ), IdClientObject.class
                 );
             }
         )
@@ -71,7 +74,7 @@ public class ClientController {
             resource()
             .validate( validation )
             .pipe {
-                clientService.readBySerialId( appID, [ 'owner' ] )
+                clientService.findUndeletedBySerialId( appID )
             }.pipe { Client client ->
                 client.name = clientObject.name
                 client.url = clientObject.url
@@ -90,7 +93,7 @@ public class ClientController {
         respondWith(
             resource()
             .pipe {
-                clientService.readBySerialId( appID, [ 'owner' ] )
+                clientService.findUndeletedBySerialId( appID )
             }.pipe { Client client ->
                 conversionService.convert(
                         clientService.delete( client ), IdClientObject.class
@@ -104,7 +107,7 @@ public class ClientController {
         respondWith(
             resource()
             .pipe {
-                clientService.readBySerialId( appID, [ 'owner' ] )
+                clientService.findUndeletedBySerialId( appID )
             }.pipe { Client client ->
                 conversionService.convert(
                         clientService.refreshSecret( client ), SecretIdClientObject.class

@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import tw.edu.ncu.cc.oauth.server.concepts.oauth.TokenExchangeService
 import tw.edu.ncu.cc.oauth.server.helper.data.EditableRequest
-import tw.edu.ncu.cc.oauth.server.service.oauth.TokenExchangeService
 
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest

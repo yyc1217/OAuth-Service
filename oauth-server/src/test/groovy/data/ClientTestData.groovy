@@ -1,9 +1,8 @@
 package data
 
 import org.springframework.beans.factory.annotation.Autowired
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.domain.User
-import tw.edu.ncu.cc.oauth.server.service.security.SecretService
+import tw.edu.ncu.cc.oauth.server.concepts.client.Client
+import tw.edu.ncu.cc.oauth.server.concepts.security.SecretService
 
 trait ClientTestData extends DomainTestData {
 
@@ -14,30 +13,34 @@ trait ClientTestData extends DomainTestData {
         secretService.encodeHashId( id )
     }
 
-    static Client new_client(){
+    Client new_client(){
         new Client(
                 name: "HelloWorld",
                 description: "description",
                 callback: "abc://123",
-                owner: User.get( 1 ),
-                url: "http://example.com"
+                owner: getUsers().findOne( 1 ),
+                url: "http://example.com",
+                deleted: false
         )
     }
 
-    static Client a_client() {
+    Client a_client() {
         new Client(
                 id: 3,
                 name: "APP3",
-                secret: "SECRET",
-                owner: User.get( 3 ),
+                encryptedSecret: "SECRET",
+                owner: getUsers().findOne( 3 ),
                 callback: "http://example.com",
                 url: "http://example.com",
-                description: "3333"
+                description: "3333",
+                deleted: false
         )
     }
 
-    static Client get_client( long id ) {
-        Client.include( [ 'owner' ] ).get( id )
+    Client get_client( int id ) {
+        def client = getClients().findOne( id )
+        client.getOwner()
+        client
     }
 
 }

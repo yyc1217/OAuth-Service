@@ -6,8 +6,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ClientAccessTokenObject
-import tw.edu.ncu.cc.oauth.server.domain.AccessToken
-import tw.edu.ncu.cc.oauth.server.service.domain.AccessTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken_
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -28,19 +29,19 @@ public class AccessTokenController {
                 resource()
                 .pipe {
                     conversionService.convert(
-                            accessTokenService.readAndUseUnexpiredByRealToken( token, [ 'user', 'scope' ] ), AccessTokenObject.class
+                            accessTokenService.findUnexpiredByToken( token, AccessToken_.scope ), AccessTokenObject.class
                     );
                 }
         )
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.GET )
-    public ResponseEntity getTokenById( @PathVariable( "id" ) final String idOrToken ) {
+    public ResponseEntity getTokenById( @PathVariable( "id" ) final String id ) {
         respondWith(
                 resource()
                 .pipe {
                     return conversionService.convert(
-                            accessTokenService.readUnexpiredById( idOrToken, [ 'client', 'user', 'scope' ] ), ClientAccessTokenObject.class
+                            accessTokenService.findUnexpiredById( id, AccessToken_.scope ), ClientAccessTokenObject.class
                     );
                 }
         )
@@ -51,7 +52,7 @@ public class AccessTokenController {
         respondWith(
             resource()
             .pipe {
-                accessTokenService.readUnexpiredById( id, [ 'client', 'user', 'scope' ] )
+                accessTokenService.findUnexpiredById( id, AccessToken_.scope )
             }.pipe { AccessToken accessToken ->
                 conversionService.convert(
                         accessTokenService.revoke( accessToken ), ClientAccessTokenObject.class

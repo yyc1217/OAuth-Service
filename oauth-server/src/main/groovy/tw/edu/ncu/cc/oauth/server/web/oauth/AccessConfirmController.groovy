@@ -8,16 +8,16 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import tw.edu.ncu.cc.oauth.server.domain.AuthorizationCode
-import tw.edu.ncu.cc.oauth.server.domain.Client
-import tw.edu.ncu.cc.oauth.server.domain.Permission
+import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCode
+import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCodeService
+import tw.edu.ncu.cc.oauth.server.concepts.client.Client
+import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
+import tw.edu.ncu.cc.oauth.server.concepts.permission.Permission
+import tw.edu.ncu.cc.oauth.server.concepts.permission.PermissionService
+import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
 import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
-import tw.edu.ncu.cc.oauth.server.service.common.LogService
-import tw.edu.ncu.cc.oauth.server.service.domain.AuthorizationCodeService
-import tw.edu.ncu.cc.oauth.server.service.domain.PermissionService
-import tw.edu.ncu.cc.oauth.server.service.domain.UserService
 
 import javax.servlet.http.HttpServletRequest
 
@@ -66,14 +66,14 @@ public final class AccessConfirmController {
 
             AuthorizationCode authCode = authorizationCodeService.create( new AuthorizationCode(
                     client: client,
-                    user: userService.readByName( authentication.name ),
+                    user: userService.findByName( authentication.name ),
                     scope: scope,
                     dateExpired: expireDate
             ) );
 
             return "redirect:" + OAuthURLBuilder
                     .url( client.getCallback() )
-                    .code( authCode.getCode() )
+                    .code( authCode.getEncryptedCode() )
                     .state( state )
                     .build();
         } else {

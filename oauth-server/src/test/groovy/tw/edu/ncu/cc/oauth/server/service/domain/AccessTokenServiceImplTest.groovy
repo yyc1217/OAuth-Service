@@ -1,8 +1,15 @@
 package tw.edu.ncu.cc.oauth.server.service.domain
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.domain.*
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken_
+import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCode
+import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCodeService
+import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken
+import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshTokenService
 
 class AccessTokenServiceImplTest extends SpringSpecification {
 
@@ -15,14 +22,15 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     @Autowired
     AuthorizationCodeService authorizationCodeService
 
+    @Transactional
     def "it can create access token"() {
         given:
             def accessToken = new_accessToken()
         when:
             def createdAccessToken = accessTokenService.create( accessToken )
         and:
-            def managedAccessToken = accessTokenService.readUnexpiredById(
-                    createdAccessToken.id as String, [ 'client', 'user', 'scope' ]
+            def managedAccessToken = accessTokenService.findUnexpiredById(
+                    createdAccessToken.id as String, AccessToken_.scope
             )
         then:
             createdAccessToken.client.name  == accessToken.client.name
@@ -33,9 +41,10 @@ class AccessTokenServiceImplTest extends SpringSpecification {
             managedAccessToken.user.name    == accessToken.user.name
             managedAccessToken.scope.size() == accessToken.scope.size()
         and:
-            createdAccessToken.token != managedAccessToken.token
+            createdAccessToken.token != null
     }
 
+    @Transactional
     def "it can create access token from authorization code"() {
         given:
             def authorizationCode = new_authorizationCode()
@@ -56,6 +65,7 @@ class AccessTokenServiceImplTest extends SpringSpecification {
             createdAccessToken.scope.size() == authorizationCode.scope.size()
     }
 
+    @Transactional
     def "it can create access token from refresh token"() {
         given:
             def accessToken = new_accessToken()
@@ -85,31 +95,32 @@ class AccessTokenServiceImplTest extends SpringSpecification {
         given:
             def accessToken = a_accessToken()
         expect:
-            accessTokenService.readAndUseUnexpiredByRealToken( accessToken.token ) != null
-            accessTokenService.readAndUseUnexpiredByRealToken( "NOTEXIST" ) == null
+            accessTokenService.findUnexpiredByToken( accessToken.token ) != null
+            accessTokenService.findUnexpiredByToken( "NOTEXIST" ) == null
         when:
-            def token1 = accessTokenService.readAndUseUnexpiredByRealToken( accessToken.token )
-            def token2 = accessTokenService.readAndUseUnexpiredByRealToken( accessToken.token )
+            def token1 = accessTokenService.findUnexpiredByToken( accessToken.token )
+            def token2 = accessTokenService.findUnexpiredByToken( accessToken.token )
         then:
             token1.lastUpdated != token2.lastUpdated
     }
 
     def "it can read unexpired access tokens by client id"() {
         expect:
-            accessTokenService.readAllUnexpiredByClient( Client.get( 2 ) ).size() == 0
-            accessTokenService.readAllUnexpiredByClient( Client.get( 3 ) ).size() == 1
+            accessTokenService.findAllUnexpiredByClient( get_client( 2 ) ).size() == 0
+            accessTokenService.findAllUnexpiredByClient( get_client( 3 ) ).size() == 1
     }
 
     def "it can read unexpired access tokens by user name"() {
         expect:
-            accessTokenService.readAllUnexpiredByUser( User.get( 2 ) ).size() == 0
-            accessTokenService.readAllUnexpiredByUser( User.get( 3 ) ).size() == 1
+            accessTokenService.findAllUnexpiredByUser( get_user( 2 ) ).size() == 0
+            accessTokenService.findAllUnexpiredByUser( get_user( 3 ) ).size() == 1
     }
 
+    @Transactional
     def "it can revoke access token"() {
         given:
             def createdAccessToken = accessTokenService.create( new_accessToken() )
-            def managedAccessToken = accessTokenService.readUnexpiredById( createdAccessToken.id as String )
+            def managedAccessToken = accessTokenService.findUnexpiredById( createdAccessToken.id as String )
         expect:
             ! accessToken_is_revoked( createdAccessToken )
         when:
@@ -119,15 +130,15 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     }
 
     private def authorizationCode_is_revoked( AuthorizationCode authorizationCode ) {
-        authorizationCodeService.readUnexpiredByRealCode( authorizationCode.code ) == null
+        authorizationCodeService.readUnexpiredByCode( authorizationCode.code ) == null
     }
 
     private def accessToken_of_refreshToken_inDB_notEquals_to_the_accessToken( refreshToken, accessToken ) {
-        refreshTokenService.readUnexpiredById( refreshToken.id as String, [ 'accessToken' ] ).accessToken.id != accessToken.id
+        refreshTokenService.readUnexpiredById( refreshToken.id as String ).accessToken.id != accessToken.id
     }
 
     private def accessToken_is_revoked( AccessToken accessToken ) {
-        accessTokenService.readUnexpiredById( accessToken.id as String ) == null
+        accessTokenService.findUnexpiredById( accessToken.id as String ) == null
     }
 
 }

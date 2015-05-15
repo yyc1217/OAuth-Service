@@ -5,8 +5,6 @@ spring:
     show_banner: false
   profiles:
     active: production
-  mvc:
-    ignore-default-model-on-redirect: true
   view:
     prefix: '/jsp/'
     suffix: '.jsp'

@@ -1,6 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.web.management
 
 import org.springframework.http.MediaType
+import org.springframework.transaction.annotation.Transactional
 import specification.IntegrationSpecification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -47,6 +48,7 @@ class UserControllerTest extends IntegrationSpecification {
             response[0].owner == "ADMIN1"
     }
 
+    @Transactional
     def "user can create new user"() {
         when:
             def response = JSON(
