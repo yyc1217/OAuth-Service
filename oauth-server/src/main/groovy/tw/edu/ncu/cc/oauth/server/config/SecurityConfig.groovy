@@ -1,5 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.config
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -13,11 +14,15 @@ public class SecurityConfig {
     @Order( 1 )
     @Configuration
     public static class OauthConfig1 extends WebSecurityConfigurerAdapter {
+
+        @Value( '${custom.management.security.access}' )
+        def String managementAccess
+
         @Override
         protected void configure( HttpSecurity http ) throws Exception {
             http.antMatcher( "/management/**" )
                 .authorizeRequests()
-                    .antMatchers( "/management/v1/**" ).access( "hasIpAddress('127.0.0.1') or hasIpAddress('0:0:0:0:0:0:0:1')" )
+                    .antMatchers( "/management/**" ).access( managementAccess )
                     .and()
                 .csrf().disable()
         }

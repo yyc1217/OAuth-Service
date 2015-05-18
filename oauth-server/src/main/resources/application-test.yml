@@ -29,3 +29,6 @@ custom:
     config-path: test/openid.properties
   api:
     limit-times: 25000
+  management:
+    security:
+      access: hasIpAddress('127.0.0.1') or hasIpAddress('0:0:0:0:0:0:0:1')
