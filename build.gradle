@@ -1,7 +1,7 @@
 
 allprojects{
     group = 'tw.edu.ncu.cc'
-    version = '0.3.1'
+    version = '0.5.0'
 }
 
 subprojects{

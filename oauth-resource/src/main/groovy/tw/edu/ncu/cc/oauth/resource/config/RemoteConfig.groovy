@@ -1,5 +1,8 @@
-package tw.edu.ncu.cc.oauth.resource.config;
+package tw.edu.ncu.cc.oauth.resource.config
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties( "ncu.oauth" )
 public class RemoteConfig {
 
     def String serverPath = "https://localhost/oauth";

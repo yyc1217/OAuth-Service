@@ -37,6 +37,7 @@ class TokenConfirmServiceImplTest1 extends Specification {
                             "id" : "1",
                             "user" : "101502549",
                             "scope" : [ "READ", "WRITE" ],
+                            "client_id" : "abc",
                             "last_updated" : "2014-12-15"
                         }
                         '''

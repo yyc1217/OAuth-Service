@@ -1,0 +1,3 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+tw.edu.ncu.cc.oauth.resource.config.ApiAuthorizationAutoConfigure

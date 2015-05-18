@@ -22,7 +22,7 @@ class APITokenControllerTest extends IntegrationSpecification {
                     ).andReturn()
             )
         then:
-            response.use_times >= 0
+            response.client_id != null
     }
 
 }

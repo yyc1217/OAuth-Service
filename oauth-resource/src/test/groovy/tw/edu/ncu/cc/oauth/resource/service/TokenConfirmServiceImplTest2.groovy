@@ -34,6 +34,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
                         .withBody(
                         '''
                         {
+                            "client_id" : "abc",
                             "use_times" : 10,
                             "last_updated" : "2014-12-15"
                         }
@@ -74,7 +75,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
 
     def "it can get api token from remote server 1"() {
         expect:
-            tokenConfirmService.readApiToken( "token1" ).use_times == 10
+            tokenConfirmService.readApiToken( "token1" ).use_times == 10 as long
     }
 
     def "it can get api token from remote server 2"() {
