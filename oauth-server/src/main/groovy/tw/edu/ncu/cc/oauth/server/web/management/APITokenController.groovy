@@ -1,11 +1,9 @@
 package tw.edu.ncu.cc.oauth.server.web.management
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.convert.ConversionService
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
@@ -25,22 +23,14 @@ class APITokenController {
     @Autowired
     def ApiTokenService apiTokenService
 
-    @Value( '${custom.api.limit-times}' )
-    def long api_limit_times
-
-    @RequestMapping( method = RequestMethod.GET )
-    public ResponseEntity getTokenByToken( @RequestHeader( "token" ) final String token ) { //TODO UPDATE
+    @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
+    public ResponseEntity getTokenByToken( @PathVariable( "token" ) final String token ) {
         respondWith(
                 resource()
                 .pipe {
-                    ApiTokenObject apiTokenObject = conversionService.convert(
+                    conversionService.convert(
                             apiTokenService.findUnexpiredByToken( token ), ApiTokenObject.class
                     )
-                    if( apiTokenObject != null && apiTokenObject.use_times > api_limit_times ) {
-                        return new ResponseEntity<>( "reach limit:" + api_limit_times, HttpStatus.FORBIDDEN )
-                    } else {
-                        return apiTokenObject
-                    }
                 }
         )
     }
