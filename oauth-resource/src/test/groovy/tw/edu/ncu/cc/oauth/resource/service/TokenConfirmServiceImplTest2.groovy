@@ -9,9 +9,6 @@ import spock.lang.Shared
 import spock.lang.Specification
 import tw.edu.ncu.cc.oauth.resource.config.RemoteConfig
 
-import static org.mockserver.model.Header.header
-
-
 class TokenConfirmServiceImplTest2 extends Specification {
 
     @Shared @ClassRule
@@ -23,10 +20,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/management/v1/api_tokens" )
-                        .withHeaders(
-                            header( "token", "token1" )
-                        )
+                        .withPath( "/management/v1/api_tokens/token/token1" )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 200 )
@@ -44,10 +38,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/management/v1/api_tokens" )
-                        .withHeaders(
-                            header( "token", "token2" )
-                        )
+                        .withPath( "/management/v1/api_tokens/token/token2" )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 404 )
@@ -55,10 +46,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/management/v1/api_tokens" )
-                        .withHeaders(
-                            header( "token", "token3" )
-                        )
+                        .withPath( "/management/v1/api_tokens/token/token3" )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 403 )
@@ -75,7 +63,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
 
     def "it can get api token from remote server 1"() {
         expect:
-            tokenConfirmService.readApiToken( "token1" ).use_times == 10 as long
+            tokenConfirmService.readApiToken( "token1" ).client_id == "abc"
     }
 
     def "it can get api token from remote server 2"() {
