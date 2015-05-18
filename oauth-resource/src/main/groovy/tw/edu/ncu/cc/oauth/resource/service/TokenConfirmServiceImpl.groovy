@@ -1,6 +1,7 @@
 package tw.edu.ncu.cc.oauth.resource.service
 
-import org.springframework.http.*
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
@@ -46,14 +47,7 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
     }
 
     private <T> ResponseEntity<T> getTokenWithType( String url, String token, Class<T> responseType ) {
-        HttpEntity entity = new HttpEntity( prepareTokenHeader( token ) )
-        restTemplate.exchange( url, HttpMethod.GET, entity, responseType )
-    }
-
-    private static HttpHeaders prepareTokenHeader( String token ) {
-        HttpHeaders headers = new HttpHeaders()
-        headers.add( "token", token )
-        headers
+        restTemplate.getForEntity( url + "/" + token, responseType )
     }
 
 }

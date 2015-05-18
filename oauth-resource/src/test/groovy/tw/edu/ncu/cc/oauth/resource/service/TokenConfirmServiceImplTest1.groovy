@@ -9,9 +9,6 @@ import spock.lang.Shared
 import spock.lang.Specification
 import tw.edu.ncu.cc.oauth.resource.config.RemoteConfig
 
-import static org.mockserver.model.Header.header
-
-
 class TokenConfirmServiceImplTest1 extends Specification {
 
     @Shared @ClassRule
@@ -23,10 +20,7 @@ class TokenConfirmServiceImplTest1 extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/management/v1/access_tokens" )
-                        .withHeaders(
-                            header( "token", "token1" )
-                        )
+                        .withPath( "/management/v1/access_tokens/token/token1" )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 200 )
@@ -46,10 +40,7 @@ class TokenConfirmServiceImplTest1 extends Specification {
         serverResource.mockServer().when(
                 HttpRequest.request()
                         .withMethod( "GET" )
-                        .withPath( "/management/v1/access_tokens" )
-                        .withHeaders(
-                            header( "token", "token2" )
-                        )
+                        .withPath( "/management/v1/access_tokens/token/token2" )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 404 )
