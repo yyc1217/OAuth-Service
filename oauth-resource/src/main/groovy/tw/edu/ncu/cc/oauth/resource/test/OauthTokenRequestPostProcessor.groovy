@@ -47,7 +47,7 @@ class OauthTokenRequestPostProcessor implements RequestPostProcessor {
                 id: id,
                 user: user,
                 scope: scope,
-                clientId: clientId,
+                client_id: clientId,
                 last_updated: new Date()
         ) )
         request

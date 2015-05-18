@@ -68,7 +68,7 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
 
     private static void bindApiToken( HttpServletRequest request, ApiTokenObject apiTokenObject ) {
         SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken( apiTokenObject.clientId, "" )
+                new UsernamePasswordAuthenticationToken( apiTokenObject.client_id, "" )
         )
         request.setAttribute( API_TOKEN_ATTR, apiTokenObject )
     }

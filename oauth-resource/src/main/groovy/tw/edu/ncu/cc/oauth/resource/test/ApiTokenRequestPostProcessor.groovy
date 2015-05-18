@@ -33,7 +33,7 @@ class ApiTokenRequestPostProcessor implements RequestPostProcessor {
         ApiCredentialHolder.addApiToken( apiToken, new ApiTokenObject(
                 use_times: apiUseTimes,
                 last_updated: new Date(),
-                clientId: clientId
+                client_id: clientId
         ) )
         request
     }

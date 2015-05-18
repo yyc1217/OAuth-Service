@@ -23,7 +23,7 @@ class ApiAuthMockMvcRequestPostProcessorsTest extends Specification {
             def apiToken = ApiCredentialHolder.getApiToken( "test-api-token" )
         then:
             apiToken.use_times == 5 as Long
-            apiToken.clientId == "app"
+            apiToken.client_id == "app"
     }
 
     def "it can add oauth token to mock request and crdential holder"() {
@@ -44,7 +44,7 @@ class ApiAuthMockMvcRequestPostProcessorsTest extends Specification {
         then:
             accessToken.id == "abc"
             accessToken.user == "jason"
-            accessToken.clientId == "app"
+            accessToken.client_id == "app"
             accessToken.scope.toList() == [ "read" ]
     }
 

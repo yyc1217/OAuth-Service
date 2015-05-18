@@ -4,7 +4,7 @@ public class AccessTokenObject {
 
     def String id
     def String user
-    def String clientId
+    def String client_id
     def String[] scope
     def Date last_updated
 

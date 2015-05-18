@@ -59,7 +59,7 @@ class ApiTokenDecisionFilterTest extends Specification {
             request.getHeader( API_TOKEN_HEADER ) >> "TOKEN"
         and:
             tokenConfirmService.readApiToken( "TOKEN" ) >> new ApiTokenObject(
-                    clientId: "testapp"
+                    client_id: "testapp"
             )
         when:
             apiTokenDecisionFilter.doFilter( request, response, filterChain )
