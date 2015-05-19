@@ -27,7 +27,7 @@ public class AccessTokenController {
     def AccessTokenService accessTokenService;
 
     @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
-    public ResponseEntity getTokenByToken( @PathVariable ( "token" ) final String token ) {
+    public ResponseEntity getByToken( @PathVariable ( "token" ) final String token ) {
         respondWith(
                 resource()
                 .pipe {
@@ -39,7 +39,7 @@ public class AccessTokenController {
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.GET )
-    public ResponseEntity getTokenById( @PathVariable( "id" ) final String id ) {
+    public ResponseEntity getById( @PathVariable( "id" ) final String id ) {
         respondWith(
                 resource()
                 .pipe {
@@ -51,7 +51,7 @@ public class AccessTokenController {
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
-    public ResponseEntity revokeTokenById( @PathVariable( "id" ) final String id ) {
+    public ResponseEntity revokeById( @PathVariable( "id" ) final String id ) {
         respondWith(
             resource()
             .pipe {

@@ -41,7 +41,7 @@ public class ClientController {
     }
 
     @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity createApplication( @RequestBody @Validated final ClientObject clientObject, BindingResult validation ) {
+    public ResponseEntity create( @RequestBody @Validated final ClientObject clientObject, BindingResult validation ) {
         respondWith(
             resource()
             .validate( validation )
@@ -59,26 +59,26 @@ public class ClientController {
         )
     }
 
-    @RequestMapping( value = "{appID}", method = RequestMethod.GET )
-    public ResponseEntity getApplication( @PathVariable( "appID" ) final String appID ) {
+    @RequestMapping( value = "{id}", method = RequestMethod.GET )
+    public ResponseEntity get( @PathVariable( "id" ) final String clientId ) {
         respondWith(
             resource()
             .pipe {
                 conversionService.convert(
-                        clientService.findUndeletedBySerialId( appID ), IdClientObject.class
+                        clientService.findUndeletedBySerialId( clientId ), IdClientObject.class
                 );
             }
         )
     }
 
-    @RequestMapping( value = "{appID}", method = RequestMethod.PUT )
-    public ResponseEntity updateApplication( @PathVariable( "appID" ) final String appID,
+    @RequestMapping( value = "{id}", method = RequestMethod.PUT )
+    public ResponseEntity update( @PathVariable( "id" ) final String clientId,
                                              @RequestBody @Validated  final ClientObject clientObject, final BindingResult validation ) {
         respondWith(
             resource()
             .validate( validation )
             .pipe {
-                clientService.findUndeletedBySerialId( appID )
+                clientService.findUndeletedBySerialId( clientId )
             }.pipe { Client client ->
                 client.name = clientObject.name
                 client.url = clientObject.url
@@ -92,12 +92,12 @@ public class ClientController {
         )
     }
 
-    @RequestMapping( value = "{appID}", method = RequestMethod.DELETE )
-    public ResponseEntity deleteApplication( @PathVariable( "appID" ) final String appID ) {
+    @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
+    public ResponseEntity delete( @PathVariable( "id" ) final String clientId ) {
         respondWith(
             resource()
             .pipe {
-                clientService.findUndeletedBySerialId( appID )
+                clientService.findUndeletedBySerialId( clientId )
             }.pipe { Client client ->
                 conversionService.convert(
                         clientService.delete( client ), IdClientObject.class
@@ -106,12 +106,12 @@ public class ClientController {
         )
     }
 
-    @RequestMapping( value = "{appID}/secret", method = RequestMethod.POST )
-    public ResponseEntity refreshApplicationSecret( @PathVariable( "appID" ) final String appID ) {
+    @RequestMapping( value = "{id}/secret", method = RequestMethod.POST )
+    public ResponseEntity refresh( @PathVariable( "id" ) final String clientId ) {
         respondWith(
             resource()
             .pipe {
-                clientService.findUndeletedBySerialId( appID )
+                clientService.findUndeletedBySerialId( clientId )
             }.pipe { Client client ->
                 conversionService.convert(
                         clientService.refreshSecret( client ), SecretIdClientObject.class
@@ -120,12 +120,12 @@ public class ClientController {
         )
     }
 
-    @RequestMapping( value = "{appID}/api_tokens", method = RequestMethod.GET )
-    public ResponseEntity getApplicationApiTokens( @PathVariable( "appID" ) final String appID ) {
+    @RequestMapping( value = "{id}/api_tokens", method = RequestMethod.GET )
+    public ResponseEntity getApiTokens( @PathVariable( "id" ) final String clientId ) {
         respondWith(
                 resource()
                 .pipe {
-                    clientService.findUndeletedBySerialId( appID, Client_.apiTokens )
+                    clientService.findUndeletedBySerialId( clientId, Client_.apiTokens )
                 }.pipe { Client client ->
                     conversionService.convert(
                             client.apiTokens,

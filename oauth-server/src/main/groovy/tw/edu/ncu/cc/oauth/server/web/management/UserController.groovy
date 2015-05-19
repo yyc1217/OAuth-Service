@@ -43,7 +43,7 @@ public class UserController {
 
     @SuppressWarnings( "unchecked" )
     @RequestMapping( value = "{userName}/access_tokens", method = RequestMethod.GET )
-    public ResponseEntity userPermittedAccessTokens( @PathVariable( "userName" ) final String userName ) {
+    public ResponseEntity getAccessTokens( @PathVariable( "userName" ) final String userName ) {
         respondWith(
             resource()
             .pipe {
@@ -60,7 +60,7 @@ public class UserController {
 
     @SuppressWarnings( "unchecked" )
     @RequestMapping( value = "{userName}/clients", method = RequestMethod.GET )
-    public ResponseEntity userOwnedClients( @PathVariable( "userName" ) final String userName ) {
+    public ResponseEntity getOwnedClients( @PathVariable( "userName" ) final String userName ) {
         respondWith(
             resource()
             .pipe {
@@ -76,7 +76,7 @@ public class UserController {
     }
 
     @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity createUserIfNotExist( @Validated @RequestBody final UserObject userObject, BindingResult validation ) {
+    public ResponseEntity createIfNotExist( @Validated @RequestBody final UserObject userObject, BindingResult validation ) {
         respondWith(
             resource()
             .validate( validation )

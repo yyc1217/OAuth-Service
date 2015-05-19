@@ -28,7 +28,7 @@ class APITokenController {
     def ClientService clientService
 
     @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity createApiTokenByClientId( @RequestParam( "client_id" ) String clientSerialId ) {
+    public ResponseEntity createByClientId( @RequestParam( "client_id" ) String clientSerialId ) {
         respondWith(
                 resource()
                 .pipe {
@@ -42,7 +42,7 @@ class APITokenController {
     }
 
     @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
-    public ResponseEntity getTokenByToken( @PathVariable( "token" ) final String token ) {
+    public ResponseEntity getByToken( @PathVariable( "token" ) final String token ) {
         respondWith(
                 resource()
                 .pipe {
@@ -54,7 +54,7 @@ class APITokenController {
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
-    public ResponseEntity revokeTokenById( @PathVariable( "id" ) final String id ) {
+    public ResponseEntity revokeById( @PathVariable( "id" ) final String id ) {
         respondWith(
                 resource()
                 .pipe {
@@ -68,7 +68,7 @@ class APITokenController {
     }
 
     @RequestMapping( value = "{id}/refresh", method = RequestMethod.POST )
-    public ResponseEntity refreshTokenById( @PathVariable( "id" ) final String id ) {
+    public ResponseEntity refreshById( @PathVariable( "id" ) final String id ) {
         respondWith(
                 resource()
                 .pipe {
