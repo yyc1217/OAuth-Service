@@ -116,6 +116,22 @@ class ClientControllerTest extends IntegrationSpecification {
             )
     }
 
+    @Transactional
+    def "user can get active api tokens of client by serial id"() {
+        given:
+            def client = get_client( 1 )
+        when:
+            def response = JSON(
+                    server().perform(
+                            get( targetURL + "/${serialId( client.id )}/api_tokens" )
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
+            )
+        then:
+            response.size() == 1
+    }
+
     private def created_a_client( ClientObject clientObject ) {
         JSON(
                 server().perform(
