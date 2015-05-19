@@ -97,7 +97,7 @@ class ClientControllerTest extends IntegrationSpecification {
         when:
             def updatedClientObject = JSON(
                     server().perform(
-                            post( targetURL + "/${ createdClientObject.id }/secret" )
+                            post( targetURL + "/${ createdClientObject.id }/refresh_secret" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -110,7 +110,7 @@ class ClientControllerTest extends IntegrationSpecification {
     def "user can refresh secret of client by serial id 2"() {
         expect:
             server().perform(
-                    post( targetURL + "/123/secret" )
+                    post( targetURL + "/123/refresh_secret" )
             ).andExpect(
                     status().isNotFound()
             )

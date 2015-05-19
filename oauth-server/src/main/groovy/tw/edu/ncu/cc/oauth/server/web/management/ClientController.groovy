@@ -106,7 +106,7 @@ public class ClientController {
         )
     }
 
-    @RequestMapping( value = "{id}/secret", method = RequestMethod.POST )
+    @RequestMapping( value = "{id}/refresh_secret", method = RequestMethod.POST )
     public ResponseEntity refresh( @PathVariable( "id" ) final String clientId ) {
         respondWith(
             resource()
