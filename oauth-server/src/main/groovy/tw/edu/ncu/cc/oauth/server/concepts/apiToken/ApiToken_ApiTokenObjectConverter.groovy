@@ -15,8 +15,8 @@ class ApiToken_ApiTokenObjectConverter implements Converter< ApiToken, ApiTokenO
     @Override
     ApiTokenObject convert( ApiToken source ) {
         ApiTokenObject apiTokenObject = new ApiTokenObject()
+        apiTokenObject.id = source.id
         apiTokenObject.last_updated = source.lastUpdated
-        apiTokenObject.use_times = 0
         apiTokenObject.client_id = secretService.encodeHashId( source.client.id )
         apiTokenObject
     }

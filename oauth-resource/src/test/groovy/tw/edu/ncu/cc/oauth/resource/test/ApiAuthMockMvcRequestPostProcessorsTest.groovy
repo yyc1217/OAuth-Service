@@ -14,7 +14,6 @@ class ApiAuthMockMvcRequestPostProcessorsTest extends Specification {
         when:
             ApiAuthMockMvcRequestPostProcessors
                     .apiToken( "test-api-token" )
-                    .apiUseTimes( 5 )
                     .clientId( "app" )
                     .postProcessRequest( mockrequest )
         then:
@@ -22,7 +21,6 @@ class ApiAuthMockMvcRequestPostProcessorsTest extends Specification {
         when:
             def apiToken = ApiCredentialHolder.getApiToken( "test-api-token" )
         then:
-            apiToken.use_times == 5 as Long
             apiToken.client_id == "app"
     }
 
