@@ -9,4 +9,6 @@ interface ApiTokenService {
     ApiToken revoke( ApiToken apiToken )
     ApiToken findUnexpiredByToken( String token, Attribute...attributes )
     ApiToken findUnexpiredByToken( String token )
+    ApiToken findUnexpiredById( String id, Attribute...attributes )
+    ApiToken findUnexpiredById( String id )
 }

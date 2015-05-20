@@ -97,7 +97,7 @@ class ClientControllerTest extends IntegrationSpecification {
         when:
             def updatedClientObject = JSON(
                     server().perform(
-                            post( targetURL + "/${ createdClientObject.id }/secret" )
+                            post( targetURL + "/${ createdClientObject.id }/refresh_secret" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -110,10 +110,26 @@ class ClientControllerTest extends IntegrationSpecification {
     def "user can refresh secret of client by serial id 2"() {
         expect:
             server().perform(
-                    post( targetURL + "/123/secret" )
+                    post( targetURL + "/123/refresh_secret" )
             ).andExpect(
                     status().isNotFound()
             )
+    }
+
+    @Transactional
+    def "user can get active api tokens of client by serial id"() {
+        given:
+            def client = get_client( 1 )
+        when:
+            def response = JSON(
+                    server().perform(
+                            get( targetURL + "/${serialId( client.id )}/api_tokens" )
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
+            )
+        then:
+            response.size() == 1
     }
 
     private def created_a_client( ClientObject clientObject ) {

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.concepts.client.ClientRepository
 import tw.edu.ncu.cc.oauth.server.concepts.security.SecretService
+import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
+import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
 
 import javax.persistence.metamodel.Attribute
 
@@ -30,6 +32,7 @@ class ApiTokenServiceImpl implements ApiTokenService {
     ApiToken create( ApiToken apiToken ) {
         String token = secretService.generateToken()
         apiToken.encryptedToken = secretService.encodeSecret( token )
+        apiToken.dateExpired = TimeBuilder.now().after( 36, TimeUnit.MONTH ).buildDate()
         apiTokenRepository.save( apiToken )
         apiToken.token = secretService.encodeSerialSecret( new SerialSecret( apiToken.id, token ) )
         apiToken
@@ -54,7 +57,7 @@ class ApiTokenServiceImpl implements ApiTokenService {
     @Transactional
     ApiToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( token )
-        ApiToken apiToken = findUnexpiredById( serialSecret.id, attributes )
+        ApiToken apiToken = findUnexpiredById( serialSecret.id as String, attributes )
         if( apiToken != null && secretService.matchesSecret( serialSecret.secret, apiToken.encryptedToken ) ) {
             apiToken.refreshTimeStamp()
             apiTokenRepository.save( apiToken )
@@ -63,9 +66,10 @@ class ApiTokenServiceImpl implements ApiTokenService {
         }
     }
 
-    private ApiToken findUnexpiredById( Integer id, Attribute...attributes = [] ) {
+    @Override
+    ApiToken findUnexpiredById( String id, Attribute...attributes = [] ) {
         apiTokenRepository.findOne(
-                where( ApiTokenSpecifications.idEquals( id ) )
+                where( ApiTokenSpecifications.idEquals( id as Integer ) )
                         .and( ApiTokenSpecifications.unexpired() )
                         .and( ApiTokenSpecifications.include( attributes ) )
         )
