@@ -24,7 +24,10 @@ custom:
     apiToken:
       expire-seconds: 600
     security:
-        defaultSalt: tDVHRGFRsWB1fofGcT9MbuWPLsgwVE6Q
+      encrypt:
+        password: Pc0SMOaViVe9MidtA5sFoBjwx55QhzEt
+        salt: bde1f26c24f303a2741f49571ac55e53
+      defaultSalt: tDVHRGFRsWB1fofGcT9MbuWPLsgwVE6Q
   openid:
     config-path: test/openid.properties
   api:

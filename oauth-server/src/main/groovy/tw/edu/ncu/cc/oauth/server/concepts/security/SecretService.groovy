@@ -16,4 +16,7 @@ interface SecretService {
     String encodeHashId( long id )
     long decodeHashId( String hashId )
 
+    String encrypt( String text )
+    String decrypt( String encryptedText )
+
 }

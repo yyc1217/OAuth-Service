@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.server.concepts.security
 import org.springframework.beans.factory.annotation.Autowired
 import specification.SpringSpecification
 
-
 class SecretServiceImplTest extends SpringSpecification {
 
     @Autowired
@@ -41,6 +40,17 @@ class SecretServiceImplTest extends SpringSpecification {
         and: "hash id can be decoded"
             secretService.decodeHashId( hashId ) == randomLong
 
+    }
+
+    def "it can encrypt/decrypt text"() {
+        given: "a text to be encrypted"
+            def text = "abc123"
+        when: "encrypt text"
+            def encryptedText = secretService.encrypt( text )
+        and: "decrypt the encrypted text"
+            def decryptedText = secretService.decrypt( encryptedText )
+        then: "decrypted text should be same as origin text"
+            decryptedText == text
     }
 
 }

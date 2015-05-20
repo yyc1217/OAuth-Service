@@ -4,6 +4,8 @@ import org.hashids.Hashids
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.encrypt.Encryptors
+import org.springframework.security.crypto.encrypt.TextEncryptor
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import tw.edu.ncu.cc.oauth.server.helper.SecretCodec
@@ -15,10 +17,14 @@ class SecretServiceImpl implements SecretService {
 
     private Hashids hashids
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder()
+    private TextEncryptor textEncryptor
 
     @Autowired
-    SecretServiceImpl( @Value( '${custom.oauth.security.defaultSalt}' ) String hashIdSalt ) {
+    SecretServiceImpl( @Value( '${custom.oauth.security.defaultSalt}' ) String hashIdSalt,
+                       @Value( '${custom.oauth.security.encrypt.password}' ) String password,
+                       @Value( '${custom.oauth.security.encrypt.salt}' ) String salt ) {
         hashids = new Hashids( hashIdSalt, 16 )
+        textEncryptor = Encryptors.text( password, salt )
     }
 
     @Override
@@ -55,6 +61,16 @@ class SecretServiceImpl implements SecretService {
     long decodeHashId( String hashId ) {
         long[] numbers = hashids.decode( hashId )
         return numbers.size() > 0 ? numbers[ 0 ] : -1
+    }
+
+    @Override
+    String encrypt( String text ) {
+        textEncryptor.encrypt( text )
+    }
+
+    @Override
+    String decrypt( String encryptedText ) {
+        textEncryptor.decrypt( encryptedText )
     }
 
 }
