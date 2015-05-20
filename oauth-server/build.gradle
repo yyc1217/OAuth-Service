@@ -25,6 +25,7 @@ dependencies{
     compile project(':oauth-data')
     compile name: 'manage-openid-0.1.0-SNAPSHOT'
     compile name: 'hashids-1.0.1-SNAPSHOT'
+    compile name: 'ssl-spring-boot-0.1.0'
 
     compile 'org.springframework.security:spring-security-config:4.0.0.RELEASE' ,
             'org.springframework.security:spring-security-taglibs:4.0.0.RELEASE',
