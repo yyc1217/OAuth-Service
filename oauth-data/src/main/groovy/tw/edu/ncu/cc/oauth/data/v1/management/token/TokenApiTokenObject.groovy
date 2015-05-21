@@ -5,5 +5,5 @@ class TokenApiTokenObject {
 
     def String id
     def String token
-    def String client_id
+
 }
