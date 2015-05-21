@@ -18,7 +18,6 @@ class ApiToken_TokenApiTokenObjectConverter implements Converter< ApiToken, Toke
         TokenApiTokenObject apiTokenObject = new TokenApiTokenObject()
         apiTokenObject.id = source.id
         apiTokenObject.token = calculateUserSideToken( source )
-        apiTokenObject.client_id = secretService.encodeHashId( source.client.id )
         apiTokenObject
     }
 
