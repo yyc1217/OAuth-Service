@@ -8,21 +8,6 @@ class SecretServiceImplTest extends SpringSpecification {
     @Autowired
     def SecretService secretService
 
-    def "it can encrypt string using descructive encryption"() {
-
-        given: "a random string"
-            def randomString = 'asdh%$h%&gh%^'
-
-        when: "encrypted"
-            def encryptedString = secretService.encodeSecret( randomString )
-
-        then: "encrypted string is differnt with origin one"
-            encryptedString != randomString
-
-        and: "that encypted string can be checked if same"
-            secretService.matchesSecret( randomString, encryptedString )
-    }
-
     def "it can encode long into string hash id"() {
 
         given: "a random long between 0 ~ 9007199254740992L"
@@ -51,6 +36,8 @@ class SecretServiceImplTest extends SpringSpecification {
             def decryptedText = secretService.decrypt( encryptedText )
         then: "decrypted text should be same as origin text"
             decryptedText == text
+        and: "text and its encrypted version is matched"
+            secretService.matches( text, encryptedText )
     }
 
 }
