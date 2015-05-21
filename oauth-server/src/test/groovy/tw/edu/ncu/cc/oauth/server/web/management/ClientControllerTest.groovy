@@ -15,7 +15,7 @@ class ClientControllerTest extends IntegrationSpecification {
 
     def "user can get client by serial id"() {
         given:
-            def client = get_client( 1 )
+            def client = get_client( 3 )
         when:
             def clientResponse = JSON(
                     server().perform(
@@ -30,6 +30,7 @@ class ClientControllerTest extends IntegrationSpecification {
             clientResponse.callback    == client.callback
             clientResponse.description == client.description
             clientResponse.owner       == client.owner.name
+            clientResponse.secret != null
     }
 
     @Transactional
@@ -130,6 +131,7 @@ class ClientControllerTest extends IntegrationSpecification {
             )
         then:
             response.size() == 1
+            response[0].token != null
     }
 
     private def created_a_client( ClientObject clientObject ) {

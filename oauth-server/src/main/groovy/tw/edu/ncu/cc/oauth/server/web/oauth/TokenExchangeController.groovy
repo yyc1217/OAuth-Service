@@ -17,7 +17,8 @@ import tw.edu.ncu.cc.oauth.server.helper.data.EditableRequest
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 
-import static org.apache.oltu.oauth2.common.message.types.GrantType.*
+import static org.apache.oltu.oauth2.common.message.types.GrantType.AUTHORIZATION_CODE
+import static org.apache.oltu.oauth2.common.message.types.GrantType.REFRESH_TOKEN
 import static org.springframework.http.HttpHeaders.CACHE_CONTROL
 import static org.springframework.http.HttpHeaders.PRAGMA
 
@@ -29,17 +30,11 @@ public class TokenExchangeController {
     @Value( '${custom.oauth.accessToken.expire-seconds}' )
     def long accessTokenExpireSeconds
 
-    @Value( '${custom.oauth.apiToken.expire-seconds}' )
-    def long apiTokenExpireSeconds
-
     @Resource( name = "RefreshTokenExchangeService" )
     def TokenExchangeService refreshTokenService;
 
     @Resource( name = "AuthCodeExchangeService" )
     def TokenExchangeService authorizationCodeService;
-
-    @Resource( name = "ApiTokenExchangeService" )
-    def TokenExchangeService apiTokenService
 
     public TokenExchangeController() {
         headers = new HttpHeaders();
@@ -81,11 +76,7 @@ public class TokenExchangeController {
 
             refreshTokenService.buildResonseMessage( tokenRequest, accessTokenExpireSeconds )
 
-        } else if( grantType ==  CLIENT_CREDENTIALS as String && apiTokenService != null ) {
-
-            apiTokenService.buildResonseMessage( tokenRequest, apiTokenExpireSeconds )
         } else {
-
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.UNSUPPORTED_GRANT_TYPE
             )

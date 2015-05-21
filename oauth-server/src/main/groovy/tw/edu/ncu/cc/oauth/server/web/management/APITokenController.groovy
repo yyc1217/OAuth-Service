@@ -27,6 +27,18 @@ class APITokenController {
     @Autowired
     def ClientService clientService
 
+    @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
+    public ResponseEntity getByToken( @PathVariable( "token" ) final String token ) {
+        respondWith(
+                resource()
+                .pipe {
+                    conversionService.convert(
+                            apiTokenService.findUnexpiredByToken( token ), ApiTokenObject.class
+                    )
+                }
+        )
+    }
+
     @RequestMapping( method = RequestMethod.POST )
     public ResponseEntity createByClientId( @RequestParam( "client_id" ) String clientSerialId ) {
         respondWith(
@@ -41,18 +53,6 @@ class APITokenController {
         )
     }
 
-    @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
-    public ResponseEntity getByToken( @PathVariable( "token" ) final String token ) {
-        respondWith(
-                resource()
-                .pipe {
-                    conversionService.convert(
-                            apiTokenService.findUnexpiredByToken( token ), ApiTokenObject.class
-                    )
-                }
-        )
-    }
-
     @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
     public ResponseEntity revokeById( @PathVariable( "id" ) final String id ) {
         respondWith(
@@ -61,7 +61,7 @@ class APITokenController {
                     apiTokenService.findUnexpiredById( id )
                 }.pipe { ApiToken apiToken ->
                     conversionService.convert(
-                            apiTokenService.revoke( apiToken ), ApiTokenObject.class
+                            apiTokenService.revoke( apiToken ), TokenApiTokenObject.class
                     )
                 }
         )

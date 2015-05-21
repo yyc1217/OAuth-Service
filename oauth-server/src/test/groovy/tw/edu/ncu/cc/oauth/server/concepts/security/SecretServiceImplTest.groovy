@@ -3,26 +3,10 @@ package tw.edu.ncu.cc.oauth.server.concepts.security
 import org.springframework.beans.factory.annotation.Autowired
 import specification.SpringSpecification
 
-
 class SecretServiceImplTest extends SpringSpecification {
 
     @Autowired
     def SecretService secretService
-
-    def "it can encrypt string using descructive encryption"() {
-
-        given: "a random string"
-            def randomString = 'asdh%$h%&gh%^'
-
-        when: "encrypted"
-            def encryptedString = secretService.encodeSecret( randomString )
-
-        then: "encrypted string is differnt with origin one"
-            encryptedString != randomString
-
-        and: "that encypted string can be checked if same"
-            secretService.matchesSecret( randomString, encryptedString )
-    }
 
     def "it can encode long into string hash id"() {
 
@@ -41,6 +25,19 @@ class SecretServiceImplTest extends SpringSpecification {
         and: "hash id can be decoded"
             secretService.decodeHashId( hashId ) == randomLong
 
+    }
+
+    def "it can encrypt/decrypt text"() {
+        given: "a text to be encrypted"
+            def text = "abc123"
+        when: "encrypt text"
+            def encryptedText = secretService.encrypt( text )
+        and: "decrypt the encrypted text"
+            def decryptedText = secretService.decrypt( encryptedText )
+        then: "decrypted text should be same as origin text"
+            decryptedText == text
+        and: "text and its encrypted version is matched"
+            secretService.matches( text, encryptedText )
     }
 
 }

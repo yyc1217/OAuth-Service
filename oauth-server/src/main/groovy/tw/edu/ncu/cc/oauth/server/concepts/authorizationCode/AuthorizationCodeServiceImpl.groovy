@@ -27,7 +27,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     @Transactional
     AuthorizationCode create( AuthorizationCode authorizationCode ) {
         String code = secretService.generateToken()
-        authorizationCode.encryptedCode = secretService.encodeSecret( code )
+        authorizationCode.encryptedCode = secretService.encrypt( code )
         authorizationCodeRepository.save( authorizationCode )
         authorizationCode.code = secretService.encodeSerialSecret( new SerialSecret( authorizationCode.id, code ) )
         authorizationCode
@@ -44,7 +44,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     AuthorizationCode readUnexpiredByCode( String code, Attribute...attributes = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( code )
         AuthorizationCode authorizationCode = readUnexpiredById( serialSecret.id as String, attributes )
-        if( authorizationCode != null && secretService.matchesSecret( serialSecret.secret, authorizationCode.encryptedCode ) ) {
+        if( authorizationCode != null && secretService.matches( serialSecret.secret, authorizationCode.encryptedCode ) ) {
             return authorizationCode
         } else {
             return null

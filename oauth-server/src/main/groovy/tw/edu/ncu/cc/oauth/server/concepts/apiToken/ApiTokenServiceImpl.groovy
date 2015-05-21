@@ -31,7 +31,7 @@ class ApiTokenServiceImpl implements ApiTokenService {
     @Transactional
     ApiToken create( ApiToken apiToken ) {
         String token = secretService.generateToken()
-        apiToken.encryptedToken = secretService.encodeSecret( token )
+        apiToken.encryptedToken = secretService.encrypt( token )
         apiToken.dateExpired = TimeBuilder.now().after( 36, TimeUnit.MONTH ).buildDate()
         apiTokenRepository.save( apiToken )
         apiToken.token = secretService.encodeSerialSecret( new SerialSecret( apiToken.id, token ) )
@@ -41,7 +41,7 @@ class ApiTokenServiceImpl implements ApiTokenService {
     @Override
     ApiToken refreshToken( ApiToken apiToken ) {
         String token = secretService.generateToken()
-        apiToken.encryptedToken = secretService.encodeSecret( token )
+        apiToken.encryptedToken = secretService.encrypt( token )
         apiTokenRepository.save( apiToken )
         apiToken.token = secretService.encodeSerialSecret( new SerialSecret( apiToken.id, token ) )
         apiToken
@@ -58,7 +58,7 @@ class ApiTokenServiceImpl implements ApiTokenService {
     ApiToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( token )
         ApiToken apiToken = findUnexpiredById( serialSecret.id as String, attributes )
-        if( apiToken != null && secretService.matchesSecret( serialSecret.secret, apiToken.encryptedToken ) ) {
+        if( apiToken != null && secretService.matches( serialSecret.secret, apiToken.encryptedToken ) ) {
             apiToken.refreshTimeStamp()
             apiTokenRepository.save( apiToken )
         } else {
