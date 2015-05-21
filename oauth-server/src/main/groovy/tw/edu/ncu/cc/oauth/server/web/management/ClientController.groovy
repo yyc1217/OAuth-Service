@@ -9,9 +9,8 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.client.SecretIdClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenApiTokenObject
 import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.concepts.client.Client
 import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
@@ -62,18 +61,18 @@ public class ClientController {
     @RequestMapping( value = "{id}", method = RequestMethod.GET )
     public ResponseEntity get( @PathVariable( "id" ) final String clientId ) {
         respondWith(
-            resource()
-            .pipe {
-                conversionService.convert(
-                        clientService.findUndeletedBySerialId( clientId ), IdClientObject.class
-                );
-            }
+                resource()
+                .pipe {
+                    conversionService.convert(
+                            clientService.findUndeletedBySerialId( clientId ), SecretIdClientObject.class
+                    );
+                }
         )
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.PUT )
     public ResponseEntity update( @PathVariable( "id" ) final String clientId,
-                                             @RequestBody @Validated  final ClientObject clientObject, final BindingResult validation ) {
+                                  @RequestBody @Validated  final ClientObject clientObject, final BindingResult validation ) {
         respondWith(
             resource()
             .validate( validation )
@@ -86,7 +85,7 @@ public class ClientController {
                 client.description = clientObject.description
 
                 conversionService.convert(
-                        clientService.update( client ), IdClientObject.class
+                        clientService.update( client ), SecretIdClientObject.class
                 );
             }
         )
@@ -100,7 +99,7 @@ public class ClientController {
                 clientService.findUndeletedBySerialId( clientId )
             }.pipe { Client client ->
                 conversionService.convert(
-                        clientService.delete( client ), IdClientObject.class
+                        clientService.delete( client ), SecretIdClientObject.class
                 );
             }
         )
@@ -130,7 +129,7 @@ public class ClientController {
                     conversionService.convert(
                             client.apiTokens,
                             TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( ApiToken.class ) ),
-                            TypeDescriptor.array( TypeDescriptor.valueOf( ApiTokenObject.class ) )
+                            TypeDescriptor.array( TypeDescriptor.valueOf( TokenApiTokenObject.class ) )
                     );
                 }
         )
