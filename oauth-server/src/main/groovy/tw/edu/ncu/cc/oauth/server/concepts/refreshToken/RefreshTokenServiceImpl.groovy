@@ -35,7 +35,7 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private RefreshToken create( RefreshToken refreshToken ) {
         String token = secretService.generateToken()
-        refreshToken.encryptedToken = secretService.encodeSecret( token )
+        refreshToken.encryptedToken = secretService.encrypt( token )
         refreshTokenRepository.save( refreshToken )
         refreshToken.token = secretService.encodeSerialSecret( new SerialSecret( refreshToken.id, token ) )
         return refreshToken
@@ -53,7 +53,7 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     RefreshToken readUnexpiredByToken( String token, Attribute...attributes = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( token )
         RefreshToken refreshToken = readUnexpiredById( serialSecret.id as String, attributes )
-        if( refreshToken != null && secretService.matchesSecret( serialSecret.secret, refreshToken.encryptedToken ) ) {
+        if( refreshToken != null && secretService.matches( serialSecret.secret, refreshToken.encryptedToken ) ) {
             return refreshToken
         } else {
             return null

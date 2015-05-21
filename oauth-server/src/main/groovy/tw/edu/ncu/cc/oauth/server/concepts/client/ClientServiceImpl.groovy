@@ -22,19 +22,15 @@ class ClientServiceImpl implements ClientService {
     @Override
     Client create( Client client ) {
         String newSecret = secretService.generateToken()
-        client.encryptedSecret = secretService.encodeSecret( newSecret )
+        client.encryptedSecret = secretService.encrypt( newSecret )
         clientRepository.save( client )
-        client.secret = newSecret
-        client
     }
 
     @Override
     Client refreshSecret( Client client ) {
         String newSecret = secretService.generateToken()
-        client.encryptedSecret = secretService.encodeSecret( newSecret )
+        client.encryptedSecret = secretService.encrypt( newSecret )
         clientRepository.save( client )
-        client.secret = newSecret
-        client
     }
 
     @Override
@@ -64,7 +60,7 @@ class ClientServiceImpl implements ClientService {
         if( client == null ) {
             return false
         } else {
-            return secretService.matchesSecret( secret, client.encryptedSecret )
+            return secretService.matches( secret, client.encryptedSecret )
         }
     }
 

@@ -37,7 +37,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
     @Transactional
     AccessToken create( AccessToken accessToken ) {
         String token = secretService.generateToken()
-        accessToken.encryptedToken = secretService.encodeSecret( token )
+        accessToken.encryptedToken = secretService.encrypt( token )
         accessTokenRepository.save( accessToken )
         accessToken.token = secretService.encodeSerialSecret( new SerialSecret( accessToken.id, token ) )
         accessToken
@@ -77,7 +77,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
     AccessToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( token )
         AccessToken accessToken = findUnexpiredById( serialSecret.id as String, attributes )
-        if( accessToken != null && secretService.matchesSecret( serialSecret.secret, accessToken.encryptedToken ) ) {
+        if( accessToken != null && secretService.matches( serialSecret.secret, accessToken.encryptedToken ) ) {
             accessToken.refreshTimeStamp()
             accessTokenRepository.save( accessToken )
         } else {
