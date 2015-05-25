@@ -28,8 +28,8 @@ class TokenConfirmServiceImplTest2 extends Specification {
                         .withBody(
                         '''
                         {
+                            "id" : "123",
                             "client_id" : "abc",
-                            "use_times" : 10,
                             "last_updated" : "2014-12-15"
                         }
                         '''
@@ -42,14 +42,6 @@ class TokenConfirmServiceImplTest2 extends Specification {
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 404 )
-        )
-        serverResource.mockServer().when(
-                HttpRequest.request()
-                        .withMethod( "GET" )
-                        .withPath( "/management/v1/api_tokens/token/token3" )
-        ).respond(
-                HttpResponse.response()
-                        .withStatusCode( 403 )
         )
     }
 
@@ -69,11 +61,6 @@ class TokenConfirmServiceImplTest2 extends Specification {
     def "it can get api token from remote server 2"() {
         expect:
             tokenConfirmService.readApiToken( "token2" ) == null
-    }
-
-    def "it should get null if api token reach use limit"() {
-        expect:
-            tokenConfirmService.readApiToken( "token3" ) == null
     }
 
 }
