@@ -38,7 +38,7 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
         try {
             getTokenWithType( remoteAddr, apiToken, ApiTokenObject.class ).getBody();
         } catch ( HttpClientErrorException e ) {
-            if( e.statusCode.equals( HttpStatus.NOT_FOUND ) || e.statusCode.equals( HttpStatus.FORBIDDEN ) ) {
+            if( e.statusCode.equals( HttpStatus.NOT_FOUND ) ) {
                 return null;
             } else {
                 throw e;
