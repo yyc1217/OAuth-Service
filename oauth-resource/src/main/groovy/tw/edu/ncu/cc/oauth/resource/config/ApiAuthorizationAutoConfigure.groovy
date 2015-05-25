@@ -4,6 +4,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -38,12 +39,26 @@ class ApiAuthorizationAutoConfigure {
     }
 
     @Bean
+    FilterRegistrationBean apiTokenDecisionFilterRegistration( ApiTokenDecisionFilter apiTokenDecisionFilter ) {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean( apiTokenDecisionFilter )
+        registrationBean.setEnabled( false )
+        registrationBean
+    }
+
+    @Bean
     @ConditionalOnMissingBean( AccessTokenDecisionFilter )
     AccessTokenDecisionFilter accessTokenDecisionFilter() {
         logger.info( "auto-configure oauth access token decision filter with server path : " + remoteConfig.serverPath )
         AccessTokenDecisionFilter filter = new AccessTokenDecisionFilter()
         filter.setTokenConfirmService( tokenConfirmService() )
         filter
+    }
+
+    @Bean
+    FilterRegistrationBean accessTokenDecisionFilterRegistration( AccessTokenDecisionFilter accessTokenDecisionFilter ) {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean( accessTokenDecisionFilter )
+        registrationBean.setEnabled( false )
+        registrationBean
     }
 
 }
