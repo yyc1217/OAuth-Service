@@ -42,7 +42,7 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
             if( apiToken != null ) {
                 bindApiToken( request, apiToken )
             } else {
-                throw new InvalidRequestException( HttpStatus.UNAUTHORIZED, "invalid api token: not exist or reach call limit" )
+                throw new InvalidRequestException( HttpStatus.UNAUTHORIZED, "invalid api token" )
             }
         } else {
             throw new InvalidRequestException( HttpStatus.BAD_REQUEST, "api token not provided" )
