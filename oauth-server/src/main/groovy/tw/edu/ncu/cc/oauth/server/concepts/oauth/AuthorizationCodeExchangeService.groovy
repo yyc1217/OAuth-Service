@@ -48,7 +48,7 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
         AccessToken accessToken   = prepareAccessToken( request, expireSeconds )
         RefreshToken refreshToken = prepareRefreshToken( accessToken )
 
-        return buildResponseMessage( accessToken.encryptedToken, refreshToken.encryptedToken, expireSeconds )
+        return buildResponseMessage( accessToken.getToken(), refreshToken.getToken(), expireSeconds )
     }
 
     private void validateOauthRequest( OAuthTokenRequest request ) {

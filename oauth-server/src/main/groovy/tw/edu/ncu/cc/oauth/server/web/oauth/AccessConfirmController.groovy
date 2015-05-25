@@ -73,7 +73,7 @@ public final class AccessConfirmController {
 
             return "redirect:" + OAuthURLBuilder
                     .url( client.getCallback() )
-                    .code( authCode.getEncryptedCode() )
+                    .code( authCode.getCode() )
                     .state( state )
                     .build();
         } else {

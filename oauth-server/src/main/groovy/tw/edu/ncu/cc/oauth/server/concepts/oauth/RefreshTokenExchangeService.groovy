@@ -40,7 +40,7 @@ class RefreshTokenExchangeService implements TokenExchangeService {
 
         AccessToken accessToken = prepareAccessToken( request, expireSeconds );
 
-        return buildResponseMessage( accessToken.encryptedToken, expireSeconds );
+        return buildResponseMessage( accessToken.getToken(), expireSeconds );
     }
 
     private void validateOauthRequest( OAuthTokenRequest request ) {
