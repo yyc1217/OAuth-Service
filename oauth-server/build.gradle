@@ -26,7 +26,7 @@ dependencies{
     compile name: 'manage-openid-0.1.0-SNAPSHOT'
     compile name: 'hashids-1.0.1-SNAPSHOT'
     compile name: 'config-ssl-0.2.0'
-    compile name: 'config-hikaricp-0.2.1'
+    compile name: 'config-hikaricp-0.2.2'
 
     compile 'org.springframework.security:spring-security-config:4.0.0.RELEASE' ,
             'org.springframework.security:spring-security-taglibs:4.0.0.RELEASE',
