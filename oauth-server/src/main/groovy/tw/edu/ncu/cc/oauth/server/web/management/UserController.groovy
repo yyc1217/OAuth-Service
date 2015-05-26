@@ -10,6 +10,7 @@ import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.user.DetailedUserObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.UserObject
 import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
@@ -39,6 +40,18 @@ public class UserController {
     @InitBinder
     public static void initBinder( WebDataBinder binder ) {
         binder.addValidators( new UserValidator() );
+    }
+
+    @RequestMapping( value = "{userName}", method = RequestMethod.GET )
+    public ResponseEntity getUser( @PathVariable( "userName" ) final String userName ) {
+        respondWith(
+                resource()
+                .pipe {
+                    conversionService.convert(
+                            userService.findByName( userName ), DetailedUserObject.class
+                    );
+                }
+        )
     }
 
     @SuppressWarnings( "unchecked" )
