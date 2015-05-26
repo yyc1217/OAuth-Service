@@ -22,4 +22,14 @@ class BasicEntity implements Serializable {
         lastUpdated = new Date()
     }
 
+    @PrePersist
+    protected void onCreate() {
+        lastUpdated = dateCreated = new Date()
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastUpdated = new Date()
+    }
+
 }
