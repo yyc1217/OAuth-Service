@@ -13,6 +13,28 @@ class UserControllerTest extends IntegrationSpecification {
 
     def targetURL = "/management/v1/users"
 
+    def "user can get user's information 1"() {
+        when:
+            def response = JSON(
+                    server().perform(
+                            get( targetURL + "/ADMIN1" )
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
+            )
+        then:
+            response.name == "ADMIN1"
+    }
+
+    def "user can get user's information 2"() {
+        expect:
+            server().perform(
+                    get( targetURL + "/NOT_EXIST_USER" )
+            ).andExpect(
+                    status().isNotFound()
+            )
+    }
+
     def "user can get user's tokens 1"() {
         when:
             def response = JSON(
