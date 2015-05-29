@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ClientAccessTokenObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.DetailedUserObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.UserObject
 import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
@@ -65,7 +65,7 @@ public class UserController {
                 conversionService.convert(
                         accessTokenService.findAllUnexpiredByUser( user, AccessToken_.scope ),
                         TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( AccessToken.class ) ),
-                        TypeDescriptor.array( TypeDescriptor.valueOf( AccessTokenObject.class ) )
+                        TypeDescriptor.array( TypeDescriptor.valueOf( ClientAccessTokenObject.class ) )
                 );
             }
         )
