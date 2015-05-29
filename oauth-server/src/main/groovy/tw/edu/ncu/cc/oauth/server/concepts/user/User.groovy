@@ -18,6 +18,7 @@ class User extends BasicEntity {
     def String name
 
     @OneToMany( mappedBy = "owner", cascade = [ CascadeType.ALL ] )
+    @Where( clause = "deleted = 'false'" )
     def Set< Client > clients = new HashSet<>()
 
     @OneToMany( mappedBy = "user", cascade = [ CascadeType.MERGE ] )
