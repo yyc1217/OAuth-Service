@@ -81,7 +81,7 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
                 new AccessToken(
                         dateExpired: dicideExpireDate( expireSeconds )
                 ),
-                authCodeService.readUnexpiredByCode( request.getCode(), AuthorizationCode_.scope )
+                authCodeService.findUnexpiredByCode( request.getCode(), AuthorizationCode_.scope )
         )
     }
 

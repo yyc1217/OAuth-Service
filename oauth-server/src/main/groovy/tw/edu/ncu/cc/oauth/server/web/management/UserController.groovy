@@ -62,7 +62,7 @@ public class UserController {
                 userService.findByName( userName )
             }.pipe { User user ->
                 conversionService.convert(
-                        refreshTokenService.readAllUnexpiredByUser( user, RefreshToken_.scope ),
+                        refreshTokenService.findAllUnexpiredByUser( user, RefreshToken_.scope ),
                         TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( RefreshToken.class ) ),
                         TypeDescriptor.array( TypeDescriptor.valueOf( ClientTokenObject.class ) )
                 );

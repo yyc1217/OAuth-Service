@@ -57,9 +57,9 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    RefreshToken readUnexpiredByToken( String token, Attribute...attributes = [] ) {
+    RefreshToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( token )
-        RefreshToken refreshToken = readUnexpiredById( serialSecret.id as String, attributes )
+        RefreshToken refreshToken = findUnexpiredById( serialSecret.id as String, attributes )
         if( refreshToken != null && secretService.matches( serialSecret.secret, refreshToken.encryptedToken ) ) {
             return refreshToken
         } else {
@@ -68,7 +68,7 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    RefreshToken readUnexpiredById( String tokenId, Attribute...attributes = [] ) {
+    RefreshToken findUnexpiredById( String tokenId, Attribute...attributes = [] ) {
         refreshTokenRepository.findOne(
                 where( RefreshTokenSpecifications.unexpired() )
                         .and( RefreshTokenSpecifications.idEquals( tokenId as Integer ) )
@@ -77,7 +77,7 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    List< RefreshToken > readAllUnexpiredByUser( User user, Attribute... attributes = [] ) {
+    List< RefreshToken > findAllUnexpiredByUser( User user, Attribute... attributes = [] ) {
         refreshTokenRepository.findAll(
                 where( RefreshTokenSpecifications.unexpired() )
                         .and( RefreshTokenSpecifications.userEquals( user ) )
@@ -86,7 +86,7 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    List< RefreshToken > readAllUnexpiredByClient( Client client, Attribute...attributes = [] ) {
+    List< RefreshToken > findAllUnexpiredByClient( Client client, Attribute...attributes = [] ) {
         refreshTokenRepository.findAll(
                 where( RefreshTokenSpecifications.unexpired() )
                         .and( RefreshTokenSpecifications.clientEquals( client ) )
@@ -97,7 +97,7 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     boolean isUnexpiredTokenMatchesClientId( String token, String clientID ) {
-        RefreshToken refreshToken = readUnexpiredByToken( token )
+        RefreshToken refreshToken = findUnexpiredByToken( token )
         return refreshToken != null &&
                refreshToken.client.id == secretService.decodeHashId( clientID ) as Integer
     }

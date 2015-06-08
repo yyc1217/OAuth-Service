@@ -32,7 +32,7 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
                     createdAccessToken
             )
         and:
-            def managedRefreshToken = refreshTokenService.readUnexpiredById( createdRefreshToken.id as String, RefreshToken_.scope )
+            def managedRefreshToken = refreshTokenService.findUnexpiredById( createdRefreshToken.id as String, RefreshToken_.scope )
         then:
             managedRefreshToken.accessToken.id == createdAccessToken.id
             managedRefreshToken.user.name      == createdAccessToken.user.name
@@ -42,20 +42,20 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
 
     def "it can read unexpired refresh token by real code"() {
         expect:
-            refreshTokenService.readUnexpiredByToken( a_refreshToken().encryptedToken ) != null
-            refreshTokenService.readUnexpiredByToken( "NOTEXIST" ) == null
+            refreshTokenService.findUnexpiredByToken( a_refreshToken().encryptedToken ) != null
+            refreshTokenService.findUnexpiredByToken( "NOTEXIST" ) == null
     }
 
     def "it can read unexpired refresh tokens by user"() {
         expect:
-            refreshTokenService.readAllUnexpiredByUser( get_user( 2 ) ).size() == 0
-            refreshTokenService.readAllUnexpiredByUser( get_user( 3 ) ).size() == 1
+            refreshTokenService.findAllUnexpiredByUser( get_user( 2 ) ).size() == 0
+            refreshTokenService.findAllUnexpiredByUser( get_user( 3 ) ).size() == 1
     }
 
     def "it can read unexpired refresh tokens by client"() {
         expect:
-            refreshTokenService.readAllUnexpiredByClient( get_client( 2 ) ).size() == 0
-            refreshTokenService.readAllUnexpiredByClient( get_client( 3 ) ).size() == 1
+            refreshTokenService.findAllUnexpiredByClient( get_client( 2 ) ).size() == 0
+            refreshTokenService.findAllUnexpiredByClient( get_client( 3 ) ).size() == 1
     }
 
     @Transactional
@@ -71,11 +71,11 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
         and:
             def refreshTokenId = createdRefreshToken.id as String
         expect:
-            refreshTokenService.readUnexpiredById( refreshTokenId ) != null
+            refreshTokenService.findUnexpiredById( refreshTokenId ) != null
         when:
-            refreshTokenService.revoke( refreshTokenService.readUnexpiredById( refreshTokenId ) ) != null
+            refreshTokenService.revoke( refreshTokenService.findUnexpiredById( refreshTokenId ) ) != null
         then:
-            refreshTokenService.readUnexpiredById( refreshTokenId ) == null
+            refreshTokenService.findUnexpiredById( refreshTokenId ) == null
         and:
             accessTokenService.findUnexpiredById( createdAccessToken.id as String ) == null
     }

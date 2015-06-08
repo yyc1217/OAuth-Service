@@ -31,7 +31,7 @@ public class AuthorizedTokenController {
                 resource()
                 .pipe {
                     return conversionService.convert(
-                            refreshTokenService.readUnexpiredById( id, RefreshToken_.scope ), ClientTokenObject.class
+                            refreshTokenService.findUnexpiredById( id, RefreshToken_.scope ), ClientTokenObject.class
                     )
                 }
         )
@@ -42,7 +42,7 @@ public class AuthorizedTokenController {
         respondWith(
             resource()
             .pipe {
-                refreshTokenService.readUnexpiredById( id, RefreshToken_.scope )
+                refreshTokenService.findUnexpiredById( id, RefreshToken_.scope )
             }.pipe { RefreshToken refreshToken ->
                 conversionService.convert(
                         refreshTokenService.revoke( refreshToken ), ClientTokenObject.class
