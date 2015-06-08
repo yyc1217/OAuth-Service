@@ -41,9 +41,9 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     }
 
     @Override
-    AuthorizationCode readUnexpiredByCode( String code, Attribute...attributes = [] ) {
+    AuthorizationCode findUnexpiredByCode( String code, Attribute...attributes = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( code )
-        AuthorizationCode authorizationCode = readUnexpiredById( serialSecret.id as String, attributes )
+        AuthorizationCode authorizationCode = findUnexpiredById( serialSecret.id as String, attributes )
         if( authorizationCode != null && secretService.matches( serialSecret.secret, authorizationCode.encryptedCode ) ) {
             return authorizationCode
         } else {
@@ -52,7 +52,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     }
 
     @Override
-    AuthorizationCode readUnexpiredById( String codeId, Attribute...attributes = [] ) {
+    AuthorizationCode findUnexpiredById( String codeId, Attribute...attributes = [] ) {
         authorizationCodeRepository.findOne(
                 where( AuthorizationCodeSpecifications.unexpired() )
                         .and( AuthorizationCodeSpecifications.idEquals( codeId as Integer ) )
@@ -61,7 +61,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     }
 
     @Override
-    List< AuthorizationCode > readAllUnexpiredByUser( User user, Attribute...attributes = [] ) {
+    List< AuthorizationCode > findAllUnexpiredByUser( User user, Attribute...attributes = [] ) {
         authorizationCodeRepository.findAll(
                 where( AuthorizationCodeSpecifications.unexpired() )
                         .and( AuthorizationCodeSpecifications.userEquals( user ) )
@@ -70,7 +70,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     }
 
     @Override
-    List< AuthorizationCode > readAllUnexpiredByClient( Client client, Attribute...attributes = [] ) {
+    List< AuthorizationCode > findAllUnexpiredByClient( Client client, Attribute...attributes = [] ) {
         authorizationCodeRepository.findAll(
                 where( AuthorizationCodeSpecifications.unexpired() )
                         .and( AuthorizationCodeSpecifications.clientEquals( client ) )
@@ -80,7 +80,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
 
     @Override
     boolean isUnexpiredCodeMatchesClientId( String code, String clientID ) {
-        AuthorizationCode authorizationCode = readUnexpiredByCode( code )
+        AuthorizationCode authorizationCode = findUnexpiredByCode( code )
         return authorizationCode != null &&
                authorizationCode.client.id == secretService.decodeHashId( clientID ) as Integer
     }
