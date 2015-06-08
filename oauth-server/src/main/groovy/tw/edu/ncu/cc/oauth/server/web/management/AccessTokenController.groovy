@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ClientAccessTokenObject
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken_
 
@@ -35,32 +33,6 @@ public class AccessTokenController {
                             accessTokenService.findUnexpiredByToken( token, AccessToken_.scope ), AccessTokenObject.class
                     );
                 }
-        )
-    }
-
-    @RequestMapping( value = "{id}", method = RequestMethod.GET )
-    public ResponseEntity getById( @PathVariable( "id" ) final String id ) {
-        respondWith(
-                resource()
-                .pipe {
-                    return conversionService.convert(
-                            accessTokenService.findUnexpiredById( id, AccessToken_.scope ), ClientAccessTokenObject.class
-                    );
-                }
-        )
-    }
-
-    @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
-    public ResponseEntity revokeById( @PathVariable( "id" ) final String id ) {
-        respondWith(
-            resource()
-            .pipe {
-                accessTokenService.findUnexpiredById( id, AccessToken_.scope )
-            }.pipe { AccessToken accessToken ->
-                conversionService.convert(
-                        accessTokenService.revoke( accessToken ), ClientAccessTokenObject.class
-                );
-            }
         )
     }
 
