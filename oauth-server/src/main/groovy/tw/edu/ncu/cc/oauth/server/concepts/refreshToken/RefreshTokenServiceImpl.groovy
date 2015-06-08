@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
+import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenRepository
 import tw.edu.ncu.cc.oauth.server.concepts.client.Client
 import tw.edu.ncu.cc.oauth.server.concepts.security.SecretService
+import tw.edu.ncu.cc.oauth.server.concepts.user.User
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 
 import javax.persistence.metamodel.Attribute
@@ -22,6 +24,9 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Autowired
     RefreshTokenRepository refreshTokenRepository
+
+    @Autowired
+    AccessTokenRepository accessTokenRepository
 
     @Override
     @Transactional
@@ -45,7 +50,9 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     @Override
     @Transactional
     RefreshToken revoke( RefreshToken refreshToken ) {
+        refreshToken.accessToken.revoke()
         refreshToken.revoke()
+        accessTokenRepository.save( refreshToken.accessToken )
         refreshTokenRepository.save( refreshToken )
     }
 
@@ -65,6 +72,15 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
         refreshTokenRepository.findOne(
                 where( RefreshTokenSpecifications.unexpired() )
                         .and( RefreshTokenSpecifications.idEquals( tokenId as Integer ) )
+                        .and( RefreshTokenSpecifications.include( attributes ) )
+        )
+    }
+
+    @Override
+    List< RefreshToken > readAllUnexpiredByUser( User user, Attribute... attributes = [] ) {
+        refreshTokenRepository.findAll(
+                where( RefreshTokenSpecifications.unexpired() )
+                        .and( RefreshTokenSpecifications.userEquals( user ) )
                         .and( RefreshTokenSpecifications.include( attributes ) )
         )
     }

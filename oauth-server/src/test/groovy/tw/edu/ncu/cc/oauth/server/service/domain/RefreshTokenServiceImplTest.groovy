@@ -46,7 +46,13 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
             refreshTokenService.readUnexpiredByToken( "NOTEXIST" ) == null
     }
 
-    def "it can read unexpired refresh tokens by client id"() {
+    def "it can read unexpired refresh tokens by user"() {
+        expect:
+            refreshTokenService.readAllUnexpiredByUser( get_user( 2 ) ).size() == 0
+            refreshTokenService.readAllUnexpiredByUser( get_user( 3 ) ).size() == 1
+    }
+
+    def "it can read unexpired refresh tokens by client"() {
         expect:
             refreshTokenService.readAllUnexpiredByClient( get_client( 2 ) ).size() == 0
             refreshTokenService.readAllUnexpiredByClient( get_client( 3 ) ).size() == 1
@@ -70,6 +76,8 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
             refreshTokenService.revoke( refreshTokenService.readUnexpiredById( refreshTokenId ) ) != null
         then:
             refreshTokenService.readUnexpiredById( refreshTokenId ) == null
+        and:
+            accessTokenService.findUnexpiredById( createdAccessToken.id as String ) == null
     }
 
     def "it can check if refresh token is unexpired and binded with specified client"() {
