@@ -3,9 +3,9 @@ package tw.edu.ncu.cc.oauth.server.concepts.user
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import tw.edu.ncu.cc.oauth.server.concepts.role.RoleRepository
 
 import javax.persistence.metamodel.Attribute
-import javax.transaction.Transactional
 
 import static org.springframework.data.jpa.domain.Specifications.where
 
@@ -16,27 +16,25 @@ class UserServiceImpl implements UserService {
     @Autowired
     def UserRepository userRepository
 
+    @Autowired
+    def RoleRepository roleRepository
+
     @Override
-    User findByName( String name, Attribute... attributes = [] ) {
+    User create( User user ) {
+        userRepository.save( user )
+    }
+
+    @Override
+    User update( User user ) {
+        userRepository.save( user )
+    }
+
+    @Override
+    User findByName( String serialId, Attribute... attributes = [] ) {
         userRepository.findOne(
-                where( UserSpecifications.nameEquals( name ) )
-                        .and( UserSpecifications.include( User_.clients ) )
+                where( UserSpecifications.nameEquals( serialId ) )
+                        .and( UserSpecifications.include( attributes ) )
         )
-    }
-
-    @Override
-    @Transactional
-    User createByNameIfNotExist( String name ) {
-        def user = findByName( name )
-        if( user == null ) {
-            user = createByName( name )
-        }
-        return user
-    }
-
-    @Override
-    User createByName( String name ) {
-        userRepository.save( new User( name: name ) )
     }
 
 }

@@ -7,6 +7,7 @@ import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCodeRe
 import tw.edu.ncu.cc.oauth.server.concepts.client.ClientRepository
 import tw.edu.ncu.cc.oauth.server.concepts.permission.PermissionRepository
 import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshTokenRepository
+import tw.edu.ncu.cc.oauth.server.concepts.role.RoleRepository
 import tw.edu.ncu.cc.oauth.server.concepts.user.UserRepository
 
 trait DomainTestData {
@@ -31,6 +32,9 @@ trait DomainTestData {
 
     @Autowired
     def UserRepository Users
+
+    @Autowired
+    def RoleRepository Roles
 
     public static Date laterTime() {
         return new Date( System.currentTimeMillis() + 1000000 )

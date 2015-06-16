@@ -7,5 +7,7 @@ trait DomainTestSet implements
         UserTestData,
         ApiTokenTestData,
         PermissionTestData,
-        RefreshTokenTestData  {
+        RefreshTokenTestData,
+        RoleTestData,
+        ManagerTestData {
 }

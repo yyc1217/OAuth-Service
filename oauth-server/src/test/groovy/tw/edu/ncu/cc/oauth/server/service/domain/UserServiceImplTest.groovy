@@ -3,6 +3,7 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
+import tw.edu.ncu.cc.oauth.server.concepts.user.User
 import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
 
 class UserServiceImplTest extends SpringSpecification {
@@ -11,20 +12,23 @@ class UserServiceImplTest extends SpringSpecification {
     private UserService userService
 
     @Transactional
-    def "it can create UserEntity"() {
+    def "it can create user"() {
         when:
-            userService.createByName( "NEW_USER" )
+            userService.create( new User( name: "newuser" ) )
         then:
-            userService.findByName( "NEW_USER" ) != null
+            userService.findByName( "newuser" ) != null
     }
 
     @Transactional
-    def "it can create user if not exist"() {
+    def "it can update user"() {
+        given:
+            User user = get_user( 1 )
         when:
-            userService.createByNameIfNotExist( "SAMEUSER" )
-            userService.createByNameIfNotExist( "SAMEUSER" )
+            user.name = "ADMINTEST"
+        and:
+            userService.update( user )
         then:
-            userService.findByName( "SAMEUSER" ) != null
+            userService.findByName( "ADMINTEST" ) != null
     }
 
 }

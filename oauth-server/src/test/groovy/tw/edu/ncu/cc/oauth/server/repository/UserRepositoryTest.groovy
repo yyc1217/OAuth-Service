@@ -20,6 +20,7 @@ class UserRepositoryTest extends SpringSpecification {
             user.clients.size() == 1
             user.accessTokens.size() == 1
             user.codes.size() == 1
+            user.roles.size() == 1
     }
 
     @Transactional

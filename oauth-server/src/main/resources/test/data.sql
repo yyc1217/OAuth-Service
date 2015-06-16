@@ -3,6 +3,12 @@ INSERT INTO user ( id, name ) VALUES
   ( 2, 'ADMIN2' ),
   ( 3, 'ADMIN3' );
 
+INSERT INTO role ( id, name ) VALUES
+  ( 1, 'admin' );
+
+INSERT INTO user_roles ( user_id, role_id ) VALUES
+  ( 1, 1 );
+
 INSERT INTO client ( id, name, encrypted_secret, url, callback, description, owner_id ) VALUES
   ( 1, 'APP1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1 ),
   ( 2, 'APP2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 ),
