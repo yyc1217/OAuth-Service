@@ -92,8 +92,12 @@ public class UserController {
             resource()
             .validate( validation )
             .pipe {
+                User user = userService.findByName( userObject.name )
+                if( user == null ) {
+                    user = userService.create( new User( name: userObject.name ) )
+                }
                 conversionService.convert(
-                        userService.createByNameIfNotExist( userObject.getName() ), UserObject.class
+                        user, UserObject.class
                 );
             }
         )
