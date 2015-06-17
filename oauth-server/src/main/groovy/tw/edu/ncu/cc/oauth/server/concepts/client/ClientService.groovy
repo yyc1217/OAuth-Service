@@ -9,7 +9,8 @@ interface ClientService {
     Client delete( Client client )
     Client refreshSecret( Client client )
     Client findUndeletedBySerialId( String id )
-    Client findUndeletedBySerialId( String id, Attribute...attributes )
+    Client findUndeletedBySerialId( String id, Attribute... attributes )
     boolean isCredentialValid( String serialId, String secret )
 
+    List<Client> findByDTO(ClientSearchDTO clientSearchDTO)
 }

@@ -3,6 +3,7 @@ package tw.edu.ncu.cc.oauth.server.concepts.user
 import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCode
 import tw.edu.ncu.cc.oauth.server.concepts.client.Client
+import tw.edu.ncu.cc.oauth.server.domain.BasicEntity_
 
 import javax.persistence.metamodel.SetAttribute
 import javax.persistence.metamodel.SingularAttribute

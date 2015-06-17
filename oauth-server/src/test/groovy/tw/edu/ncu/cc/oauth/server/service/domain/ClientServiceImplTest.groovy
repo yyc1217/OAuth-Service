@@ -3,16 +3,13 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.client.ClientSearchDTO
 import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
 
 class ClientServiceImplTest extends SpringSpecification {
 
     @Autowired
     ClientService clientService
-
-    @Autowired
-    ApiTokenService apiTokenService
 
     @Transactional
     def "it can create client"() {
@@ -72,4 +69,59 @@ class ClientServiceImplTest extends SpringSpecification {
             clientService.findUndeletedBySerialId( createdClientSerialId ).encryptedSecret != originEncryptedSecret
     }
 
+    @Transactional
+    def "it can find clients by partial name"() {
+        given:
+            def client = new_client()
+        and:
+            clientService.create(client)
+
+            def dto = new ClientSearchDTO()
+            dto.name = client.name.substring(client.name.length() - 1)
+        when:
+            def results = clientService.findByDTO(dto)
+        then:
+            results.size() == 1
+            results[0].name == client.name
+    }
+
+    @Transactional
+    def "it can find clients by partial name, full id and full owner name"() {
+        given:
+            def client = new_client()
+        and:
+            def createdClient = clientService.create(client)
+            clientService.create(client)
+
+            def dto = new ClientSearchDTO()
+            dto.name = createdClient.name.substring(createdClient.name.length() - 1)
+            dto.id = createdClient.id
+            dto.owner = createdClient.owner.name
+        when:
+            def results = clientService.findByDTO(dto)
+        then:
+            results.size() == 1
+            results[0].name == createdClient.name
+            results[0].id == createdClient.id
+            results[0].owner == createdClient.owner
+    }
+
+    @Transactional
+    def "it should find nothing because of client is deleted"() {
+        given:
+            def client = new_client()
+            client.deleted = true
+        and:
+            def createdClient = clientService.create(client)
+            clientService.create(client)
+
+            def dto = new ClientSearchDTO()
+            dto.name = createdClient.name.substring(createdClient.name.length() - 1)
+            dto.id = createdClient.id
+            dto.owner = createdClient.owner.name
+        when:
+            def results = clientService.findByDTO(dto)
+        then:
+            results.isEmpty()
+    }
 }

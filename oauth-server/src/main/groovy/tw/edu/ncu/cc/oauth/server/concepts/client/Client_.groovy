@@ -5,13 +5,14 @@ import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCode
 import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken
 import tw.edu.ncu.cc.oauth.server.concepts.user.User
+import tw.edu.ncu.cc.oauth.server.domain.BasicEntity_
 
 import javax.persistence.metamodel.SetAttribute
 import javax.persistence.metamodel.SingularAttribute
 import javax.persistence.metamodel.StaticMetamodel
 
 @StaticMetamodel( Client )
-class Client_ {
+class Client_ extends BasicEntity_ {
 
     public static volatile SingularAttribute< Client, String > name
     public static volatile SingularAttribute< Client, String > encryptedSecret

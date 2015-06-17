@@ -13,6 +13,7 @@ import tw.edu.ncu.cc.oauth.data.v1.management.client.SecretIdClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenApiTokenObject
 import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.concepts.client.Client
+import tw.edu.ncu.cc.oauth.server.concepts.client.ClientSearchDTO
 import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
 import tw.edu.ncu.cc.oauth.server.concepts.client.ClientValidator
 import tw.edu.ncu.cc.oauth.server.concepts.client.Client_
@@ -37,6 +38,27 @@ public class ClientController {
     @InitBinder
     public static void initBinder( WebDataBinder binder ) {
         binder.addValidators( new ClientValidator() );
+    }
+
+    /**
+     * ·j´Mclients
+     * <code>/clients?name={clientName}&id={clientId}&owner={portalId}&isDeleted={true or false}</code>
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity search(@ModelAttribute("client") ClientSearchDTO clientSearchDTO) {
+        respondWith(
+            resource()
+            .pipe {
+                clientService.findByDTO(clientSearchDTO)
+            }.pipe { List<Client> clients ->
+                conversionService.convert(
+                        clients,
+                        TypeDescriptor.collection(Set.class, TypeDescriptor.valueOf(Client.class)),
+                        TypeDescriptor.array(TypeDescriptor.valueOf(ClientObject.class))
+                );
+            }
+        )
     }
 
     @RequestMapping( method = RequestMethod.POST )
