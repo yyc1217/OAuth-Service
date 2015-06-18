@@ -183,7 +183,7 @@ class ClientControllerTest extends IntegrationSpecification {
                     callback: "http://example.com",
                     owner:    "ADMIN1"
             )
-            def createdClientObject = created_a_client(clientObject)
+            created_a_client(clientObject)
         when:
             def response = JSON(
                     server().perform(
@@ -194,7 +194,7 @@ class ClientControllerTest extends IntegrationSpecification {
             )
         then:
             response.size() == 1
-            response[0].name == client.name
+            response[0].name == clientObject.name
     }
 
 }

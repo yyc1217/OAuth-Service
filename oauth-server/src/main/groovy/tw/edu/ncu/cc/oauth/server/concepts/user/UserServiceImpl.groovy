@@ -3,6 +3,7 @@ package tw.edu.ncu.cc.oauth.server.concepts.user
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.util.StringUtils
 
 import javax.persistence.metamodel.Attribute
 import javax.transaction.Transactional
@@ -18,6 +19,11 @@ class UserServiceImpl implements UserService {
 
     @Override
     User findByName( String name, Attribute... attributes = [] ) {
+
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+
         userRepository.findOne(
                 where( UserSpecifications.nameEquals( name ) )
                         .and( UserSpecifications.include( User_.clients ) )

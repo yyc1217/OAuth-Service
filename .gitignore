@@ -18,3 +18,16 @@ application-production.yml
 
 oauth-server/src/main/resources/production/openid.properties
 oauth-server/src/main/resources/production/ehcache.xml
+
+# eclipse
+.project
+.classpath
+.settings
+
+# gradle
+.gradle
+
+**/build
+**/bin
+
+oauth-resource/*.log

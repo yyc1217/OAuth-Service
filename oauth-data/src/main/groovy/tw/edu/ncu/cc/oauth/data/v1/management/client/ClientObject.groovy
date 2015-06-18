@@ -7,5 +7,5 @@ public class ClientObject {
     def String url
     def String callback
     def String owner
-
+    def Boolean isDeleted
 }

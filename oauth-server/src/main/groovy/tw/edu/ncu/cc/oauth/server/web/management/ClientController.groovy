@@ -9,11 +9,11 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientObject
+import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.client.SecretIdClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenApiTokenObject
 import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.concepts.client.Client
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientSearchDTO
 import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
 import tw.edu.ncu.cc.oauth.server.concepts.client.ClientValidator
 import tw.edu.ncu.cc.oauth.server.concepts.client.Client_
@@ -46,15 +46,26 @@ public class ClientController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity search(@ModelAttribute("client") ClientSearchDTO clientSearchDTO) {
+    public ResponseEntity search(@RequestParam(value = "id", required = false) String id,
+                                 @RequestParam(value = "name", required = false) String name,
+                                 @RequestParam(value = "owner", required = false) String owner,
+                                 @RequestParam(value = "isDeleted", defaultValue = "false") Boolean isDeleted) {
+
+        def dto = IdClientObject.newInstance(
+                id : id,
+                name : name,
+                owner : owner,
+                isDeleted : isDeleted
+        )
+
         respondWith(
             resource()
             .pipe {
-                clientService.findByDTO(clientSearchDTO)
+                clientService.findByDTO(dto)
             }.pipe { List<Client> clients ->
                 conversionService.convert(
                         clients,
-                        TypeDescriptor.collection(Set.class, TypeDescriptor.valueOf(Client.class)),
+                        TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Client.class)),
                         TypeDescriptor.array(TypeDescriptor.valueOf(ClientObject.class))
                 );
             }

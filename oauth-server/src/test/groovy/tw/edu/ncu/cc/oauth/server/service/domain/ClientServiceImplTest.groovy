@@ -3,7 +3,7 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientSearchDTO
+import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
 import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
 
 class ClientServiceImplTest extends SpringSpecification {
@@ -76,8 +76,11 @@ class ClientServiceImplTest extends SpringSpecification {
         and:
             clientService.create(client)
 
-            def dto = new ClientSearchDTO()
-            dto.name = client.name.substring(client.name.length() - 1)
+            def dto = IdClientObject.newInstance(
+                    name : client.name.substring(client.name.length() - 1),
+                    isDeleted : false
+            )
+
         when:
             def results = clientService.findByDTO(dto)
         then:
@@ -91,12 +94,14 @@ class ClientServiceImplTest extends SpringSpecification {
             def client = new_client()
         and:
             def createdClient = clientService.create(client)
-            clientService.create(client)
 
-            def dto = new ClientSearchDTO()
-            dto.name = createdClient.name.substring(createdClient.name.length() - 1)
-            dto.id = createdClient.id
-            dto.owner = createdClient.owner.name
+            def dto = IdClientObject.newInstance(
+                    name : createdClient.name.substring(createdClient.name.length() - 1),
+                    id : createdClient.id,
+                    owner : createdClient.owner.name,
+                    isDeleted : false
+            )
+
         when:
             def results = clientService.findByDTO(dto)
         then:
@@ -107,18 +112,19 @@ class ClientServiceImplTest extends SpringSpecification {
     }
 
     @Transactional
-    def "it should find nothing because of client is deleted"() {
+    def "it should find nothing because client is deleted"() {
         given:
             def client = new_client()
             client.deleted = true
         and:
             def createdClient = clientService.create(client)
-            clientService.create(client)
 
-            def dto = new ClientSearchDTO()
-            dto.name = createdClient.name.substring(createdClient.name.length() - 1)
-            dto.id = createdClient.id
-            dto.owner = createdClient.owner.name
+            def dto = IdClientObject.newInstance(
+                    name : createdClient.name.substring(createdClient.name.length() - 1),
+                    id : createdClient.id,
+                    owner : createdClient.owner.name
+            )
+
         when:
             def results = clientService.findByDTO(dto)
         then:
