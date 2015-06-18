@@ -11,15 +11,15 @@ interface AuthorizationCodeService {
     AuthorizationCode create( AuthorizationCode authorizationCode );
     AuthorizationCode revoke( AuthorizationCode authorizationCode );
 
-    AuthorizationCode readUnexpiredByCode( String code );
-    AuthorizationCode readUnexpiredByCode( String code, Attribute...attributes );
-    AuthorizationCode readUnexpiredById( String codeId );
-    AuthorizationCode readUnexpiredById( String codeId, Attribute...attributes );
+    AuthorizationCode findUnexpiredByCode( String code );
+    AuthorizationCode findUnexpiredByCode( String code, Attribute...attributes );
+    AuthorizationCode findUnexpiredById( String codeId );
+    AuthorizationCode findUnexpiredById( String codeId, Attribute...attributes );
 
-    List< AuthorizationCode > readAllUnexpiredByUser( User user );
-    List< AuthorizationCode > readAllUnexpiredByUser( User user, Attribute...attributes );
-    List< AuthorizationCode > readAllUnexpiredByClient( Client client );
-    List< AuthorizationCode > readAllUnexpiredByClient( Client client, Attribute...attributes );
+    List< AuthorizationCode > findAllUnexpiredByUser( User user );
+    List< AuthorizationCode > findAllUnexpiredByUser( User user, Attribute...attributes );
+    List< AuthorizationCode > findAllUnexpiredByClient( Client client );
+    List< AuthorizationCode > findAllUnexpiredByClient( Client client, Attribute...attributes );
 
     boolean isUnexpiredCodeMatchesClientId( String authCode, String clientID );
 }

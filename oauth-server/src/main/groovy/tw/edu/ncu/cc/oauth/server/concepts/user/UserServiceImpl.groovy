@@ -3,10 +3,11 @@ package tw.edu.ncu.cc.oauth.server.concepts.user
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+
 import org.springframework.util.StringUtils
 
+
 import javax.persistence.metamodel.Attribute
-import javax.transaction.Transactional
 
 import static org.springframework.data.jpa.domain.Specifications.where
 
@@ -25,24 +26,19 @@ class UserServiceImpl implements UserService {
         }
 
         userRepository.findOne(
-                where( UserSpecifications.nameEquals( name ) )
-                        .and( UserSpecifications.include( User_.clients ) )
+                where(UserSpecifications.nameEquals(name))
+                        .and(UserSpecifications.include(User_.clients))
         )
     }
 
     @Override
-    @Transactional
-    User createByNameIfNotExist( String name ) {
-        def user = findByName( name )
-        if( user == null ) {
-            user = createByName( name )
-        }
-        return user
+    User create( User user ) {
+        userRepository.save( user )
     }
 
     @Override
-    User createByName( String name ) {
-        userRepository.save( new User( name: name ) )
+    User update( User user ) {
+        userRepository.save( user )
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import tw.edu.ncu.cc.manage.openid.OpenIDManager
 import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
+import tw.edu.ncu.cc.oauth.server.concepts.user.User
 import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
 
 import javax.security.auth.login.LoginException
@@ -36,17 +37,23 @@ class OpenIdServiceImpl implements OpenIdService {
     public void login( HttpServletRequest request ) throws LoginException {
 
         if( openIDManager.isValid( request ) ) {
-            String userName = openIDManager.getIdentity( request );
-            userService.createByNameIfNotExist( userName );
-            integrateWithSpringSecurity( request, userName );
-            logService.info( "LOGIN", "USER:" + userName )
+            String name = openIDManager.getIdentity( request );
+
+            User user = userService.findByName( name );
+            if( user == null ) {
+                user = userService.create( new User( name: name ) )
+            }
+            integrateWithSpringSecurity( request, user );
+            logService.info( "LOGIN", "USER:" + name )
         } else {
             throw new LoginException( "openid response is incorrect" );
         }
     }
 
-    private static void integrateWithSpringSecurity( HttpServletRequest request, String userName ) {
-        Authentication authentication = new UsernamePasswordAuthenticationToken( userName, "", AuthorityUtils.createAuthorityList( "ROLE_USER" ) );
+    private static void integrateWithSpringSecurity( HttpServletRequest request, User user ) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                user.name, "", AuthorityUtils.createAuthorityList( buildRoles( user ) )
+        );
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication( authentication );
@@ -54,6 +61,12 @@ class OpenIdServiceImpl implements OpenIdService {
         HttpSession newSession = request.getSession( true );
         newSession.setAttribute( "SPRING_SECURITY_CONTEXT", securityContext );
         newSession.setMaxInactiveInterval( 5*60 );
+    }
+
+    private static String buildRoles( User user ) {
+        user.roles.inject( "ROLE_USER" ) { roles, role ->
+            roles + " " + role.name
+        }
     }
 
 }

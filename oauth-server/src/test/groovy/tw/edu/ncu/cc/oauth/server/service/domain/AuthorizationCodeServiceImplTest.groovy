@@ -26,7 +26,7 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
         when:
             def createdAuthorizationCode = authorizationCodeService.create( authorizationCode )
         and:
-            def managedAuthorizationCode = authorizationCodeService.readUnexpiredById(
+            def managedAuthorizationCode = authorizationCodeService.findUnexpiredById(
                     createdAuthorizationCode.id as String, AuthorizationCode_.scope
             )
         then:
@@ -40,25 +40,25 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
         given:
             def authorizationCode = authorizationCodeService.create( new_authorizationCode() )
         expect:
-            authorizationCodeService.readUnexpiredByCode( authorizationCode.code ) != null
+            authorizationCodeService.findUnexpiredByCode( authorizationCode.code ) != null
     }
 
     def "it can read unexpired authorization code by real code 2"() {
         expect:
-            authorizationCodeService.readUnexpiredByCode( a_authorizationCode().code ) != null
-            authorizationCodeService.readUnexpiredByCode( "NOTEXIST" ) == null
+            authorizationCodeService.findUnexpiredByCode( a_authorizationCode().code ) != null
+            authorizationCodeService.findUnexpiredByCode( "NOTEXIST" ) == null
     }
 
     def "it can read unexpired authorization codes by client id"() {
         expect:
-            authorizationCodeService.readAllUnexpiredByClient( get_client( 2 ) ).size() == 0
-            authorizationCodeService.readAllUnexpiredByClient( get_client( 3 ) ).size() == 1
+            authorizationCodeService.findAllUnexpiredByClient( get_client( 2 ) ).size() == 0
+            authorizationCodeService.findAllUnexpiredByClient( get_client( 3 ) ).size() == 1
     }
 
     def "it can read unexpired authorization codes by user name"() {
         expect:
-            authorizationCodeService.readAllUnexpiredByUser( get_user( 2 ) ).size() == 0
-            authorizationCodeService.readAllUnexpiredByUser( get_user( 3 ) ).size() == 1
+            authorizationCodeService.findAllUnexpiredByUser( get_user( 2 ) ).size() == 0
+            authorizationCodeService.findAllUnexpiredByUser( get_user( 3 ) ).size() == 1
     }
 
     @Transactional
@@ -68,9 +68,9 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
         and:
             def createdAuthorizationCodeId = authorizationCodeService.create( authorizationCode ).id as String
         when:
-            authorizationCodeService.revoke( authorizationCodeService.readUnexpiredById( createdAuthorizationCodeId ) )
+            authorizationCodeService.revoke( authorizationCodeService.findUnexpiredById( createdAuthorizationCodeId ) )
         then:
-            authorizationCodeService.readUnexpiredById( createdAuthorizationCodeId ) == null
+            authorizationCodeService.findUnexpiredById( createdAuthorizationCodeId ) == null
     }
 
     def "it can check if authorization code is unexpired and binded with specified client"() {

@@ -73,7 +73,7 @@ class RefreshTokenExchangeService implements TokenExchangeService {
                 new AccessToken(
                         dateExpired: dicideExpireDate( expireSeconds )
                 ),
-                refreshTokenService.readUnexpiredByToken( request.getRefreshToken(), RefreshToken_.scope )
+                refreshTokenService.findUnexpiredByToken( request.getRefreshToken(), RefreshToken_.scope )
         )
     }
 

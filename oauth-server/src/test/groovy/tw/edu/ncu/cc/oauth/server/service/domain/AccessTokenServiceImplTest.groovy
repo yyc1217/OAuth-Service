@@ -130,11 +130,11 @@ class AccessTokenServiceImplTest extends SpringSpecification {
     }
 
     private def authorizationCode_is_revoked( AuthorizationCode authorizationCode ) {
-        authorizationCodeService.readUnexpiredByCode( authorizationCode.code ) == null
+        authorizationCodeService.findUnexpiredByCode( authorizationCode.code ) == null
     }
 
     private def accessToken_of_refreshToken_inDB_notEquals_to_the_accessToken( refreshToken, accessToken ) {
-        refreshTokenService.readUnexpiredById( refreshToken.id as String ).accessToken.id != accessToken.id
+        refreshTokenService.findUnexpiredById( refreshToken.id as String ).accessToken.id != accessToken.id
     }
 
     private def accessToken_is_revoked( AccessToken accessToken ) {

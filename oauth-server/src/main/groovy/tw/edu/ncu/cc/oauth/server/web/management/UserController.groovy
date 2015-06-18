@@ -9,13 +9,13 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ClientAccessTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ClientTokenObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.DetailedUserObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.UserObject
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken_
 import tw.edu.ncu.cc.oauth.server.concepts.client.Client
+import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken
+import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshTokenService
+import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken_
 import tw.edu.ncu.cc.oauth.server.concepts.user.User
 import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
 import tw.edu.ncu.cc.oauth.server.concepts.user.UserValidator
@@ -29,13 +29,13 @@ import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 public class UserController {
 
     @Autowired
-    def UserService userService;
+    def UserService userService
 
     @Autowired
-    def AccessTokenService accessTokenService
+    def RefreshTokenService refreshTokenService
 
     @Autowired
-    def ConversionService conversionService;
+    def ConversionService conversionService
 
     @InitBinder
     public static void initBinder( WebDataBinder binder ) {
@@ -54,8 +54,7 @@ public class UserController {
         )
     }
 
-    @SuppressWarnings( "unchecked" )
-    @RequestMapping( value = "{userName}/access_tokens", method = RequestMethod.GET )
+    @RequestMapping( value = "{userName}/authorized_tokens", method = RequestMethod.GET )
     public ResponseEntity getAccessTokens( @PathVariable( "userName" ) final String userName ) {
         respondWith(
             resource()
@@ -63,15 +62,14 @@ public class UserController {
                 userService.findByName( userName )
             }.pipe { User user ->
                 conversionService.convert(
-                        accessTokenService.findAllUnexpiredByUser( user, AccessToken_.scope ),
-                        TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( AccessToken.class ) ),
-                        TypeDescriptor.array( TypeDescriptor.valueOf( ClientAccessTokenObject.class ) )
+                        refreshTokenService.findAllUnexpiredByUser( user, RefreshToken_.scope ),
+                        TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( RefreshToken.class ) ),
+                        TypeDescriptor.array( TypeDescriptor.valueOf( ClientTokenObject.class ) )
                 );
             }
         )
     }
 
-    @SuppressWarnings( "unchecked" )
     @RequestMapping( value = "{userName}/clients", method = RequestMethod.GET )
     public ResponseEntity getOwnedClients( @PathVariable( "userName" ) final String userName ) {
         respondWith(
@@ -94,8 +92,12 @@ public class UserController {
             resource()
             .validate( validation )
             .pipe {
+                User user = userService.findByName( userObject.name )
+                if( user == null ) {
+                    user = userService.create( new User( name: userObject.name ) )
+                }
                 conversionService.convert(
-                        userService.createByNameIfNotExist( userObject.getName() ), UserObject.class
+                        user, UserObject.class
                 );
             }
         )
