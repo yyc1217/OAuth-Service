@@ -42,6 +42,26 @@ public class UserController {
         binder.addValidators( new UserValidator() );
     }
 
+    /**
+     * 部份搜尋使用者帳號
+     * /users?name={userName}
+     *
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity search(@RequestParam(value = "name", required = true) String userName) {
+        respondWith(
+                resource()
+                .pipe {
+                    conversionService.convert(
+                            userService.findByPartialName(userName),
+                            TypeDescriptor.collection(List.class,TypeDescriptor.valueOf(User.class)),
+                            TypeDescriptor.array(TypeDescriptor.valueOf( DetailedUserObject.class))
+                    );
+                }
+        )
+    }
+
     @RequestMapping( value = "{userName}", method = RequestMethod.GET )
     public ResponseEntity getUser( @PathVariable( "userName" ) final String userName ) {
         respondWith(

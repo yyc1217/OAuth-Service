@@ -7,4 +7,6 @@ interface UserService {
     User update( User user )
     User findByName( String name )
     User findByName( String name, Attribute...attributes )
+
+    List<User> findByPartialName(String userName)
 }

@@ -31,4 +31,15 @@ class UserServiceImplTest extends SpringSpecification {
             userService.findByName( "ADMINTEST" ) != null
     }
 
+    @Transactional
+    def "it can find user by partial username"() {
+        when:
+            def username = "fakeusername"
+            userService.create(new User(
+                    name: username
+            ))
+            def partialUsername = username.substring(username.length() - 1)
+        then:
+            userService.findByPartialName(partialUsername) != null
+    }
 }

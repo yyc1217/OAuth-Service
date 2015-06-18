@@ -92,4 +92,31 @@ class UserControllerTest extends IntegrationSpecification {
             response.name == "jason"
     }
 
+    @Transactional
+    def "managers can search user by partial username"() {
+        when:
+            server().perform(
+                post(targetURL)
+                    .contentType( MediaType.APPLICATION_JSON )
+                    .content(
+                    '''
+                        {
+                          "name" : "jason"
+                        }
+                    '''
+                )
+            ).andExpect(
+                status().isOk()
+            )
+        and:
+            def response = JSON(
+                    server().perform(
+                        get(targetURL + "?name=jas")
+                    ).andExpect(
+                         status().isOk()
+                    ).andReturn()
+            )
+        then:
+            response[0].name == "jason"
+    }
 }
