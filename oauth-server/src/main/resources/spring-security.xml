@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+    <security:http pattern="/resource/**" security="none"/>
+
+    <security:http pattern="/oauth/token/**" create-session="never" entry-point-ref="stubEntry">
+        <security:csrf disabled="true"/>
+    </security:http>
+
+    <security:http use-expressions="true" >
+
+        <security:intercept-url pattern="/oauth/authorize" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/login_page" access="permitAll"/>
+        <security:intercept-url pattern="/login_confirm" access="permitAll"/>
+        <security:intercept-url pattern="/**" access="isAuthenticated()"/>
+
+        <security:form-login login-page="/login_page"/>
+        <security:csrf/>
+
+    </security:http>
+
+    <security:authentication-manager alias="authenticationManager"/>
+
+    <bean class="tw.edu.ncu.cc.manage.openid.OpenIDManager">
+        <constructor-arg index="0" ref="openidConfigurationFileName"/>
+    </bean>
+
+</beans>

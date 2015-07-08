@@ -10,7 +10,7 @@ class OpenIdLoginControllerTest extends IntegrationSpecification {
     def "it should redirect login path to remote address"() {
         expect:
             server().perform(
-                    get( "/login" )
+                    get( "/login_page" )
             ).andExpect(
                     status().isFound()
             )
